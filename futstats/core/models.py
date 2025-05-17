@@ -11,16 +11,13 @@ class Campeonato(models.Model):
 
 class Time(models.Model):
     nome = models.CharField(max_length=100)
+    sigla = models.CharField(max_length=10, blank=True, null=True)
+    pais = models.CharField(max_length=100)
+    fundacao = models.IntegerField(blank=True, null=True)
     logo = models.URLField(blank=True, null=True)
-    campeonato = models.ForeignKey( # chave estrangeira que se relaciona com outras tabelas
-        Campeonato,
-        on_delete=models.CASCADE,  # Se o campeonato for deletado, apaga os times associados
-        related_name='times'  # Permite acessar os times a partir do campeonato (ex: campeonato.times.all())
-    )
-    api_code = models.IntegerField(unique=True)  # Código único do time vindo da API
 
     def __str__(self):
-        return self.nome  # Exibe apenas o nome do time
+        return self.nome
     
 class Jogador(models.Model):
     nome = models.CharField(max_length=100)  # Nome do jogador
