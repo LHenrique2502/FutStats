@@ -1,29 +1,73 @@
 import requests
+from core.models import League, Team
 
-# Novo endpoint direto da API-SPORTS
-API_URL = "https://v3.football.api-sports.io/teams"
+# Endpoint e chave da API-Football via RapidAPI
+API_URL = "api-football-v1.p.rapidapi.com"
+API_KEY = "8eddef054cmsh7d4c542a9644e3ep11ef9ejsneb25932abe3f"
 
-# Sua chave direto do dashboard da API-SPORTS
-API_KEY = "7b53f431eccfcb7df388a6041c7a2b89"
+# Cabeçalhos necessários para autenticação da API
+HEADERS = {
+    "x-rapidapi-host": API_URL,
+    "x-rapidapi-key": API_KEY
+}
 
-# TODO: criar função para importar ligas, times, partidas e as estatisticas
-def buscar_ligas():
-    headers = {}
+def get_leagues():
+    """Busca ligas e salva apenas a temporada atual das ligas de interesse"""
+    ids_de_interesse = [39, 140, 61, 135, 78, 71]  # Premier, Espanhol, Francês, Italiano, Alemão, Brasileiro
 
-def buscar_times(league_id="39", season="2023"):
-    headers = {
-        "x-apisports-key": API_KEY  # <- header correto da API-Sports
-    }
-
-    params = {
-        "league": league_id,
-        "season": season
-    }
-
-    response = requests.get(API_URL, headers=headers, params=params)
+    url = f"https://{API_URL}/v3/leagues"
+    response = requests.get(url, headers=HEADERS)
 
     if response.status_code == 200:
-        return response.json()["response"]
+        data = response.json()
+        for item in data["response"]:
+            league = item.get("league")
+            country = item.get("country")
+            seasons = item.get("seasons", [])
+
+            if league["id"] in ids_de_interesse:
+                # Filtra a temporada atual
+                current_season = next((s for s in seasons if s.get("current")), None)
+
+                if current_season:
+                    League.objects.update_or_create(
+                    api_id=league["id"],
+                    defaults={
+                    "name": league["name"],
+                    "type": league["type"],
+                    "country": country["name"],  # pegar do campo correto
+                    "logo": league["logo"],
+                    "season": current_season["year"],
+                        }
+                    )
     else:
-        print(f"Erro: {response.status_code} - {response.text}")
-        return []
+        print(f"Erro ao buscar ligas: {response.status_code} - {response.text}")
+
+def get_teams():
+    # Pega as ligas atuais no banco
+    ligas_atuais = [39, 140, 61, 135, 78, 71]  # Premier, Espanhol, Francês, Italiano, Alemão, Brasileiro
+    
+    for liga in ligas_atuais:
+        url = f"https://{API_URL}/v3/teams"
+        params = {
+            "league": liga.api_id,
+            "season": liga.season
+        }
+        response = requests.get(url, headers=HEADERS, params=params)
+        
+        if response.status_code == 200:
+            data = response.json()
+            for item in data["response"]:
+                team = item["team"]
+                
+                # Salva ou atualiza o time no banco
+                Team.objects.update_or_create(
+                    api_id=team["id"],
+                    defaults={
+                        "name": team["name"],
+                        "code": team["logo"],
+                        # adicione outros campos do seu model Team aqui
+                    }
+                )
+        else:
+            print(f"Erro ao buscar times da liga {liga.name}: {response.status_code} - {response.text}")
