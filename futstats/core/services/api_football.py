@@ -45,13 +45,14 @@ def get_leagues():
 
 def get_teams():
     # Pega as ligas atuais no banco
-    ligas_atuais = [39, 140, 61, 135, 78, 71]  # Premier, Espanhol, Francês, Italiano, Alemão, Brasileiro
+    ligas_atuais = League.objects.filter(api_id__in=[39, 140, 61, 135, 78, 71])
+
     
     for liga in ligas_atuais:
         url = f"https://{API_URL}/v3/teams"
         params = {
             "league": liga.api_id,
-            "season": liga.season
+            "season": liga.season,
         }
         response = requests.get(url, headers=HEADERS, params=params)
         
@@ -60,13 +61,16 @@ def get_teams():
             for item in data["response"]:
                 team = item["team"]
                 
+                
                 # Salva ou atualiza o time no banco
                 Team.objects.update_or_create(
                     api_id=team["id"],
                     defaults={
                         "name": team["name"],
-                        "code": team["logo"],
-                        # adicione outros campos do seu model Team aqui
+                        "code": team["code"],
+                        "country": team["country"],
+                        "logo": team["logo"],
+                        "league": liga
                     }
                 )
         else:
