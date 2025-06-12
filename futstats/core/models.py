@@ -25,40 +25,87 @@ class Team(models.Model):
 
 
 class Player(models.Model):   
-    api_id = models.IntegerField(unique=True) # ID fornecido pela API-Football   
-    name = models.CharField(max_length=100) # Nome do jogador   
-    age = models.IntegerField(null=True, blank=True) # Idade do jogador (se disponível)   
-    nationality = models.CharField(max_length=50, null=True, blank=True) # Nacionalidade (ex: Brazil, France)    
-    photo = models.URLField(null=True, blank=True) # Foto do jogador (URL)     
-    team = models.ForeignKey(Team, on_delete=models.CASCADE) # Time ao qual o jogador pertence    
-    position = models.CharField(max_length=30, null=True, blank=True) # Posição (ex: Attacker, Midfielder)    
-    number = models.IntegerField(null=True, blank=True) # Número da camisa (se disponível)
+    api_id = models.IntegerField(unique=True)  # ID fornecido pela API-Football
+    name = models.CharField(max_length=100)  # Nome do jogador
+    age = models.IntegerField(null=True, blank=True)  # Idade
+    nationality = models.CharField(max_length=50, null=True, blank=True)  # Nacionalidade
+    photo = models.URLField(null=True, blank=True)  # Foto
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)  # Time associado
+    position = models.CharField(max_length=30, null=True, blank=True)  # Posição em campo
+    number = models.IntegerField(null=True, blank=True)  # Camisa
+
+    # Campos adicionais de 'games'
+    appearences = models.IntegerField(null=True, blank=True)  # Jogos jogados
+    lineups = models.IntegerField(null=True, blank=True)  # Escalado como titular
+    minutes = models.IntegerField(null=True, blank=True)  # Minutos jogados
+
+    # Campos adicionais de 'goals'
+    total_goals = models.IntegerField(null=True, blank=True)  # Gols marcados
+    conceded_goals = models.IntegerField(null=True, blank=True)  # Gols sofridos (relevante para goleiros)
+    assists = models.IntegerField(null=True, blank=True)  # Assistências
+    saves = models.IntegerField(null=True, blank=True)  # Defesas (relevante para goleiros)
 
     def __str__(self):
         return self.name
 
+class Match(models.Model):
+    api_id = models.IntegerField(unique=True)
+    date = models.DateTimeField()
+    league = models.ForeignKey(League, on_delete=models.CASCADE)
 
-class Match(models.Model):   
-    api_id = models.IntegerField(unique=True) # ID fornecido pela API-Football   
-    league = models.ForeignKey(League, on_delete=models.CASCADE) # Liga da partida   
-    home_team = models.ForeignKey(Team, related_name='home_matches', on_delete=models.CASCADE) # Time da casa
-    away_team = models.ForeignKey(Team, related_name='away_matches', on_delete=models.CASCADE) # Time visitante    
-    date = models.DateTimeField() # Data e hora da partida   
-    status = models.CharField(max_length=50) # Status da partida (Scheduled, Finished, In Play, etc.)   
-    round = models.CharField(max_length=50, null=True, blank=True) # Rodada (ex: "Regular Season - 1")   
-    venue = models.CharField(max_length=100, null=True, blank=True) # Nome do estádio    
-    home_score = models.IntegerField(null=True, blank=True) # Placar do time da casa    
-    away_score = models.IntegerField(null=True, blank=True) # Placar do time visitante
+    venue_name = models.CharField(max_length=100, null=True, blank=True)
+    venue_city = models.CharField(max_length=50, null=True, blank=True)
+    venue_capacity = models.IntegerField(null=True, blank=True)
+    referee = models.CharField(max_length=100, null=True, blank=True)
 
-    def __str__(self):
-        return f"{self.home_team} vs {self.away_team} - {self.date.strftime('%d/%m/%Y')}"
-
-
-class MatchStatistic(models.Model):   
-    match = models.ForeignKey(Match, on_delete=models.CASCADE) # Partida à qual a estatística pertence    
-    team = models.ForeignKey(Team, on_delete=models.CASCADE) # Time ao qual a estatística se refere    
-    type = models.CharField(max_length=100) # Tipo de estatística (ex: Possession, Shots on Target)    
-    value = models.CharField(max_length=20) # Valor da estatística (ex: "58%", "3", etc.)
+    home_team = models.ForeignKey(Team, related_name='home_fixtures', on_delete=models.CASCADE)
+    away_team = models.ForeignKey(Team, related_name='away_fixtures', on_delete=models.CASCADE)
+    home_score = models.IntegerField(null=True, blank=True)
+    away_score = models.IntegerField(null=True, blank=True)
+    home_penalties = models.IntegerField(null=True, blank=True)
+    away_penalties = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.type} - {self.team.name} - {self.match.id}"
+        return f"{self.home_team} x {self.away_team} ({self.date.strftime('%Y-%m-%d')})"
+
+
+class MatchEvent(models.Model):
+    match = models.ForeignKey('Match', on_delete=models.CASCADE)
+    team = models.ForeignKey('Team', on_delete=models.CASCADE)
+    player = models.CharField(max_length=100, null=True, blank=True)
+    assist = models.CharField(max_length=100, null=True, blank=True)
+    type = models.CharField(max_length=50)  # Goal, Card, Substitution
+    detail = models.CharField(max_length=100, null=True, blank=True)  # Yellow Card, Red Card, Normal Goal, etc.
+    comments = models.TextField(null=True, blank=True)
+    minute = models.IntegerField()
+    extra_minute = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.match} - {self.type} ({self.detail}) - {self.player}"
+
+class TeamStatistics(models.Model):
+    match = models.ForeignKey('Match', on_delete=models.CASCADE)
+    team = models.ForeignKey('Team', on_delete=models.CASCADE)
+
+    shots_on_goal = models.IntegerField(null=True, blank=True)
+    shots_off_goal = models.IntegerField(null=True, blank=True)
+    total_shots = models.IntegerField(null=True, blank=True)
+    blocked_shots = models.IntegerField(null=True, blank=True)
+    shots_inside_box = models.IntegerField(null=True, blank=True)
+    shots_outside_box = models.IntegerField(null=True, blank=True)
+
+    fouls = models.IntegerField(null=True, blank=True)
+    corner_kicks = models.IntegerField(null=True, blank=True)
+    offsides = models.IntegerField(null=True, blank=True)
+
+    ball_possession = models.CharField(max_length=10, null=True, blank=True)  # Ex: "56%"
+    yellow_cards = models.IntegerField(null=True, blank=True)
+    red_cards = models.IntegerField(null=True, blank=True)
+
+    passes = models.IntegerField(null=True, blank=True)
+    accurate_passes = models.IntegerField(null=True, blank=True)
+    pass_percentage = models.CharField(max_length=10, null=True, blank=True)  # Ex: "85%"
+
+    def __str__(self):
+        return f"{self.match} - {self.team} Statistics"
+# TODO: Adequar a chamada importar_estatisticas para utilizaar tambem a função TeamStatistcs

@@ -4,6 +4,7 @@
 
 ### Execute project
 
+`python manage.py runserver (executar esse comando dentro da raiz do projeto)`
 `python manage.py "nome do arquivo que deseja executar"`
 
 ### Migrations
