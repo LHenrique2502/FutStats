@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
-from .models import League, Team, Player  # ou .models se o model estiver no mesmo app
+from .models import League, Team, Player, Match, MatchEvent, TeamStatistics  # ou .models se o model estiver no mesmo app
 
 def index(request):
     return render(request, 'futstats/index.html')
@@ -76,3 +76,46 @@ def listar_jogadores(request):
         'request': request,  # para manter os valores no form
     }
     return render(request, 'futstats/listar_jogadores.html', context)
+
+def listar_partidas(request):
+    date = request.GET.get('date', '')
+    league = request.GET.get('name', '')
+    home_team = request.GET.get('name', '')
+    away_team = request.GET.get('name', '')
+    home_score = request.GET.get('home_score', '')
+    away_score = request.GET.get('away_score', '')
+
+    partidas = Match.objects.all()
+
+    if date:
+        partidas = partidas.filter(date__icontains=date)
+    if league:
+        partidas = partidas.filter(league__icontains=league)
+    if home_team:
+        partidas = partidas.filter(name__icontains=home_team)
+    if away_team:
+        partidas = partidas.filter(name__icontains=away_team)
+    if home_score:
+        partidas = partidas.filter(home_score__icontains=home_score)
+    if away_score:
+        partidas = partidas.filter(away_score__icontains=away_score)
+
+    # Obter todos os valores únicos para os filtros
+    date = Match.objects.values_list('date', flat=True).distinct().order_by('date')
+    ligas = League.objects.values_list('name', flat=True).distinct().order_by('name')
+    time = Team.objects.values_list('name', flat=True).distinct().order_by('name')
+
+    # Paginação
+    paginator = Paginator(partidas, 10)
+    page_number = request.GET.get('page')
+    page_obj_match = paginator.get_page(page_number)
+
+    context = {
+        'page_obj_match': page_obj_match,
+        'date': date,
+        'ligas': ligas,
+        'time': time,
+        'request': request,  # para manter os valores no form
+    }
+
+    return render(request, 'futstats/listar_partidas.html', context)
