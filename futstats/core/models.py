@@ -108,4 +108,6 @@ class TeamStatistics(models.Model):
 
     def __str__(self):
         return f"{self.match} - {self.team} Statistics"
+    
 # TODO: Adequar a chamada importar_estatisticas para utilizaar tambem a função TeamStatistcs
+# TODO: Refatorar as funções para a necessidade de importação
