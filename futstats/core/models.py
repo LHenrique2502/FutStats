@@ -7,6 +7,7 @@ class League(models.Model):
     country = models.CharField(max_length=50) # País da competição (ex: England, Brazil)   
     logo = models.URLField(null=True, blank=True) # URL do logo da liga    
     season = models.IntegerField() # Temporada associada (ex: 2023)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.name} ({self.season})"
@@ -19,6 +20,7 @@ class Team(models.Model):
     country = models.CharField(max_length=50) # País do time   
     logo = models.URLField(null=True, blank=True) # URL do logo do time    
     league = models.ForeignKey(League, on_delete=models.CASCADE) # Liga à qual o time está associado
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -33,6 +35,7 @@ class Player(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)  # Time associado
     position = models.CharField(max_length=30, null=True, blank=True)  # Posição em campo
     number = models.IntegerField(null=True, blank=True)  # Camisa
+    created_at = models.DateTimeField(auto_now_add=True)
 
     # Campos adicionais de 'games'
     appearences = models.IntegerField(null=True, blank=True)  # Jogos jogados
@@ -64,6 +67,7 @@ class Match(models.Model):
     away_score = models.IntegerField(null=True, blank=True)
     home_penalties = models.IntegerField(null=True, blank=True)
     away_penalties = models.IntegerField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.home_team} x {self.away_team} ({self.date.strftime('%Y-%m-%d')})"
@@ -79,6 +83,7 @@ class MatchEvent(models.Model):
     comments = models.TextField(null=True, blank=True)
     minute = models.IntegerField()
     extra_minute = models.IntegerField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.match} - {self.type} ({self.detail}) - {self.player}"
@@ -105,6 +110,7 @@ class TeamStatistics(models.Model):
     passes = models.IntegerField(null=True, blank=True)
     accurate_passes = models.IntegerField(null=True, blank=True)
     pass_percentage = models.CharField(max_length=10, null=True, blank=True)  # Ex: "85%"
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.match} - {self.team} Statistics"

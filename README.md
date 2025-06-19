@@ -1,36 +1,151 @@
-# Meu Novo Projeto
+# 🚀 Projeto Fullstack: Django + React (Vite)
 
-## Back-end
+Este é um projeto fullstack com backend em **Django** e frontend em **React + Vite**, utilizando **Tailwind CSS**, **shadcn-ui** e **TypeScript**.
 
-### Execute project
+---
 
-`python manage.py runserver (executar esse comando dentro da raiz do projeto)`
-`python manage.py "nome do arquivo que deseja executar"`
+## 📁 Estrutura do Projeto
 
-### Migrations
+```
+/
+├── backend/
+│   ├── manage.py
+│   └── ...
+├── frontend/
+│   ├── index.html
+│   ├── package.json
+│   └── ...
+├── README.md
+└── .gitignore
+```
 
-`python manage.py makemigrations`
-`python manage.py migrate`
+---
 
-## Populando o banco de dados
+## 🧠 Tecnologias Utilizadas
 
-Após clonar o projeto e ativar seu ambiente virtual:
+### Backend
 
-1. Aplique as migrações para criar o banco:
+- Python
+- Django
+- Django REST Framework
+- SQLite
 
-   ```bash
-   python manage.py migrate
+### Frontend
 
-   ```
+- Vite
+- React
+- TypeScript
+- Tailwind CSS
+- shadcn-ui
 
-2. Carregue os dados de exemplo (caso deseje restaurar os dados salvos):
+---
 
-   ```bash
-   python manage.py loaddata dados.json
-   ```
+## 🔧 Como executar o projeto localmente
 
-O arquivo db.sqlite3 está ignorado no repositório. Utilize o loaddata sempre que quiser importar os dados salvos no arquivo dados.json.
+### 🔙 Backend (Django)
 
-### Create superuser
+#### 📦 Pré-requisitos
 
-`python manage.py createsuperuser`
+- Python 3.10+
+- Ambiente virtual configurado
+
+#### ▶️ Rodando o servidor
+
+```bash
+# Acesse a pasta do backend
+cd backend/
+
+# Crie e ative o ambiente virtual
+python -m venv venv
+source venv/bin/activate  # No Windows: venv\Scripts\activate
+
+# Instale as dependências
+pip install -r requirements.txt
+
+# Rode o servidor
+python manage.py runserver
+```
+
+#### 🗃️ Migrações do banco de dados
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+#### 👤 Criar superusuário
+
+```bash
+python manage.py createsuperuser
+```
+
+#### 🧪 Populando com dados de exemplo
+
+```bash
+# Aplicar migrações (caso não tenha feito)
+python manage.py migrate
+
+# Carregar dados de exemplo (arquivo dados.json)
+python manage.py loaddata dados.json
+```
+
+> ⚠️ O arquivo `db.sqlite3` está no `.gitignore`. Use `loaddata` sempre que quiser restaurar os dados salvos.
+
+---
+
+### 🔜 Frontend (React + Vite)
+
+#### 📦 Pré-requisitos
+
+- Node.js (recomenda-se instalar com [nvm](https://github.com/nvm-sh/nvm#installing-and-updating))
+
+#### ▶️ Rodando o frontend
+
+```bash
+# Acesse a pasta do frontend
+cd frontend/
+
+# Instale as dependências
+npm install
+
+# Rode o projeto com hot reload
+npm run dev
+```
+
+---
+
+## 🌍 Deploy
+
+Este projeto pode ser facilmente implantado utilizando a plataforma **Lovable**:
+
+- Acesse: [Projeto no Lovable](https://lovable.dev/projects/97817821-2020-4d7a-b69e-4767f7ded0e6)
+- Clique em **Share > Publish** para publicar
+- Para conectar um domínio personalizado: Vá em `Project > Settings > Domains`
+
+🔗 Guia oficial: [Setting up a custom domain (Lovable Docs)](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+---
+
+## 💻 Outras formas de edição
+
+- **Usando o Lovable:** edite diretamente pela plataforma
+- **GitHub + IDE:** clone o repositório e edite localmente
+- **GitHub Codespaces:** use a IDE do GitHub online
+- **Editor direto no GitHub:** clique no botão de edição nos arquivos
+
+---
+
+## ✅ Funcionalidades (em desenvolvimento)
+
+- [x] API REST com Django
+- [x] Interface moderna com React
+- [ ] Autenticação de usuários
+- [ ] Dashboard de estatísticas
+
+---
+
+## 📬 Contato
+
+Caso tenha dúvidas ou queira contribuir, fique à vontade para abrir uma issue ou pull request!
+
+---
