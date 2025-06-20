@@ -188,3 +188,79 @@ def estatisticas_gerais(request):
         "crescimento_jogadores": calcular_percentual(jogadores_atuais, jogadores_passados),
     }
     return JsonResponse(data)
+
+def match_details(request, id):
+    try:
+        jogo = Match.objects.get(pk=id)
+    except Match.DoesNotExist:
+        return JsonResponse({"detail": "Partida não encontrada."}, status=404)
+
+    # Filtra todos os eventos relacionados à partida
+    eventos = MatchEvent.objects.filter(match=jogo)
+
+    goals = []
+    cards = []
+    substitutions = []
+
+    for evento in eventos:
+        team_side = 'home' if evento.team == jogo.home_team else 'away'
+
+        if evento.type.lower() == 'goal':
+            goals.append({
+                "team": team_side,
+                "player": evento.player,
+                "minute": evento.minute,
+                "type": evento.detail
+            })
+
+        elif evento.type.lower() == 'card':
+            cards.append({
+                "team": team_side,
+                "player": evento.player,
+                "minute": evento.minute,
+                "type": evento.detail.lower()  # 'yellow', 'red'
+            })
+
+        elif evento.type.lower() == 'substitution':
+            substitutions.append({
+                "team": team_side,
+                "playerOut": evento.player,
+                "playerIn": evento.assist,
+                "minute": evento.minute
+            })
+
+    data = {
+        "id": jogo.id,
+        "homeTeam": jogo.home_team.name,
+        "awayTeam": jogo.away_team.name,
+        "home_logo": jogo.home_team.logo,
+        "away_logo": jogo.away_team.logo,
+        "homeScore": jogo.home_score,
+        "awayScore": jogo.away_score,
+        "date": jogo.date.strftime('%d/%m/%Y %H:%M'),
+        "stadium": jogo.venue_name,
+        "league": jogo.league.name if jogo.league else None,
+        "status": "completed" if jogo.home_score is not None and jogo.away_score is not None else "upcoming",
+        "referee": jogo.referee,
+        "attendance": None,
+
+        "goals": goals,
+        "cards": cards,
+        "substitutions": substitutions,
+
+        # Por enquanto valores mockados (você pode conectar com outro model futuramente)
+        "stats": {
+            "possession": {"home": 55, "away": 45},
+            "shots": {"home": 14, "away": 11},
+            "shotsOnTarget": {"home": 6, "away": 4},
+            "corners": {"home": 7, "away": 3},
+            "fouls": {"home": 10, "away": 14},
+            "offsides": {"home": 1, "away": 2},
+            "passes": {"home": 500, "away": 430},
+            "passAccuracy": {"home": 85, "away": 79},
+            "tackles": {"home": 19, "away": 21},
+            "aerialDuels": {"home": 13, "away": 15}
+        }
+    }
+
+    return JsonResponse(data, safe=False)

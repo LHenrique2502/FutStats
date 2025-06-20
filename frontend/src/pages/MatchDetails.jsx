@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,66 +19,38 @@ import {
 const MatchDetails = () => {
   const { id } = useParams();
 
-  // Dados mockados da partida (normalmente viria de uma API)
-  const matchData = {
-    id: id,
-    homeTeam: 'Flamengo',
-    awayTeam: 'Palmeiras',
-    homeScore: 2,
-    awayScore: 1,
-    date: '2024-06-10 20:00',
-    stadium: 'Maracanã',
-    league: 'Brasileirão',
-    status: 'completed',
-    referee: 'Wilton Pereira Sampaio',
-    attendance: '67.000',
-    goals: [
-      { team: 'home', player: 'Gabriel Barbosa', minute: 23, type: 'goal' },
-      { team: 'away', player: 'Endrick', minute: 45, type: 'goal' },
-      { team: 'home', player: 'Pedro', minute: 78, type: 'goal' },
-    ],
-    cards: [
-      { team: 'home', player: 'Gerson', minute: 34, type: 'yellow' },
-      { team: 'away', player: 'Zé Rafael', minute: 56, type: 'yellow' },
-      { team: 'away', player: 'Gustavo Gómez', minute: 89, type: 'yellow' },
-    ],
-    substitutions: [
-      {
-        team: 'home',
-        playerOut: 'Everton Ribeiro',
-        playerIn: 'Victor Hugo',
-        minute: 62,
-      },
-      { team: 'away', playerOut: 'Dudu', playerIn: 'Rony', minute: 68 },
-      {
-        team: 'home',
-        playerOut: 'Bruno Henrique',
-        playerIn: 'Matheus França',
-        minute: 85,
-      },
-    ],
-    stats: {
-      possession: { home: 58, away: 42 },
-      shots: { home: 16, away: 12 },
-      shotsOnTarget: { home: 8, away: 5 },
-      corners: { home: 7, away: 4 },
-      fouls: { home: 11, away: 15 },
-      offsides: { home: 2, away: 3 },
-      passes: { home: 487, away: 356 },
-      passAccuracy: { home: 84, away: 78 },
-      tackles: { home: 18, away: 22 },
-      aerialDuels: { home: 15, away: 21 },
-    },
-  };
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8000/api/partida/${id}/`)
+      .then((response) => {
+        console.log('Dados recebidos:', response.data);
+        setMatchData(response.data);
+        console.log('Estado atualizado:', response.data);
+      })
+      .catch((error) => {
+        console.error('Erro ao buscar dados da partida:', error);
+      });
+  }, [id]);
+
+  const [matchData, setMatchData] = useState(null);
 
   const getCardIcon = (type) => {
     return type === 'yellow' ? '🟨' : '🟥';
   };
 
+  if (!matchData) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-muted-foreground text-lg animate-pulse">
+          Carregando partida...
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
-
       <main className="container mx-auto py-6 sm:py-8 space-y-6 sm:space-y-8">
         {/* Botão de Voltar */}
         <div className="animate-fade-in-up">
@@ -108,7 +81,11 @@ const MatchDetails = () => {
                   {matchData.homeTeam}
                 </div>
                 <div className="w-16 h-16 bg-primary/10 rounded-full mx-auto flex items-center justify-center">
-                  <Users className="h-8 w-8 text-primary" />
+                  <img
+                    src={matchData.home_logo}
+                    alt={`${matchData.home_logo} logo`}
+                    className="w-10 h-10 object-contain"
+                  />
                 </div>
               </div>
 
@@ -126,7 +103,11 @@ const MatchDetails = () => {
                   {matchData.awayTeam}
                 </div>
                 <div className="w-16 h-16 bg-primary/10 rounded-full mx-auto flex items-center justify-center">
-                  <Users className="h-8 w-8 text-primary" />
+                  <img
+                    src={matchData.away_logo}
+                    alt={`${matchData.away_logo} logo`}
+                    className="w-10 h-10 object-contain"
+                  />
                 </div>
               </div>
             </div>
@@ -159,9 +140,9 @@ const MatchDetails = () => {
             <TabsTrigger value="stats">Estatísticas</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="events" className="space-y-6">
+          <TabsContent value="events" className="grid w-full grid-cols-3">
             {/* Gols */}
-            <Card className="card-responsive">
+            <Card className="card-responsive m-2">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-base sm:text-lg">
                   <Target className="h-5 w-5" />
@@ -194,7 +175,7 @@ const MatchDetails = () => {
             </Card>
 
             {/* Cartões */}
-            <Card className="card-responsive">
+            <Card className="card-responsive m-2">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-base sm:text-lg">
                   <AlertTriangle className="h-5 w-5" />
@@ -225,7 +206,7 @@ const MatchDetails = () => {
             </Card>
 
             {/* Substituições */}
-            <Card className="card-responsive">
+            <Card className="card-responsive m-2">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-base sm:text-lg">
                   <Activity className="h-5 w-5" />
@@ -287,7 +268,9 @@ const MatchDetails = () => {
                     <div className="w-full bg-gray-200 rounded-full h-3">
                       <div
                         className="bg-primary h-3 rounded-full"
-                        style={{ width: `${matchData.stats.possession.home}%` }}
+                        style={{
+                          width: `${matchData.stats.possession.home}%`,
+                        }}
                       ></div>
                     </div>
                     <div className="flex justify-between items-center">

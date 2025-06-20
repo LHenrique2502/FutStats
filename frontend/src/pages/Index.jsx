@@ -54,7 +54,7 @@ const Index = () => {
       .get('http://localhost:8000/api/ultimas_partidas/')
       .then((response) => {
         const matches = response.data.map((match) => ({
-          matchId: match.match_id,
+          matchId: match.id,
           homeTeam: match.home_team,
           awayTeam: match.away_team,
           homeLogo: match.home_logo,
@@ -168,7 +168,7 @@ const Index = () => {
                       Média de Gols/Jogo
                     </span>
                     <span className="font-bold text-base text-foreground">
-                      2.4
+                      EM BREVE
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-2">
@@ -176,7 +176,7 @@ const Index = () => {
                       Time com Mais Vitórias
                     </span>
                     <span className="font-bold text-base text-foreground">
-                      Flamengo
+                      EM BREVE
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-2">
@@ -184,7 +184,7 @@ const Index = () => {
                       Artilheiro
                     </span>
                     <span className="font-bold text-base text-foreground">
-                      Pedro (15 gols)
+                      EM BREVE
                     </span>
                   </div>
                   <div className="flex justify-between items-center py-2">
@@ -192,7 +192,7 @@ const Index = () => {
                       Liga Mais Ativa
                     </span>
                     <span className="font-bold text-base text-foreground">
-                      Brasileirão
+                      EM BREVE
                     </span>
                   </div>
                 </div>
@@ -210,7 +210,7 @@ const Index = () => {
                       Ver Análises Detalhadas
                     </div>
                     <div className="text-sm text-muted-foreground mt-1">
-                      Acesse relatórios completos
+                      EM BREVE
                     </div>
                   </button>
                   <button className="p-4 text-left rounded-lg border hover:bg-accent transition-colors">
@@ -218,7 +218,7 @@ const Index = () => {
                       Comparar Times
                     </div>
                     <div className="text-sm text-muted-foreground mt-1">
-                      Compare estatísticas
+                      EM BREVE
                     </div>
                   </button>
                 </div>

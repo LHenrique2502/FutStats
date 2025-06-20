@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 urlpatterns = [
+    path('api/partida/<int:id>/', views.match_details, name='partida_detalhe'),
     path('api/estatisticas/', views.estatisticas_gerais, name='estatisticas'),
     path('api/ultimas_partidas/', views.ultimas_partidas, name='ultimas_partidas'),
     path('', views.index, name='index'),
