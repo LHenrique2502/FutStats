@@ -9,6 +9,7 @@ import Jogos from './pages/Jogos';
 import Times from './pages/Times';
 import Ligas from './pages/Ligas';
 import Scouts from './pages/Scouts';
+import Jogadores from './pages/Jogadores';
 import MatchDetails from './pages/MatchDetails';
 import NotFound from './pages/NotFound';
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/times" element={<Times />} />
             <Route path="/ligas" element={<Ligas />} />
             <Route path="/scouts" element={<Scouts />} />
+            <Route path="/jogadores" element={<Jogadores />} />
             <Route path="/partida/:id" element={<MatchDetails />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

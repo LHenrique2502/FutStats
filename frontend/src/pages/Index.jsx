@@ -122,7 +122,7 @@ const Index = () => {
               stats.crescimento_jogadores
             }% este mês`}
             trend={stats.crescimento_jogadores >= 0 ? 'up' : 'down'}
-            href="/scouts"
+            href="/jogadores"
           />
           <StatsCard
             title="Análises Realizadas"
