@@ -1,83 +1,83 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Header from "@/components/Header";
-import StatsCard from "@/components/StatsCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Trophy, Users, Calendar, Search, MapPin, Star } from "lucide-react";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Header from '@/components/Header';
+import StatsCard from '@/components/StatsCard';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Trophy, Users, Calendar, Search, MapPin, Star } from 'lucide-react';
 
 const Ligas = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   // Dados mockados - substituir pela sua API Django
   const leagues = [
     {
       id: 1,
-      name: "Brasileirão Série A",
-      country: "Brasil",
-      season: "2024",
+      name: 'Brasileirão Série A',
+      country: 'Brasil',
+      season: '2024',
       teams: 20,
       matches: 380,
-      logo: "🇧🇷",
-      status: "Ativa",
-      description: "Campeonato Brasileiro de Futebol - Série A",
+      logo: '🇧🇷',
+      status: 'Ativa',
+      description: 'Campeonato Brasileiro de Futebol - Série A',
     },
     {
       id: 2,
-      name: "Copa Libertadores",
-      country: "América do Sul",
-      season: "2024",
+      name: 'Copa Libertadores',
+      country: 'América do Sul',
+      season: '2024',
       teams: 32,
       matches: 125,
-      logo: "🏆",
-      status: "Ativa",
-      description: "Principal competição sul-americana de clubes",
+      logo: '🏆',
+      status: 'Ativa',
+      description: 'Principal competição sul-americana de clubes',
     },
     {
       id: 3,
-      name: "Premier League",
-      country: "Inglaterra",
-      season: "2024/25",
+      name: 'Premier League',
+      country: 'Inglaterra',
+      season: '2024/25',
       teams: 20,
       matches: 380,
-      logo: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      status: "Ativa",
-      description: "Liga inglesa de futebol",
+      logo: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+      status: 'Ativa',
+      description: 'Liga inglesa de futebol',
     },
     {
       id: 4,
-      name: "La Liga",
-      country: "Espanha",
-      season: "2024/25",
+      name: 'La Liga',
+      country: 'Espanha',
+      season: '2024/25',
       teams: 20,
       matches: 380,
-      logo: "🇪🇸",
-      status: "Ativa",
-      description: "Liga espanhola de futebol",
+      logo: '🇪🇸',
+      status: 'Ativa',
+      description: 'Liga espanhola de futebol',
     },
     {
       id: 5,
-      name: "Copa do Brasil",
-      country: "Brasil",
-      season: "2024",
+      name: 'Copa do Brasil',
+      country: 'Brasil',
+      season: '2024',
       teams: 92,
       matches: 184,
-      logo: "🇧🇷",
-      status: "Em andamento",
-      description: "Copa nacional brasileira",
+      logo: '🇧🇷',
+      status: 'Em andamento',
+      description: 'Copa nacional brasileira',
     },
     {
       id: 6,
-      name: "Serie A",
-      country: "Itália",
-      season: "2024/25",
+      name: 'Serie A',
+      country: 'Itália',
+      season: '2024/25',
       teams: 20,
       matches: 380,
-      logo: "🇮🇹",
-      status: "Ativa",
-      description: "Liga italiana de futebol",
+      logo: '🇮🇹',
+      status: 'Ativa',
+      description: 'Liga italiana de futebol',
     },
   ];
 
@@ -164,7 +164,7 @@ const Ligas = () => {
                   <div className="text-3xl">{league.logo}</div>
                   <Badge
                     variant={
-                      league.status === "Ativa" ? "default" : "secondary"
+                      league.status === 'Ativa' ? 'default' : 'secondary'
                     }
                     className="group-hover:scale-105 transition-transform"
                   >

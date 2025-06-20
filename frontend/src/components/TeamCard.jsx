@@ -1,24 +1,23 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Users, Trophy, TrendingUp } from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Users, Trophy, TrendingUp } from "lucide-react";
-
-const TeamCard = ({ 
-  name, 
-  league, 
-  position, 
-  points, 
-  played, 
-  wins, 
-  draws, 
-  losses, 
-  players 
+const TeamCard = ({
+  name,
+  league,
+  position,
+  points,
+  played,
+  wins,
+  draws,
+  losses,
+  players,
 }) => {
   const getPositionColor = () => {
-    if (position <= 4) return "text-green-600";
-    if (position <= 6) return "text-blue-600";
-    if (position >= 18) return "text-red-600";
-    return "text-muted-foreground";
+    if (position <= 4) return 'text-green-600';
+    if (position <= 6) return 'text-blue-600';
+    if (position >= 18) return 'text-red-600';
+    return 'text-muted-foreground';
   };
 
   return (
@@ -39,7 +38,7 @@ const TeamCard = ({
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
@@ -48,7 +47,7 @@ const TeamCard = ({
           </div>
           <span className="font-bold text-lg">{points}</span>
         </div>
-        
+
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="space-y-1">
             <div className="flex justify-between">
@@ -60,7 +59,7 @@ const TeamCard = ({
               <span className="font-medium">{wins}</span>
             </div>
           </div>
-          
+
           <div className="space-y-1">
             <div className="flex justify-between">
               <span className="text-yellow-600">Empates:</span>
@@ -72,7 +71,7 @@ const TeamCard = ({
             </div>
           </div>
         </div>
-        
+
         <div className="flex items-center justify-between pt-2 border-t">
           <div className="flex items-center space-x-2">
             <Users className="h-4 w-4 text-primary" />

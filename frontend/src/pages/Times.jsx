@@ -1,20 +1,20 @@
-import { useState } from "react";
-import Header from "@/components/Header";
-import TeamCard from "@/components/TeamCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Search, Filter, Users, Trophy, Target } from "lucide-react";
+import { useState } from 'react';
+import Header from '@/components/Header';
+import TeamCard from '@/components/TeamCard';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Search, Filter, Users, Trophy, Target } from 'lucide-react';
 
 const Times = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedLeague, setSelectedLeague] = useState("all");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedLeague, setSelectedLeague] = useState('all');
 
   // Dados mockados dos times
   const teams = [
     {
-      name: "Flamengo",
-      league: "Brasileirão Série A",
+      name: 'Flamengo',
+      league: 'Brasileirão Série A',
       position: 1,
       points: 45,
       played: 20,
@@ -24,8 +24,8 @@ const Times = () => {
       players: 28,
     },
     {
-      name: "Palmeiras",
-      league: "Brasileirão Série A",
+      name: 'Palmeiras',
+      league: 'Brasileirão Série A',
       position: 2,
       points: 42,
       played: 20,
@@ -35,8 +35,8 @@ const Times = () => {
       players: 26,
     },
     {
-      name: "São Paulo",
-      league: "Brasileirão Série A",
+      name: 'São Paulo',
+      league: 'Brasileirão Série A',
       position: 5,
       points: 35,
       played: 20,
@@ -46,8 +46,8 @@ const Times = () => {
       players: 25,
     },
     {
-      name: "Corinthians",
-      league: "Brasileirão Série A",
+      name: 'Corinthians',
+      league: 'Brasileirão Série A',
       position: 8,
       points: 28,
       played: 20,
@@ -57,8 +57,8 @@ const Times = () => {
       players: 27,
     },
     {
-      name: "Grêmio",
-      league: "Brasileirão Série A",
+      name: 'Grêmio',
+      league: 'Brasileirão Série A',
       position: 12,
       points: 25,
       played: 20,
@@ -68,8 +68,8 @@ const Times = () => {
       players: 24,
     },
     {
-      name: "Internacional",
-      league: "Brasileirão Série A",
+      name: 'Internacional',
+      league: 'Brasileirão Série A',
       position: 6,
       points: 33,
       played: 20,
@@ -79,8 +79,8 @@ const Times = () => {
       players: 26,
     },
     {
-      name: "Santos",
-      league: "Brasileirão Série B",
+      name: 'Santos',
+      league: 'Brasileirão Série B',
       position: 3,
       points: 38,
       played: 20,
@@ -90,8 +90,8 @@ const Times = () => {
       players: 23,
     },
     {
-      name: "Vasco",
-      league: "Brasileirão Série A",
+      name: 'Vasco',
+      league: 'Brasileirão Série A',
       position: 15,
       points: 22,
       played: 20,
@@ -103,10 +103,10 @@ const Times = () => {
   ];
 
   const leagues = [
-    "all",
-    "Brasileirão Série A",
-    "Brasileirão Série B",
-    "Copa do Brasil",
+    'all',
+    'Brasileirão Série A',
+    'Brasileirão Série B',
+    'Copa do Brasil',
   ];
 
   const filteredTeams = teams.filter((team) => {
@@ -114,7 +114,7 @@ const Times = () => {
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesLeague =
-      selectedLeague === "all" || team.league === selectedLeague;
+      selectedLeague === 'all' || team.league === selectedLeague;
 
     return matchesSearch && matchesLeague;
   });
@@ -205,7 +205,7 @@ const Times = () => {
                 >
                   {leagues.map((league) => (
                     <option key={league} value={league}>
-                      {league === "all" ? "Todas as Ligas" : league}
+                      {league === 'all' ? 'Todas as Ligas' : league}
                     </option>
                   ))}
                 </select>

@@ -8,25 +8,25 @@ import {
   Moon,
   Sun,
   User,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Link, useLocation } from "react-router-dom";
-import { useTheme } from "next-themes";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Link, useLocation } from 'react-router-dom';
+import { useTheme } from 'next-themes';
 
 const Header = () => {
   const location = useLocation();
   const { theme, setTheme } = useTheme();
 
   const navItems = [
-    { path: "/", label: "Início", icon: BarChart3 },
-    { path: "/jogos", label: "Jogos", icon: Trophy },
-    { path: "/times", label: "Times", icon: Users },
-    { path: "/ligas", label: "Ligas", icon: Layers },
-    { path: "/scouts", label: "Scouts", icon: Target },
+    { path: '/', label: 'Início', icon: BarChart3 },
+    { path: '/jogos', label: 'Jogos', icon: Trophy },
+    { path: '/times', label: 'Times', icon: Users },
+    { path: '/ligas', label: 'Ligas', icon: Layers },
+    { path: '/scouts', label: 'Scouts', icon: Target },
   ];
 
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
   return (
@@ -50,7 +50,7 @@ const Header = () => {
                   key={item.path}
                   to={item.path}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 hover:bg-primary-foreground/10 ${
-                    isActive ? "bg-primary-foreground/20" : ""
+                    isActive ? 'bg-primary-foreground/20' : ''
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -67,7 +67,7 @@ const Header = () => {
               onClick={toggleTheme}
               className="hover:bg-primary-foreground/10"
             >
-              {theme === "dark" ? (
+              {theme === 'dark' ? (
                 <Sun className="h-5 w-5" />
               ) : (
                 <Moon className="h-5 w-5" />

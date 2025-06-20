@@ -1,7 +1,7 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Calendar, MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const MatchCard = ({
   homeTeam,
@@ -14,27 +14,27 @@ const MatchCard = ({
   stadium,
   league,
   status,
-  matchId = "1",
+  matchId = '1',
 }) => {
   const getStatusColor = () => {
     switch (status) {
-      case "completed":
-        return "bg-green-600";
+      case 'completed':
+        return 'bg-green-600';
       default:
-        return "bg-blue-500";
+        return 'bg-blue-500';
     }
   };
 
   const getStatusText = () => {
     switch (status) {
-      case "completed":
-        return "FINALIZADO";
+      case 'completed':
+        return 'FINALIZADO';
       default:
-        return "AGENDADO";
+        return 'AGENDADO';
     }
   };
 
-  console.log("Valor de homeLogo:", homeLogo);
+  console.log('Valor de homeLogo:', homeLogo);
 
   return (
     <Link to={`/partida/${matchId}`}>
@@ -62,7 +62,7 @@ const MatchCard = ({
             </div>
 
             <div className="text-center px-4">
-              {status === "completed" &&
+              {status === 'completed' &&
               homeScore !== undefined &&
               awayScore !== undefined ? (
                 <div className="text-3xl font-bold">

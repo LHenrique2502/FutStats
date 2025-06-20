@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
 
 const StatsCard = ({
   title,
@@ -7,24 +7,24 @@ const StatsCard = ({
   icon: Icon,
   description,
   trend,
-  className = "",
+  className = '',
   href,
 }) => {
   const getTrendColor = () => {
     switch (trend) {
-      case "up":
-        return "text-green-600 dark:text-green-400";
-      case "down":
-        return "text-red-600 dark:text-red-400";
+      case 'up':
+        return 'text-green-600 dark:text-green-400';
+      case 'down':
+        return 'text-red-600 dark:text-red-400';
       default:
-        return "text-muted-foreground";
+        return 'text-muted-foreground';
     }
   };
 
   const CardComponent = (
     <Card
       className={`hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${
-        href ? "cursor-pointer" : ""
+        href ? 'cursor-pointer' : ''
       } ${className}`}
     >
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

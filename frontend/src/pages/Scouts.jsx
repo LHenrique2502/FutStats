@@ -1,8 +1,8 @@
-import { useState } from "react";
-import Header from "@/components/Header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
+import { useState } from 'react';
+import Header from '@/components/Header';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import {
   Search,
   Filter,
@@ -12,19 +12,19 @@ import {
   TrendingUp,
   Activity,
   Calendar,
-} from "lucide-react";
+} from 'lucide-react';
 
 const Scouts = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedPosition, setSelectedPosition] = useState("all");
-  const [selectedTeam, setSelectedTeam] = useState("all");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedPosition, setSelectedPosition] = useState('all');
+  const [selectedTeam, setSelectedTeam] = useState('all');
 
   // Dados mockados dos jogadores
   const players = [
     {
-      name: "Gabriel Barbosa",
-      team: "Flamengo",
-      position: "Atacante",
+      name: 'Gabriel Barbosa',
+      team: 'Flamengo',
+      position: 'Atacante',
       age: 27,
       matches: 18,
       goals: 15,
@@ -32,13 +32,13 @@ const Scouts = () => {
       yellowCards: 2,
       redCards: 0,
       rating: 8.3,
-      marketValue: "25M€",
-      lastMatch: "2024-06-10",
+      marketValue: '25M€',
+      lastMatch: '2024-06-10',
     },
     {
-      name: "Endrick",
-      team: "Palmeiras",
-      position: "Atacante",
+      name: 'Endrick',
+      team: 'Palmeiras',
+      position: 'Atacante',
       age: 17,
       matches: 16,
       goals: 12,
@@ -46,13 +46,13 @@ const Scouts = () => {
       yellowCards: 1,
       redCards: 0,
       rating: 7.9,
-      marketValue: "35M€",
-      lastMatch: "2024-06-09",
+      marketValue: '35M€',
+      lastMatch: '2024-06-09',
     },
     {
-      name: "Lucas Paquetá",
-      team: "Brasil/West Ham",
-      position: "Meio-campo",
+      name: 'Lucas Paquetá',
+      team: 'Brasil/West Ham',
+      position: 'Meio-campo',
       age: 26,
       matches: 20,
       goals: 6,
@@ -60,13 +60,13 @@ const Scouts = () => {
       yellowCards: 3,
       redCards: 0,
       rating: 8.1,
-      marketValue: "40M€",
-      lastMatch: "2024-06-08",
+      marketValue: '40M€',
+      lastMatch: '2024-06-08',
     },
     {
-      name: "Alisson Becker",
-      team: "Brasil/Liverpool",
-      position: "Goleiro",
+      name: 'Alisson Becker',
+      team: 'Brasil/Liverpool',
+      position: 'Goleiro',
       age: 30,
       matches: 22,
       goals: 0,
@@ -74,13 +74,13 @@ const Scouts = () => {
       yellowCards: 1,
       redCards: 0,
       rating: 8.5,
-      marketValue: "45M€",
-      lastMatch: "2024-06-11",
+      marketValue: '45M€',
+      lastMatch: '2024-06-11',
     },
     {
-      name: "Casemiro",
-      team: "Brasil/Manchester United",
-      position: "Meio-campo",
+      name: 'Casemiro',
+      team: 'Brasil/Manchester United',
+      position: 'Meio-campo',
       age: 31,
       matches: 19,
       goals: 3,
@@ -88,13 +88,13 @@ const Scouts = () => {
       yellowCards: 5,
       redCards: 1,
       rating: 7.6,
-      marketValue: "30M€",
-      lastMatch: "2024-06-07",
+      marketValue: '30M€',
+      lastMatch: '2024-06-07',
     },
     {
-      name: "Vinicius Jr.",
-      team: "Brasil/Real Madrid",
-      position: "Atacante",
+      name: 'Vinicius Jr.',
+      team: 'Brasil/Real Madrid',
+      position: 'Atacante',
       age: 23,
       matches: 21,
       goals: 18,
@@ -102,13 +102,13 @@ const Scouts = () => {
       yellowCards: 4,
       redCards: 0,
       rating: 8.7,
-      marketValue: "120M€",
-      lastMatch: "2024-06-12",
+      marketValue: '120M€',
+      lastMatch: '2024-06-12',
     },
     {
-      name: "Marquinhos",
-      team: "Brasil/PSG",
-      position: "Zagueiro",
+      name: 'Marquinhos',
+      team: 'Brasil/PSG',
+      position: 'Zagueiro',
       age: 29,
       matches: 24,
       goals: 2,
@@ -116,13 +116,13 @@ const Scouts = () => {
       yellowCards: 2,
       redCards: 0,
       rating: 8.2,
-      marketValue: "50M€",
-      lastMatch: "2024-06-10",
+      marketValue: '50M€',
+      lastMatch: '2024-06-10',
     },
     {
-      name: "Rodrygo",
-      team: "Brasil/Real Madrid",
-      position: "Atacante",
+      name: 'Rodrygo',
+      team: 'Brasil/Real Madrid',
+      position: 'Atacante',
       age: 22,
       matches: 19,
       goals: 14,
@@ -130,45 +130,45 @@ const Scouts = () => {
       yellowCards: 1,
       redCards: 0,
       rating: 8.0,
-      marketValue: "80M€",
-      lastMatch: "2024-06-11",
+      marketValue: '80M€',
+      lastMatch: '2024-06-11',
     },
   ];
 
-  const positions = ["all", "Goleiro", "Zagueiro", "Meio-campo", "Atacante"];
-  const teams = ["all", ...new Set(players.map((p) => p.team))];
+  const positions = ['all', 'Goleiro', 'Zagueiro', 'Meio-campo', 'Atacante'];
+  const teams = ['all', ...new Set(players.map((p) => p.team))];
 
   const filteredPlayers = players.filter((player) => {
     const matchesSearch = player.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesPosition =
-      selectedPosition === "all" || player.position === selectedPosition;
-    const matchesTeam = selectedTeam === "all" || player.team === selectedTeam;
+      selectedPosition === 'all' || player.position === selectedPosition;
+    const matchesTeam = selectedTeam === 'all' || player.team === selectedTeam;
 
     return matchesSearch && matchesPosition && matchesTeam;
   });
 
   const getPositionColor = (position) => {
     switch (position) {
-      case "Goleiro":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-      case "Zagueiro":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
-      case "Meio-campo":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "Atacante":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+      case 'Goleiro':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+      case 'Zagueiro':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+      case 'Meio-campo':
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+      case 'Atacante':
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
     }
   };
 
   const getRatingColor = (rating) => {
-    if (rating >= 8.5) return "text-green-600 font-bold";
-    if (rating >= 8.0) return "text-green-500 font-semibold";
-    if (rating >= 7.5) return "text-yellow-600 font-semibold";
-    return "text-red-500 font-semibold";
+    if (rating >= 8.5) return 'text-green-600 font-bold';
+    if (rating >= 8.0) return 'text-green-500 font-semibold';
+    if (rating >= 7.5) return 'text-yellow-600 font-semibold';
+    return 'text-red-500 font-semibold';
   };
 
   const totalGoals = players.reduce((sum, player) => sum + player.goals, 0);
@@ -265,7 +265,7 @@ const Scouts = () => {
                   >
                     {positions.map((position) => (
                       <option key={position} value={position}>
-                        {position === "all" ? "Todas as Posições" : position}
+                        {position === 'all' ? 'Todas as Posições' : position}
                       </option>
                     ))}
                   </select>
@@ -279,7 +279,7 @@ const Scouts = () => {
                   >
                     {teams.map((team) => (
                       <option key={team} value={team}>
-                        {team === "all" ? "Todos os Times" : team}
+                        {team === 'all' ? 'Todos os Times' : team}
                       </option>
                     ))}
                   </select>

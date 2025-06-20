@@ -1,19 +1,19 @@
-import { useState } from "react";
-import Header from "@/components/Header";
-import MatchCard from "@/components/MatchCard";
-import StatsCard from "@/components/StatsCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
+import { useState } from 'react';
+import Header from '@/components/Header';
+import MatchCard from '@/components/MatchCard';
+import StatsCard from '@/components/StatsCard';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Trophy,
   Target,
@@ -23,71 +23,71 @@ import {
   Activity,
   Calendar,
   Filter,
-} from "lucide-react";
+} from 'lucide-react';
 
 const Jogos = () => {
-  const [selectedLeague, setSelectedLeague] = useState("all");
-  const [selectedTeam, setSelectedTeam] = useState("all");
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedLeague, setSelectedLeague] = useState('all');
+  const [selectedTeam, setSelectedTeam] = useState('all');
+  const [selectedDate, setSelectedDate] = useState('');
 
   // Dados mockados - substituir pela sua API Django
   const matches = [
     {
-      matchId: "1",
-      homeTeam: "Flamengo",
-      awayTeam: "Palmeiras",
+      matchId: '1',
+      homeTeam: 'Flamengo',
+      awayTeam: 'Palmeiras',
       homeScore: 2,
       awayScore: 1,
-      date: "2024-06-10 20:00",
-      stadium: "Maracanã",
-      league: "Brasileirão",
-      status: "completed",
+      date: '2024-06-10 20:00',
+      stadium: 'Maracanã',
+      league: 'Brasileirão',
+      status: 'completed',
     },
     {
-      matchId: "2",
-      homeTeam: "São Paulo",
-      awayTeam: "Corinthians",
-      date: "2024-06-11 21:45",
-      stadium: "Morumbi",
-      league: "Brasileirão",
-      status: "live",
+      matchId: '2',
+      homeTeam: 'São Paulo',
+      awayTeam: 'Corinthians',
+      date: '2024-06-11 21:45',
+      stadium: 'Morumbi',
+      league: 'Brasileirão',
+      status: 'live',
     },
     {
-      matchId: "3",
-      homeTeam: "Grêmio",
-      awayTeam: "Internacional",
-      date: "2024-06-12 19:00",
-      stadium: "Arena do Grêmio",
-      league: "Brasileirão",
-      status: "upcoming",
+      matchId: '3',
+      homeTeam: 'Grêmio',
+      awayTeam: 'Internacional',
+      date: '2024-06-12 19:00',
+      stadium: 'Arena do Grêmio',
+      league: 'Brasileirão',
+      status: 'upcoming',
     },
     {
-      matchId: "4",
-      homeTeam: "Boca Juniors",
-      awayTeam: "River Plate",
+      matchId: '4',
+      homeTeam: 'Boca Juniors',
+      awayTeam: 'River Plate',
       homeScore: 1,
       awayScore: 0,
-      date: "2024-06-09 21:30",
-      stadium: "La Bombonera",
-      league: "Copa Libertadores",
-      status: "completed",
+      date: '2024-06-09 21:30',
+      stadium: 'La Bombonera',
+      league: 'Copa Libertadores',
+      status: 'completed',
     },
     {
-      matchId: "5",
-      homeTeam: "Santos",
-      awayTeam: "Vasco",
-      date: "2024-06-13 16:00",
-      stadium: "Vila Belmiro",
-      league: "Brasileirão",
-      status: "upcoming",
+      matchId: '5',
+      homeTeam: 'Santos',
+      awayTeam: 'Vasco',
+      date: '2024-06-13 16:00',
+      stadium: 'Vila Belmiro',
+      league: 'Brasileirão',
+      status: 'upcoming',
     },
   ];
 
   const filteredMatches = matches.filter((match) => {
     const matchesLeague =
-      selectedLeague === "all" || match.league === selectedLeague;
+      selectedLeague === 'all' || match.league === selectedLeague;
     const matchesTeam =
-      selectedTeam === "all" ||
+      selectedTeam === 'all' ||
       match.homeTeam === selectedTeam ||
       match.awayTeam === selectedTeam;
     const matchesDate = !selectedDate || match.date.includes(selectedDate);
@@ -96,20 +96,20 @@ const Jogos = () => {
   });
 
   const leagues = [
-    "all",
+    'all',
     ...Array.from(new Set(matches.map((match) => match.league))),
   ];
   const teams = [
-    "all",
+    'all',
     ...Array.from(
       new Set(matches.flatMap((match) => [match.homeTeam, match.awayTeam]))
     ),
   ];
 
   const clearFilters = () => {
-    setSelectedLeague("all");
-    setSelectedTeam("all");
-    setSelectedDate("");
+    setSelectedLeague('all');
+    setSelectedTeam('all');
+    setSelectedDate('');
   };
 
   return (
@@ -250,7 +250,7 @@ const Jogos = () => {
             <TabsContent value="live" className="space-y-6 mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredMatches
-                  .filter((match) => match.status === "live")
+                  .filter((match) => match.status === 'live')
                   .map((match, index) => (
                     <MatchCard key={index} {...match} />
                   ))}
@@ -260,7 +260,7 @@ const Jogos = () => {
             <TabsContent value="completed" className="space-y-6 mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredMatches
-                  .filter((match) => match.status === "completed")
+                  .filter((match) => match.status === 'completed')
                   .map((match, index) => (
                     <MatchCard key={index} {...match} />
                   ))}
@@ -285,7 +285,7 @@ const Jogos = () => {
                     (match) => match.league === league
                   );
                   const completedMatches = leagueMatches.filter(
-                    (match) => match.status === "completed"
+                    (match) => match.status === 'completed'
                   );
                   const totalGoals = completedMatches.reduce(
                     (sum, match) =>
@@ -295,7 +295,7 @@ const Jogos = () => {
                   const avgGoals =
                     completedMatches.length > 0
                       ? (totalGoals / completedMatches.length).toFixed(1)
-                      : "0.0";
+                      : '0.0';
 
                   return (
                     <div

@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import Header from "@/components/Header";
-import StatsCard from "@/components/StatsCard";
-import MatchCard from "@/components/MatchCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect } from 'react';
+import Header from '@/components/Header';
+import StatsCard from '@/components/StatsCard';
+import MatchCard from '@/components/MatchCard';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   BarChart3,
   Trophy,
@@ -10,8 +10,8 @@ import {
   TrendingUp,
   Calendar,
   Activity,
-} from "lucide-react";
-import axios from "axios";
+} from 'lucide-react';
+import axios from 'axios';
 
 const Index = () => {
   const [stats, setStats] = useState({
@@ -27,12 +27,12 @@ const Index = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/estatisticas/")
+      .get('http://localhost:8000/api/estatisticas/')
       .then((response) => {
         setStats(response.data);
       })
       .catch((error) => {
-        console.error("Erro ao carregar estatísticas:", error);
+        console.error('Erro ao carregar estatísticas:', error);
       });
   }, []);
 
@@ -51,7 +51,7 @@ const Index = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/ultimas_partidas/")
+      .get('http://localhost:8000/api/ultimas_partidas/')
       .then((response) => {
         const matches = response.data.map((match) => ({
           matchId: match.match_id,
@@ -68,7 +68,7 @@ const Index = () => {
         }));
         setRecentMatches(matches);
       })
-      .catch((error) => console.error("Erro ao carregar os jogos:", error));
+      .catch((error) => console.error('Erro ao carregar os jogos:', error));
   }, []);
 
   return (
@@ -86,8 +86,8 @@ const Index = () => {
               Bem-vindo ao sistema de análise de futebol
             </p>
             <p className="text-sm text-muted-foreground mt-1">
-              {currentTime.toLocaleDateString("pt-BR")} às{" "}
-              {currentTime.toLocaleTimeString("pt-BR")}
+              {currentTime.toLocaleDateString('pt-BR')} às{' '}
+              {currentTime.toLocaleTimeString('pt-BR')}
             </p>
           </div>
         </div>
@@ -98,30 +98,30 @@ const Index = () => {
             title="Total de Jogos"
             value={stats.total_jogos}
             icon={Trophy}
-            description={`${stats.crescimento_jogos >= 0 ? "+" : ""}${
+            description={`${stats.crescimento_jogos >= 0 ? '+' : ''}${
               stats.crescimento_jogos
             }% este mês`}
-            trend={stats.crescimento_jogos >= 0 ? "up" : "down"}
+            trend={stats.crescimento_jogos >= 0 ? 'up' : 'down'}
             href="/jogos"
           />
           <StatsCard
             title="Times Cadastrados"
             value={stats.total_times}
             icon={Users}
-            description={`${stats.crescimento_times >= 0 ? "+" : ""}${
+            description={`${stats.crescimento_times >= 0 ? '+' : ''}${
               stats.crescimento_times
             }% este mês`}
-            trend={stats.crescimento_times >= 0 ? "up" : "down"}
+            trend={stats.crescimento_times >= 0 ? 'up' : 'down'}
             href="/times"
           />
           <StatsCard
             title="Jogadores"
             value={stats.total_jogadores}
             icon={Activity}
-            description={`${stats.crescimento_jogadores >= 0 ? "+" : ""}${
+            description={`${stats.crescimento_jogadores >= 0 ? '+' : ''}${
               stats.crescimento_jogadores
             }% este mês`}
-            trend={stats.crescimento_jogadores >= 0 ? "up" : "down"}
+            trend={stats.crescimento_jogadores >= 0 ? 'up' : 'down'}
             href="/scouts"
           />
           <StatsCard
