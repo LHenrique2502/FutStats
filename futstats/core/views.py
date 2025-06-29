@@ -1,9 +1,22 @@
 from django.utils import timezone
+import requests
+from datetime import datetime
 from datetime import timedelta
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.db.models import Q
 from .models import League, Team, Player, Match, MatchEvent, TeamStatistics  # ou .models se o model estiver no mesmo app
+from dotenv import load_dotenv
+import os
+from telegram import Bot
+
+load_dotenv() # Carrega o conteúdo do .env
+
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHANNEL_ID  = os.getenv("TELEGRAM_CHANNEL_ID")
+
+bot = Bot(token=TELEGRAM_BOT_TOKEN)
 
 def index(request):
     return render(request, 'futstats/index.html')
@@ -264,3 +277,86 @@ def match_details(request, id):
     }
 
     return JsonResponse(data, safe=False)
+
+def enviar_mensagem_telegram(texto):
+    url = f'https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage'
+    payload = {
+        'chat_id': TELEGRAM_CHANNEL_ID,
+        'text': texto,
+        'parse_mode': 'Markdown'
+    }
+    response = requests.post(url, data=payload)
+    return response.ok
+
+def analisar_e_enviar_telegram():
+    print("\n🔍 Iniciando análise e envio para Telegram...\n")
+
+    todos_times = Team.objects.all()
+
+    def calcular_gols(matches, time):
+        feitos = 0
+        sofridos = 0
+        for m in matches:
+            if m.home_team == time:
+                feitos += m.home_score or 0
+                sofridos += m.away_score or 0
+            elif m.away_team == time:
+                feitos += m.away_score or 0
+                sofridos += m.home_score or 0
+        return feitos, sofridos
+
+    mensagens = []
+
+    for time in todos_times:
+        proximo_jogo = Match.objects.filter(
+            Q(home_team=time) | Q(away_team=time),
+            date__gte=timezone.now()
+        ).order_by('date').first()
+
+        if not proximo_jogo:
+            continue
+
+        adversario = proximo_jogo.away_team if proximo_jogo.home_team == time else proximo_jogo.home_team
+
+        ultimos_time = Match.objects.filter(
+            Q(home_team=time) | Q(away_team=time),
+            date__lt=proximo_jogo.date
+        ).order_by('-date')[:5]
+
+        ultimos_adversario = Match.objects.filter(
+            Q(home_team=adversario) | Q(away_team=adversario),
+            date__lt=proximo_jogo.date
+        ).order_by('-date')[:5]
+
+        gols_time, _ = calcular_gols(ultimos_time, time)
+        gols_adv, _ = calcular_gols(ultimos_adversario, adversario)
+
+        media_gols_time = gols_time / len(ultimos_time) if ultimos_time else 0
+        media_gols_adv = gols_adv / len(ultimos_adversario) if ultimos_adversario else 0
+
+        sugestao = None
+        if media_gols_time >= 1.5 and media_gols_adv >= 1.5:
+            sugestao = "Mais de 2.5 gols"
+        elif media_gols_time >= 1.2 and media_gols_adv >= 1.2:
+            sugestao = "Ambos marcam: Sim"
+        elif media_gols_time >= 1.5:
+            sugestao = f"{time.name} marca 1.5+ gols"
+        elif media_gols_adv >= 1.5:
+            sugestao = f"{adversario.name} marca 1.5+ gols"
+
+        if sugestao:
+            jogo_str = f"{proximo_jogo.home_team.name} x {proximo_jogo.away_team.name} ({proximo_jogo.date.strftime('%Y-%m-%d %H:%M')})"
+            mensagem = f"✅ *Sugestão de aposta*\n{jogo_str}\nSugestão: *{sugestao}*"
+            mensagens.append(mensagem)
+
+    if mensagens:
+        texto = "\n\n".join(mensagens)
+        sucesso = enviar_mensagem_telegram(texto)
+        if sucesso:
+            print("✅ Mensagem enviada para o canal do Telegram.")
+        else:
+            print("❌ Erro ao enviar a mensagem para o canal.")
+    else:
+        print("⚠️ Nenhuma sugestão para enviar.")
+
+    print("\n✔️ Análise e envio finalizados.")

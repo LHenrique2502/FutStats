@@ -1,6 +1,7 @@
 import requests
 import os
 from dotenv import load_dotenv
+from datetime import datetime
 from core.models import League, Team, Match, MatchEvent, TeamStatistics
 
 load_dotenv() # Carrega o conteúdo do .env
@@ -137,11 +138,22 @@ def get_match():
     teams = Team.objects.all()
     request_count = 0
 
+    # Busca a data da última partida no banco
+    ultima_partida = Match.objects.order_by('-date').first()
+    if ultima_partida:
+        data_inicio = ultima_partida.date.strftime('%Y-%m-%d')
+    else:
+        # Se não houver partidas no banco, define uma data inicial padrão
+        data_inicio = '2023-01-01'
+
+    print(f"🔍 Buscando partidas a partir de {data_inicio}")
+
     for team in teams:
         url = f"https://{API_URL}/v3/fixtures"
         params = {
             "team": team.api_id,
             "season": team.league.season,
+            "from": data_inicio,  # Busca só jogos a partir desta data
         }
         response = requests.get(url, headers=HEADERS, params=params)
         request_count += 1
@@ -156,12 +168,10 @@ def get_match():
                 score_data = item.get("score", {})  # onde ficam os pênaltis
                 venue_data = fixture_data.get("venue", {})
 
-                # Verifica se a liga já existe no banco
                 league_obj = League.objects.filter(api_id=league_data.get("id")).first()
                 if not league_obj:
-                    continue  # Ignora partidas de ligas não cadastradas
+                    continue
 
-                # Criar ou obter times
                 home_data = teams_data.get("home", {})
                 away_data = teams_data.get("away", {})
 
@@ -175,7 +185,6 @@ def get_match():
                     defaults={"name": away_data.get("name"), "league": league_obj}
                 )
 
-                # Salvar ou atualizar a partida
                 Match.objects.update_or_create(
                     api_id=fixture_data.get("id"),
                     defaults={
@@ -185,7 +194,6 @@ def get_match():
                         'venue_city': venue_data.get('city'),
                         'venue_capacity': venue_data.get('capacity'),
                         'referee': fixture_data.get('referee'),
-
                         'home_team': home_team_obj,
                         'away_team': away_team_obj,
                         'home_score': goals_data.get('home'),
@@ -195,10 +203,10 @@ def get_match():
                     }
                 )
         else:
-            print(f"Erro ao buscar partidas do time {team.name}: {response.status_code} - {response.text}")
+            print(f"❌ Erro ao buscar partidas do time {team.name}: {response.status_code} - {response.text}")
 
         if request_count % 30 == 0:
-            print("Limite de 30 requisições atingido. Aguardando 100 segundos...")
+            print("⏱️ Limite de 30 requisições atingido. Aguardando 100 segundos...")
             time.sleep(100)
 
 
