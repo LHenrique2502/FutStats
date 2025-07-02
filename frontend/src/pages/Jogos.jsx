@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import Header from '@/components/Header';
 import MatchCard from '@/components/MatchCard';
 import StatsCard from '@/components/StatsCard';
@@ -26,91 +27,59 @@ import {
 } from 'lucide-react';
 
 const Jogos = () => {
+  const today = new Date().toISOString().split('T')[0];
+
   const [selectedLeague, setSelectedLeague] = useState('all');
   const [selectedTeam, setSelectedTeam] = useState('all');
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState(today);
 
-  // Dados mockados - substituir pela sua API Django
-  const matches = [
-    {
-      matchId: '1',
-      homeTeam: 'Flamengo',
-      awayTeam: 'Palmeiras',
-      homeScore: 2,
-      awayScore: 1,
-      date: '2024-06-10 20:00',
-      stadium: 'Maracanã',
-      league: 'Brasileirão',
-      status: 'completed',
-    },
-    {
-      matchId: '2',
-      homeTeam: 'São Paulo',
-      awayTeam: 'Corinthians',
-      date: '2024-06-11 21:45',
-      stadium: 'Morumbi',
-      league: 'Brasileirão',
-      status: 'live',
-    },
-    {
-      matchId: '3',
-      homeTeam: 'Grêmio',
-      awayTeam: 'Internacional',
-      date: '2024-06-12 19:00',
-      stadium: 'Arena do Grêmio',
-      league: 'Brasileirão',
-      status: 'upcoming',
-    },
-    {
-      matchId: '4',
-      homeTeam: 'Boca Juniors',
-      awayTeam: 'River Plate',
-      homeScore: 1,
-      awayScore: 0,
-      date: '2024-06-09 21:30',
-      stadium: 'La Bombonera',
-      league: 'Copa Libertadores',
-      status: 'completed',
-    },
-    {
-      matchId: '5',
-      homeTeam: 'Santos',
-      awayTeam: 'Vasco',
-      date: '2024-06-13 16:00',
-      stadium: 'Vila Belmiro',
-      league: 'Brasileirão',
-      status: 'upcoming',
-    },
-  ];
+  const [matches, setMatches] = useState([]);
+  const [leagues, setLeagues] = useState(['all']);
+  const [teams, setTeams] = useState(['all']);
 
-  const filteredMatches = matches.filter((match) => {
-    const matchesLeague =
-      selectedLeague === 'all' || match.league === selectedLeague;
-    const matchesTeam =
-      selectedTeam === 'all' ||
-      match.homeTeam === selectedTeam ||
-      match.awayTeam === selectedTeam;
-    const matchesDate = !selectedDate || match.date.includes(selectedDate);
+  const [leagueStats, setLeagueStats] = useState([]);
 
-    return matchesLeague && matchesTeam && matchesDate;
-  });
-
-  const leagues = [
-    'all',
-    ...Array.from(new Set(matches.map((match) => match.league))),
-  ];
-  const teams = [
-    'all',
-    ...Array.from(
-      new Set(matches.flatMap((match) => [match.homeTeam, match.awayTeam]))
-    ),
-  ];
+  const buscarPartidas = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/api/matches/', {
+        params: {
+          date: selectedDate,
+          league: selectedLeague !== 'all' ? selectedLeague : '',
+          team: selectedTeam !== 'all' ? selectedTeam : '',
+        },
+      });
+      setMatches(response.data);
+    } catch (error) {
+      console.error('Erro ao buscar partidas:', error);
+    }
+  };
 
   const clearFilters = () => {
     setSelectedLeague('all');
     setSelectedTeam('all');
-    setSelectedDate('');
+    setSelectedDate(today);
+    buscarPartidas();
   };
+
+  useEffect(() => {
+    const fetchFiltros = async () => {
+      try {
+        const [ligasRes, timesRes] = await Promise.all([
+          axios.get('http://localhost:8000/api/ligas/'),
+          axios.get('http://localhost:8000/api/times/'),
+        ]);
+        setLeagues(['all', ...ligasRes.data]);
+        setTeams(['all', ...timesRes.data]);
+      } catch (error) {
+        console.error('Erro ao buscar filtros:', error);
+      }
+    };
+
+    fetchFiltros();
+    buscarPartidas(); // carrega os jogos iniciais
+  }, []);
+
+  const filteredMatches = matches;
 
   return (
     <div className="min-h-screen bg-background">
@@ -125,7 +94,7 @@ const Jogos = () => {
           </p>
         </div>
 
-        {/* Estatísticas Gerais dos Jogos - Grid ajustado */}
+        {/* Estatísticas Gerais dos Jogos */}
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6 animate-fade-in-up">
           <StatsCard
             title="Jogos Filtrados"
@@ -150,7 +119,7 @@ const Jogos = () => {
           />
           <StatsCard
             title="Ligas Ativas"
-            value="12"
+            value={leagues.length - 1}
             icon={BarChart3}
             description="Em 8 países"
             trend="neutral"
@@ -191,10 +160,9 @@ const Jogos = () => {
                     <SelectValue placeholder="Filtrar por liga" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Todas as Ligas</SelectItem>
-                    {leagues.slice(1).map((league) => (
+                    {leagues.map((league) => (
                       <SelectItem key={league} value={league}>
-                        {league}
+                        {league === 'all' ? 'Todas as Ligas' : league}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -208,22 +176,27 @@ const Jogos = () => {
                     <SelectValue placeholder="Filtrar por time" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Todos os Times</SelectItem>
-                    {teams.slice(1).map((team) => (
+                    {teams.map((team) => (
                       <SelectItem key={team} value={team}>
-                        {team}
+                        {team === 'all' ? 'Todos os Times' : team}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="flex items-end">
+              <div className="flex items-end space-x-2">
+                <button
+                  onClick={buscarPartidas}
+                  className="px-4 py-2 text-sm bg-primary text-white hover:bg-primary/90 rounded-md transition-colors w-full"
+                >
+                  Buscar
+                </button>
                 <button
                   onClick={clearFilters}
                   className="px-4 py-2 text-sm bg-secondary hover:bg-secondary/80 rounded-md transition-colors w-full"
                 >
-                  Limpar Filtros
+                  Limpar
                 </button>
               </div>
             </div>
@@ -269,7 +242,7 @@ const Jogos = () => {
           </Tabs>
         </div>
 
-        {/* Estatísticas Detalhadas - Grid ajustado */}
+        {/* Estatísticas Detalhadas */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in-up">
           <Card>
             <CardHeader>
@@ -280,40 +253,43 @@ const Jogos = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {leagues.slice(1).map((league) => {
-                  const leagueMatches = matches.filter(
-                    (match) => match.league === league
-                  );
-                  const completedMatches = leagueMatches.filter(
-                    (match) => match.status === 'completed'
-                  );
-                  const totalGoals = completedMatches.reduce(
-                    (sum, match) =>
-                      sum + (match.homeScore || 0) + (match.awayScore || 0),
-                    0
-                  );
-                  const avgGoals =
-                    completedMatches.length > 0
-                      ? (totalGoals / completedMatches.length).toFixed(1)
-                      : '0.0';
+                {leagues
+                  .filter((league) => league !== 'all')
+                  .map((league) => {
+                    const leagueMatches = matches.filter(
+                      (match) => match.league === league
+                    );
+                    const completedMatches = leagueMatches.filter(
+                      (match) => match.status === 'completed'
+                    );
+                    const totalGoals = completedMatches.reduce(
+                      (sum, match) =>
+                        sum + (match.homeScore || 0) + (match.awayScore || 0),
+                      0
+                    );
+                    const avgGoals =
+                      completedMatches.length > 0
+                        ? (totalGoals / completedMatches.length).toFixed(1)
+                        : '0.0';
 
-                  return (
-                    <div
-                      key={league}
-                      className="flex justify-between items-center p-3 rounded-lg border"
-                    >
-                      <div>
-                        <div className="font-medium">{league}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {leagueMatches.length} jogos • Média: {avgGoals} gols
+                    return (
+                      <div
+                        key={league}
+                        className="flex justify-between items-center p-3 rounded-lg border"
+                      >
+                        <div>
+                          <div className="font-medium">{league}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {leagueMatches.length} jogos • Média: {avgGoals}{' '}
+                            gols
+                          </div>
                         </div>
+                        <Badge variant="outline">
+                          {completedMatches.length} finalizados
+                        </Badge>
                       </div>
-                      <Badge variant="outline">
-                        {completedMatches.length} finalizados
-                      </Badge>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
             </CardContent>
           </Card>

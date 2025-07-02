@@ -14,7 +14,7 @@ const MatchCard = ({
   stadium,
   league,
   status,
-  matchId = '1',
+  matchId,
 }) => {
   const getStatusColor = () => {
     switch (status) {

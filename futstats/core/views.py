@@ -5,7 +5,7 @@ from datetime import timedelta
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.db.models import Q
+from django.db.models import Avg, Count, Q, F, Sum
 from .models import League, Team, Player, Match, MatchEvent, TeamStatistics  # ou .models se o model estiver no mesmo app
 from dotenv import load_dotenv
 import os
@@ -22,38 +22,12 @@ def index(request):
     return render(request, 'futstats/index.html')
 
 def listar_ligas(request):
-    ligas = League.objects.all().order_by('country', 'name')
-    return render(request, 'futstats/listar_ligas.html', {'ligas': ligas})
+    ligas = League.objects.values_list('name', flat=True).distinct().order_by('name')
+    return JsonResponse(list(ligas), safe=False)
 
 def listar_times(request):
-    nome = request.GET.get('nome', '')
-    pais = request.GET.get('pais', '')
-    liga = request.GET.get('liga', '')
-
-    times = Team.objects.all()
-
-    if nome:
-        times = times.filter(name__icontains=nome)
-    if pais:
-        times = times.filter(country__icontains=pais)
-    if liga:
-        times = times.filter(league__name__icontains=liga)
-
-    # Obter todos os valores únicos para os filtros
-    paises = Team.objects.values_list('country', flat=True).exclude(country='').values_list('country', flat=True).distinct().order_by('country')
-    ligas = League.objects.values_list('name', flat=True).distinct().order_by('name')
-
-    paginator = Paginator(times, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    context = {
-        'page_obj': page_obj,
-        'paises': paises,
-        'ligas': ligas,
-        'request': request,  # para manter os valores no form
-    }
-    return render(request, 'futstats/listar_times.html', context)
+    times = Team.objects.values_list('name', flat=True).distinct().order_by('name')
+    return JsonResponse(list(times), safe=False)
 
 def listar_jogadores(request):
     nome = request.GET.get('nome', '')
@@ -95,46 +69,38 @@ def listar_jogadores(request):
 
 def listar_partidas(request):
     date = request.GET.get('date', '')
-    league = request.GET.get('name', '')
-    home_team = request.GET.get('name', '')
-    away_team = request.GET.get('name', '')
-    home_score = request.GET.get('home_score', '')
-    away_score = request.GET.get('away_score', '')
+    league = request.GET.get('league', '')
+    team = request.GET.get('team', '')
 
-    partidas = Match.objects.all()
+    partidas = Match.objects.select_related('home_team', 'away_team', 'league').all()
 
     if date:
-        partidas = partidas.filter(date__icontains=date)
+        partidas = partidas.filter(date__date=date)
     if league:
-        partidas = partidas.filter(league__icontains=league)
-    if home_team:
-        partidas = partidas.filter(name__icontains=home_team)
-    if away_team:
-        partidas = partidas.filter(name__icontains=away_team)
-    if home_score:
-        partidas = partidas.filter(home_score__icontains=home_score)
-    if away_score:
-        partidas = partidas.filter(away_score__icontains=away_score)
+        partidas = partidas.filter(league__name__icontains=league)
+    if team:
+        partidas = partidas.filter(
+            Q(home_team__name__icontains=team) |
+            Q(away_team__name__icontains=team)
+        )
 
-    # Obter todos os valores únicos para os filtros
-    date = Match.objects.values_list('date', flat=True).distinct().order_by('date')
-    ligas = League.objects.values_list('name', flat=True).distinct().order_by('name')
-    time = Team.objects.values_list('name', flat=True).distinct().order_by('name')
+    data = []
+    for partida in partidas:
+        data.append({
+            'matchId': partida.id,
+            'homeTeam': partida.home_team.name,
+            'awayTeam': partida.away_team.name,
+            'homeLogo': partida.home_team.logo,
+            'awayLogo': partida.away_team.logo,
+            'homeScore': partida.home_score,
+            'awayScore': partida.away_score,
+            'date': partida.date.strftime('%Y-%m-%d %H:%M'),
+            'stadium': partida.venue_name,
+            'league': partida.league.name,
+            # 'status': partida.status,
+        })
 
-    # Paginação
-    paginator = Paginator(partidas, 10)
-    page_number = request.GET.get('page')
-    page_obj_match = paginator.get_page(page_number)
-
-    context = {
-        'page_obj_match': page_obj_match,
-        'date': date,
-        'ligas': ligas,
-        'time': time,
-        'request': request,  # para manter os valores no form
-    }
-
-    return render(request, 'futstats/listar_partidas.html', context)
+    return JsonResponse(data, safe=False)
 
 # COMMIT-BEFORE: VIEW DE TESTE
 def ultimas_partidas(request):
@@ -360,3 +326,29 @@ def analisar_e_enviar_telegram():
         print("⚠️ Nenhuma sugestão para enviar.")
 
     print("\n✔️ Análise e envio finalizados.")
+
+def card_estatisticas_por_ligas(request):
+    ligas = Match.objects.values('league').distinct()
+    resultado = []
+
+    for liga in ligas:
+        nome_liga = liga['league']
+        jogos_liga = Match.objects.filter(league=nome_liga)
+        jogos_finalizados = jogos_liga.filter(status='completed')
+
+        total_jogos = jogos_liga.count()
+        total_finalizados = jogos_finalizados.count()
+
+        # Média de gols soma dos gols da casa + fora divididos pelo total de jogos finalizados
+        media_gols = jogos_finalizados.aggregate(
+            avg_goals=Avg(F('homeScore') + F('awayScore'))
+        )['avg_goals'] or 0
+
+        resultado.append({
+            'league': nome_liga,
+            'total_matches': total_jogos,
+            'completed_matches': total_finalizados,
+            'average_goals': round(media_gols, 2),
+        })
+
+    return JsonResponse(resultado, safe=False)
