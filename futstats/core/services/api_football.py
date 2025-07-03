@@ -199,96 +199,103 @@ def get_match():
         time.sleep(2)
 
 def import_match_details():
-    # Só seleciona as partidas que têm liga cadastrada
     leagues = League.objects.all()
     matches = Match.objects.filter(league__in=leagues)
 
     for match in matches:
         match_id = match.api_id
 
-        url = f"https://{API_URL}/v3/fixtures/events"
-        params = {"fixture": match_id}
-        response = requests.get(url, headers=HEADERS, params=params)
-        print(f"Requisição feita para a partida {match.api_id}")
+        # Verifica se já existem eventos ou estatísticas no banco
+        events_exist = MatchEvent.objects.filter(match=match).exists()
+        stats_exist = TeamStatistics.objects.filter(match=match).exists()
 
-        if response.status_code == 200:
-            events = response.json().get("response", [])
+        # 🔹 1. Buscar eventos, se ainda não existem
+        if not events_exist:
+            url = f"https://{API_URL}/v3/fixtures/events"
+            params = {"fixture": match_id}
+            response = requests.get(url, headers=HEADERS, params=params)
+            print(f"Requisição de eventos para a partida {match_id}")
 
-            for event in events:
-                team_api_id = event.get("team", {}).get("id")
-                team_obj = Team.objects.filter(api_id=team_api_id).first()
+            if response.status_code == 200:
+                events = response.json().get("response", [])
+                for event in events:
+                    team_api_id = event.get("team", {}).get("id")
+                    team_obj = Team.objects.filter(api_id=team_api_id).first()
 
-                MatchEvent.objects.update_or_create(
-                    match=match,
-                    team=team_obj,
-                    player=event.get("player", {}).get("name"),
-                    minute=event.get("time", {}).get("elapsed"),
-                    extra_minute=event.get("time", {}).get("extra"),
-                    type=event.get("type"),
-                    detail=event.get("detail"),
-                    defaults={
-                        "assist": event.get("assist", {}).get("name"),
-                        "comments": event.get("comments"),
-                    }
-                )
-        else:
-            print(f"Erro ao buscar eventos da partida {match_id}: {response.status_code}")
+                    MatchEvent.objects.update_or_create(
+                        match=match,
+                        team=team_obj,
+                        player=event.get("player", {}).get("name"),
+                        minute=event.get("time", {}).get("elapsed"),
+                        extra_minute=event.get("time", {}).get("extra"),
+                        type=event.get("type"),
+                        detail=event.get("detail"),
+                        defaults={
+                            "assist": event.get("assist", {}).get("name"),
+                            "comments": event.get("comments"),
+                        }
+                    )
+            else:
+                print(f"Erro ao buscar eventos da partida {match_id}: {response.status_code}")
 
-        url_stats = f"https://{API_URL}/v3/fixtures/statistics"
-        params_stats = {"fixture": match_id}
-        response_stats = requests.get(url_stats, headers=HEADERS, params=params_stats)
+        # 🔹 2. Buscar estatísticas, se ainda não existem
+        if not stats_exist:
+            url_stats = f"https://{API_URL}/v3/fixtures/statistics"
+            params_stats = {"fixture": match_id}
+            response_stats = requests.get(url_stats, headers=HEADERS, params=params_stats)
+            print(f"Requisição de estatísticas para a partida {match_id}")
 
-        if response_stats.status_code == 200:
-            stats_response = response_stats.json().get("response", [])
+            if response_stats.status_code == 200:
+                stats_response = response_stats.json().get("response", [])
+                for team_stats in stats_response:
+                    team_api_id = team_stats.get("team", {}).get("id")
+                    team_obj = Team.objects.filter(api_id=team_api_id).first()
 
-            for team_stats in stats_response:
-                team_api_id = team_stats.get("team", {}).get("id")
-                team_obj = Team.objects.filter(api_id=team_api_id).first()
+                    stats_dict = {}
+                    for stat in team_stats.get("statistics", []):
+                        stat_name = stat.get("type")
+                        stat_value = stat.get("value")
 
-                stats_dict = {}
-                for stat in team_stats.get("statistics", []):
-                    stat_name = stat.get("type")
-                    stat_value = stat.get("value")
+                        if stat_name == "Shots on Goal":
+                            stats_dict["shots_on_goal"] = stat_value
+                        elif stat_name == "Shots off Goal":
+                            stats_dict["shots_off_goal"] = stat_value
+                        elif stat_name == "Total Shots":
+                            stats_dict["total_shots"] = stat_value
+                        elif stat_name == "Blocked Shots":
+                            stats_dict["blocked_shots"] = stat_value
+                        elif stat_name == "Shots insidebox":
+                            stats_dict["shots_inside_box"] = stat_value
+                        elif stat_name == "Shots outsidebox":
+                            stats_dict["shots_outside_box"] = stat_value
+                        elif stat_name == "Fouls":
+                            stats_dict["fouls"] = stat_value
+                        elif stat_name == "Corner Kicks":
+                            stats_dict["corner_kicks"] = stat_value
+                        elif stat_name == "Offsides":
+                            stats_dict["offsides"] = stat_value
+                        elif stat_name == "Ball Possession":
+                            stats_dict["ball_possession"] = stat_value
+                        elif stat_name == "Yellow Cards":
+                            stats_dict["yellow_cards"] = stat_value
+                        elif stat_name == "Red Cards":
+                            stats_dict["red_cards"] = stat_value
+                        elif stat_name == "Passes":
+                            stats_dict["passes"] = stat_value
+                        elif stat_name == "Accurate Passes":
+                            stats_dict["accurate_passes"] = stat_value
+                        elif stat_name == "Pass Percentage":
+                            stats_dict["pass_percentage"] = stat_value
 
-                    if stat_name == "Shots on Goal":
-                        stats_dict["shots_on_goal"] = stat_value
-                    elif stat_name == "Shots off Goal":
-                        stats_dict["shots_off_goal"] = stat_value
-                    elif stat_name == "Total Shots":
-                        stats_dict["total_shots"] = stat_value
-                    elif stat_name == "Blocked Shots":
-                        stats_dict["blocked_shots"] = stat_value
-                    elif stat_name == "Shots insidebox":
-                        stats_dict["shots_inside_box"] = stat_value
-                    elif stat_name == "Shots outsidebox":
-                        stats_dict["shots_outside_box"] = stat_value
-                    elif stat_name == "Fouls":
-                        stats_dict["fouls"] = stat_value
-                    elif stat_name == "Corner Kicks":
-                        stats_dict["corner_kicks"] = stat_value
-                    elif stat_name == "Offsides":
-                        stats_dict["offsides"] = stat_value
-                    elif stat_name == "Ball Possession":
-                        stats_dict["ball_possession"] = stat_value
-                    elif stat_name == "Yellow Cards":
-                        stats_dict["yellow_cards"] = stat_value
-                    elif stat_name == "Red Cards":
-                        stats_dict["red_cards"] = stat_value
-                    elif stat_name == "Passes":
-                        stats_dict["passes"] = stat_value
-                    elif stat_name == "Accurate Passes":
-                        stats_dict["accurate_passes"] = stat_value
-                    elif stat_name == "Pass Percentage":
-                        stats_dict["pass_percentage"] = stat_value
+                    TeamStatistics.objects.update_or_create(
+                        match=match,
+                        team=team_obj,
+                        defaults=stats_dict
+                    )
+            else:
+                print(f"Erro ao buscar estatísticas da partida {match_id}: {response_stats.status_code}")
 
-                TeamStatistics.objects.update_or_create(
-                    match=match,
-                    team=team_obj,
-                    defaults=stats_dict
-                )
-        else:
-            print(f"Erro ao buscar estatísticas da partida {match_id}: {response_stats.status_code}")
-
+        # Pausa para não estourar o limite da API
         time.sleep(5)
 
 # TODO: Refatorar a função para puxar as partidas dos ultimos 2 dias ou outros
