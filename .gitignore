@@ -35,6 +35,8 @@ db.sqlite3
 # React / Node
 #######################################
 node_modules/
+.next/
+.env.local
 build/
 dist/
 .cache/
