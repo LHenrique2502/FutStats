@@ -1,15 +1,15 @@
 import requests
 import os
+import time
 from dotenv import load_dotenv
 from datetime import datetime
-from core.models import League, Team, Match, MatchEvent, TeamStatistics
+from core.models import League, Team, Player, Match, MatchEvent, TeamStatistics
 
 load_dotenv() # Carrega o conteúdo do .env
 
 API_URL = os.getenv("API_URL")
 API_KEY = os.getenv("API_KEY")
 
-# Cabeçalhos necessários para autenticação da API
 HEADERS = {
     "x-rapidapi-host": API_URL,
     "x-rapidapi-key": API_KEY
@@ -39,7 +39,7 @@ def get_leagues():
                     defaults={
                     "name": league["name"],
                     "type": league["type"],
-                    "country": country["name"],  # pegar do campo correto
+                    "country": country["name"],
                     "logo": league["logo"],
                     "season": current_season["year"],
                         }
@@ -65,8 +65,6 @@ def get_teams():
             for item in data["response"]:
                 team = item["team"]
                 
-                
-                # Salva ou atualiza o time no banco
                 Team.objects.update_or_create(
                     api_id=team["id"],
                     defaults={
@@ -80,23 +78,19 @@ def get_teams():
         else:
             print(f"Erro ao buscar times da liga {liga.name}: {response.status_code} - {response.text}")
 
-import time
-import requests
-from core.models import Team, Player  # ajuste conforme necessário
-
 def get_players():
     teams = Team.objects.all()
-    request_count = 0  # contador de requisições
-
+    
     for team in teams:
         url = f"https://{API_URL}/v3/players"
         params = {
             "team": team.api_id,
             "season": team.league.season
         }
-        response = requests.get(url, headers=HEADERS, params=params)
-        request_count += 1  # incrementa após cada requisição
 
+        response = requests.get(url, headers=HEADERS, params=params)
+        print(f"Requisição feita para o time {team.name}")
+        
         if response.status_code == 200:
             data = response.json()
             for item in data.get("response", []):
@@ -129,14 +123,11 @@ def get_players():
         else:
             print(f"Erro ao buscar jogadores do time {team.name}: {response.status_code} - {response.text}")
 
-        # Pausa a cada 30 requisições
-        if request_count % 30 == 0:
-            print("Limite de 30 requisições atingido. Aguardando 70 segundos...")
-            time.sleep(70)
+        # Aguarda 2 segundos entre cada requisição
+        time.sleep(2)
 
 def get_match():
     teams = Team.objects.all()
-    request_count = 0
 
     # Busca a data da última partida no banco
     ultima_partida = Match.objects.order_by('-date').first()
@@ -144,7 +135,7 @@ def get_match():
         data_inicio = ultima_partida.date.strftime('%Y-%m-%d')
     else:
         # Se não houver partidas no banco, define uma data inicial padrão
-        data_inicio = '2023-01-01'
+        data_inicio = '2024-01-01'
 
     print(f"🔍 Buscando partidas a partir de {data_inicio}")
 
@@ -156,7 +147,7 @@ def get_match():
             "from": data_inicio,  # Busca só jogos a partir desta data
         }
         response = requests.get(url, headers=HEADERS, params=params)
-        request_count += 1
+        print(f"Requisição feita para partidas do time {team.name}")
 
         if response.status_code == 200:
             data = response.json()
@@ -205,27 +196,20 @@ def get_match():
         else:
             print(f"❌ Erro ao buscar partidas do time {team.name}: {response.status_code} - {response.text}")
 
-        if request_count % 30 == 0:
-            print("⏱️ Limite de 30 requisições atingido. Aguardando 100 segundos...")
-            time.sleep(100)
-
-
-import time
+        time.sleep(2)
 
 def import_match_details():
     # Só seleciona as partidas que têm liga cadastrada
     leagues = League.objects.all()
     matches = Match.objects.filter(league__in=leagues)
-    request_count = 0
 
     for match in matches:
         match_id = match.api_id
 
-        # --- Importar eventos ---
         url = f"https://{API_URL}/v3/fixtures/events"
         params = {"fixture": match_id}
         response = requests.get(url, headers=HEADERS, params=params)
-        request_count += 1
+        print(f"Requisição feita para a partida {match.api_id}")
 
         if response.status_code == 200:
             events = response.json().get("response", [])
@@ -250,11 +234,9 @@ def import_match_details():
         else:
             print(f"Erro ao buscar eventos da partida {match_id}: {response.status_code}")
 
-        # --- Importar estatísticas ---
         url_stats = f"https://{API_URL}/v3/fixtures/statistics"
         params_stats = {"fixture": match_id}
         response_stats = requests.get(url_stats, headers=HEADERS, params=params_stats)
-        request_count += 1
 
         if response_stats.status_code == 200:
             stats_response = response_stats.json().get("response", [])
@@ -307,10 +289,7 @@ def import_match_details():
         else:
             print(f"Erro ao buscar estatísticas da partida {match_id}: {response_stats.status_code}")
 
-        # Aguarda se atingir o limite de 30 requisições
-        if request_count % 30 == 0:
-            print("Limite de 30 requisições atingido. Aguardando 100 segundos...")
-            time.sleep(100)
+        time.sleep(5)
 
 # TODO: Refatorar a função para puxar as partidas dos ultimos 2 dias ou outros
 

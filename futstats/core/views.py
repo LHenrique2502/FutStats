@@ -72,7 +72,7 @@ def listar_partidas(request):
     league = request.GET.get('league', '')
     team = request.GET.get('team', '')
 
-    partidas = Match.objects.select_related('home_team', 'away_team', 'league').all()
+    partidas = Match.objects.select_related('home_team', 'away_team', 'league').all().order_by('-date')
 
     if date:
         partidas = partidas.filter(date__date=date)
