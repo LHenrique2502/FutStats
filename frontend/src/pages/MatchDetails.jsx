@@ -16,12 +16,14 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api/';
+
 const MatchDetails = () => {
   const { id } = useParams();
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/partida/${id}/`)
+      .get(`${API_URL}partida/${id}/`)
       .then((response) => {
         console.log('Dados recebidos:', response.data);
         setMatchData(response.data);

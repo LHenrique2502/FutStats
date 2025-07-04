@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api/';
+
 const Index = () => {
   const [stats, setStats] = useState({
     total_jogos: 0,
@@ -27,7 +29,7 @@ const Index = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8000/api/estatisticas/')
+      .get('${API_URL}estatisticas/')
       .then((response) => {
         setStats(response.data);
       })
@@ -51,7 +53,7 @@ const Index = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8000/api/ultimas_partidas/')
+      .get('${API_URL}ultimas_partidas/')
       .then((response) => {
         const matches = response.data.map((match) => ({
           matchId: match.id,
