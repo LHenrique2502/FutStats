@@ -136,5 +136,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True  # ou configure `CORS_ALLOWED_ORIGINS` com o domínio do React
 
 CORS_ALLOWED_ORIGINS = [
-    "https://fut-stats.vercel.app/",
+    "https://fut-stats.vercel.app",
 ]
