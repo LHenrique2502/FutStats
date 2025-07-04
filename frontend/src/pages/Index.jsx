@@ -13,7 +13,8 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL_BACK = process.env.REACT_APP_API_URL_BACK;
+const API_URL_BACK =
+  import.meta.env.REACT_APP_API_URL_BACK || 'http://localhost:8000/api/';
 
 const Index = () => {
   const [stats, setStats] = useState({
