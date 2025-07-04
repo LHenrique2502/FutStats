@@ -54,7 +54,7 @@ const Index = () => {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}ultimas_partidas/`)
+      .get(`${API_URL_BACK}ultimas_partidas/`)
       .then((response) => {
         const matches = response.data.map((match) => ({
           matchId: match.id,
