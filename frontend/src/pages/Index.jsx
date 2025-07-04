@@ -29,7 +29,7 @@ const Index = () => {
   });
 
   useEffect(() => {
-    console.log('⚠️ API URL em produção:', API_URL_BACK);
+    console.log('API URL em produção:', process.env.REACT_APP_API_URL_BACK);
     axios
       .get(`${API_URL_BACK}estatisticas/`)
       .then((response) => {
