@@ -1,6 +1,7 @@
 import requests
 import os
 import time
+from django.db.models import Q
 from dotenv import load_dotenv
 from datetime import datetime
 from core.models import League, Team, Player, Match, MatchEvent, TeamStatistics
@@ -129,38 +130,44 @@ def get_players():
 def get_match():
     teams = Team.objects.all()
 
-    # Busca a data da última partida no banco
-    ultima_partida = Match.objects.order_by('-date').first()
-    if ultima_partida:
-        data_inicio = ultima_partida.date.strftime('%Y-%m-%d')
-    else:
-        # Se não houver partidas no banco, define uma data inicial padrão
-        data_inicio = '2024-01-01'
-
-    print(f"🔍 Buscando partidas a partir de {data_inicio}")
-
     for team in teams:
+        # 🔍 Busca a última partida específica desse time
+        ultima_partida = Match.objects.filter(
+            Q(home_team=team) | Q(away_team=team)
+        ).order_by('-date').first()
+
+        if ultima_partida:
+            data_inicio = ultima_partida.date.strftime('%Y-%m-%d')
+        else:
+            data_inicio = '2025-01-01'
+
+        print(f"\n⚽ Time: {team.name} (ID: {team.api_id}) - Buscando partidas a partir de {data_inicio}")
+
         url = f"https://{API_URL}/v3/fixtures"
         params = {
             "team": team.api_id,
             "season": team.league.season,
-            "from": data_inicio,  # Busca só jogos a partir desta data
+            "from": data_inicio,  # agora funcionando corretamente
         }
+
         response = requests.get(url, headers=HEADERS, params=params)
-        print(f"Requisição feita para partidas do time {team.name}")
+        print(f"📡 Status da requisição: {response.status_code}")
 
         if response.status_code == 200:
             data = response.json()
+            print(f"➡️ Partidas encontradas: {len(data.get('response', []))}")
+
             for item in data.get("response", []):
                 fixture_data = item.get("fixture", {})
                 league_data = item.get("league", {})
                 teams_data = item.get("teams", {})
                 goals_data = item.get("goals", {})
-                score_data = item.get("score", {})  # onde ficam os pênaltis
+                score_data = item.get("score", {})
                 venue_data = fixture_data.get("venue", {})
 
                 league_obj = League.objects.filter(api_id=league_data.get("id")).first()
                 if not league_obj:
+                    print(f"❌ Liga não encontrada para ID: {league_data.get('id')}")
                     continue
 
                 home_data = teams_data.get("home", {})
@@ -176,7 +183,7 @@ def get_match():
                     defaults={"name": away_data.get("name"), "league": league_obj}
                 )
 
-                Match.objects.update_or_create(
+                match_obj, created = Match.objects.update_or_create(
                     api_id=fixture_data.get("id"),
                     defaults={
                         'date': fixture_data.get('date'),
@@ -193,6 +200,7 @@ def get_match():
                         'away_penalties': score_data.get('penalty', {}).get('away'),
                     }
                 )
+                print(f"{'✅ Criado' if created else '♻️ Atualizado'}: Match ID {match_obj.api_id}")
         else:
             print(f"❌ Erro ao buscar partidas do time {team.name}: {response.status_code} - {response.text}")
 
