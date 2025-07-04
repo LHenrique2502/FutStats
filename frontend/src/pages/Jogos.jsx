@@ -26,7 +26,7 @@ import {
   Filter,
 } from 'lucide-react';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api/';
+const API_URL_BACK = process.env.REACT_APP_API_URL_BACK;
 
 const Jogos = () => {
   const today = new Date().toISOString().split('T')[0];
@@ -67,8 +67,8 @@ const Jogos = () => {
     const fetchFiltros = async () => {
       try {
         const [ligasRes, timesRes] = await Promise.all([
-          axios.get(`${API_URL}ligas/`),
-          axios.get(`${API_URL}times/`),
+          axios.get(`${API_URL_BACK}ligas/`),
+          axios.get(`${API_URL_BACK}times/`),
         ]);
         setLeagues(['all', ...ligasRes.data]);
         setTeams(['all', ...timesRes.data]);
