@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL_BACK = process.env.REACT_APP_API_URL_BACK;
 
 const Index = () => {
   const [stats, setStats] = useState({
@@ -30,7 +30,7 @@ const Index = () => {
   useEffect(() => {
     console.log('⚠️ API URL em produção:', API_URL);
     axios
-      .get(`${API_URL}estatisticas/`)
+      .get(`${API_URL_BACK}estatisticas/`)
       .then((response) => {
         setStats(response.data);
       })
