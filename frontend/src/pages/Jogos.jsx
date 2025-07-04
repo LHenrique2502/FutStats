@@ -43,7 +43,7 @@ const Jogos = () => {
 
   const buscarPartidas = async () => {
     try {
-      const response = await axios.get(`${API_URL}matches/`, {
+      const response = await axios.get(`${API_URL_BACK}matches/`, {
         params: {
           date: selectedDate,
           league: selectedLeague !== 'all' ? selectedLeague : '',
