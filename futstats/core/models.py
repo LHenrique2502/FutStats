@@ -1,6 +1,8 @@
 from django.db import models
+from django.utils.timezone import now
 
 class League(models.Model):
+    last_fetched_at = models.DateTimeField(null=True, blank=True)
     api_id = models.IntegerField(unique=True) # ID fornecido pela API-Football
     name = models.CharField(max_length=100) # Nome da liga (ex: Premier League) 
     type = models.CharField(max_length=50) # Tipo da competição (League, Cup, etc.)  
@@ -14,6 +16,7 @@ class League(models.Model):
 
 class Team(models.Model):
     
+    last_fetched_at = models.DateTimeField(null=True, blank=True)
     api_id = models.IntegerField(unique=True) # ID fornecido pela API-Football    
     name = models.CharField(max_length=100) # Nome do time   
     code = models.CharField(max_length=10, null=True, blank=True) # Código curto do time (ex: MCI, PSG)    
@@ -27,6 +30,8 @@ class Team(models.Model):
 
 
 class Player(models.Model):   
+
+    last_fetched_at = models.DateTimeField(null=True, blank=True)
     api_id = models.IntegerField(unique=True)  # ID fornecido pela API-Football
     name = models.CharField(max_length=100)  # Nome do jogador
     age = models.IntegerField(null=True, blank=True)  # Idade
@@ -52,6 +57,8 @@ class Player(models.Model):
         return self.name
 
 class Match(models.Model):
+
+    last_fetched_at = models.DateTimeField(null=True, blank=True)
     api_id = models.IntegerField(unique=True)
     date = models.DateTimeField()
     league = models.ForeignKey(League, on_delete=models.CASCADE)
@@ -74,6 +81,8 @@ class Match(models.Model):
 
 
 class MatchEvent(models.Model):
+
+    last_fetched_at = models.DateTimeField(null=True, blank=True)
     match = models.ForeignKey('Match', on_delete=models.CASCADE)
     team = models.ForeignKey('Team', on_delete=models.CASCADE)
     player = models.CharField(max_length=100, null=True, blank=True)
@@ -84,11 +93,15 @@ class MatchEvent(models.Model):
     minute = models.IntegerField()
     extra_minute = models.IntegerField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    events_fetched_at = models.DateTimeField(null=True, blank=True)
+    stats_fetched_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.match} - {self.type} ({self.detail}) - {self.player}"
 
 class TeamStatistics(models.Model):
+
+    last_fetched_at = models.DateTimeField(null=True, blank=True)
     match = models.ForeignKey('Match', on_delete=models.CASCADE)
     team = models.ForeignKey('Team', on_delete=models.CASCADE)
 

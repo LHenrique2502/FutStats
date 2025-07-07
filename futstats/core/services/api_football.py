@@ -1,3 +1,4 @@
+import asyncio
 import requests
 import os
 import time
@@ -5,328 +6,305 @@ from django.db.models import Q
 from dotenv import load_dotenv
 from datetime import datetime
 from core.models import League, Team, Player, Match, MatchEvent, TeamStatistics
+import httpx
+from django.utils.timezone import now, timedelta
+from core.models import League
+from asgiref.sync import sync_to_async
 
 load_dotenv() # Carrega o conteúdo do .env
 
-API_URL = os.getenv("API_URL")
+API_HOST = os.getenv("API_HOST")  # só o host, sem https://
+BASE_URL = f"https://{API_HOST}"  # URL completa com protocolo
+
 API_KEY = os.getenv("API_KEY")
 
 HEADERS = {
-    "x-rapidapi-host": API_URL,
+    "x-rapidapi-host": API_HOST,  # só o host, sem https://
     "x-rapidapi-key": API_KEY
 }
 
-def get_leagues():
-    """Busca ligas e salva apenas a temporada atual das ligas de interesse"""
-    ids_de_interesse = [39, 140, 61, 135, 78, 71]  # Premier, Espanhol, Francês, Italiano, Alemão, Brasileiro
+ids_de_interesse = [39, 140, 61, 135, 78, 71, 15]  # Premier, Espanhol, Francês, Italiano, Alemão, Brasileiro, Copa do Mundo de Clubes
 
-    url = f"https://{API_URL}/v3/leagues"
-    response = requests.get(url, headers=HEADERS)
+async def fetch(client, url, params=None, retries=3):
+    for attempt in range(retries):
+        try:
+            response = await client.get(url, headers=HEADERS, params=params)
+            if response.status_code == 200:
+                return response.json()
+            elif response.status_code == 429:
+                retry_after = int(response.headers.get("Retry-After", 60))
+                await asyncio.sleep(retry_after)
+            else:
+                print(f"Erro {response.status_code}: {response.text}")
+                return None
+        except httpx.RequestError as e:
+            print(f"Erro de rede: {e}")
+            await asyncio.sleep(2 ** attempt)
+    return None
 
-    if response.status_code == 200:
-        data = response.json()
-        for item in data["response"]:
+async def get_leagues():
+    print("🟢 Iniciando get_leagues()")
+
+    url = f"{BASE_URL}/v3/leagues"
+
+    async with httpx.AsyncClient(timeout=20) as client:
+        data = await fetch(client, url)
+
+        if not data:
+            print("❌ Nenhuma liga foi retornada.")
+            return
+
+        for item in data.get("response", []):
             league = item.get("league")
             country = item.get("country")
             seasons = item.get("seasons", [])
 
             if league["id"] in ids_de_interesse:
-                # Filtra a temporada atual
                 current_season = next((s for s in seasons if s.get("current")), None)
-
-                if current_season:
-                    League.objects.update_or_create(
-                    api_id=league["id"],
-                    defaults={
-                    "name": league["name"],
-                    "type": league["type"],
-                    "country": country["name"],
-                    "logo": league["logo"],
-                    "season": current_season["year"],
-                        }
-                    )
-    else:
-        print(f"Erro ao buscar ligas: {response.status_code} - {response.text}")
-
-def get_teams():
-    # Pega as ligas atuais no banco
-    ligas_atuais = League.objects.filter(api_id__in=[39, 140, 61, 135, 78, 71])
-
-    
-    for liga in ligas_atuais:
-        url = f"https://{API_URL}/v3/teams"
-        params = {
-            "league": liga.api_id,
-            "season": liga.season,
-        }
-        response = requests.get(url, headers=HEADERS, params=params)
-        
-        if response.status_code == 200:
-            data = response.json()
-            for item in data["response"]:
-                team = item["team"]
-                
-                Team.objects.update_or_create(
-                    api_id=team["id"],
-                    defaults={
-                        "name": team["name"],
-                        "code": team["code"],
-                        "country": team["country"],
-                        "logo": team["logo"],
-                        "league": liga
-                    }
-                )
-        else:
-            print(f"Erro ao buscar times da liga {liga.name}: {response.status_code} - {response.text}")
-
-def get_players():
-    teams = Team.objects.all()
-    
-    for team in teams:
-        url = f"https://{API_URL}/v3/players"
-        params = {
-            "team": team.api_id,
-            "season": team.league.season
-        }
-
-        response = requests.get(url, headers=HEADERS, params=params)
-        print(f"Requisição feita para o time {team.name}")
-        
-        if response.status_code == 200:
-            data = response.json()
-            for item in data.get("response", []):
-                player_info = item.get("player", {})
-                stats = item.get("statistics", [])
-
-                if stats:
-                    game_stats = stats[0].get("games", {})
-                    goal_stats = stats[0].get("goals", {})
-
-                    Player.objects.update_or_create(
-                        api_id=player_info.get("id"),
-                        defaults={
-                            "name": player_info.get("name"),
-                            "age": player_info.get("age"),
-                            "nationality": player_info.get("nationality"),
-                            "photo": player_info.get("photo"),
-                            "team": team,
-                            "appearences": game_stats.get("appearences"),
-                            "lineups": game_stats.get("lineups"),
-                            "minutes": game_stats.get("minutes"),
-                            "position": game_stats.get("position"),
-                            "number": game_stats.get("number"),
-                            "total_goals": goal_stats.get("total"),
-                            "conceded_goals": goal_stats.get("conceded"),
-                            "assists": goal_stats.get("assists"),
-                            "saves": goal_stats.get("saves")
-                        }
-                    )
-        else:
-            print(f"Erro ao buscar jogadores do time {team.name}: {response.status_code} - {response.text}")
-
-        # Aguarda 2 segundos entre cada requisição
-        time.sleep(2)
-
-def get_match():
-    teams = Team.objects.all()
-
-    for team in teams:
-        # 🔍 Busca a última partida específica desse time
-        ultima_partida = Match.objects.filter(
-            Q(home_team=team) | Q(away_team=team)
-        ).order_by('-date').first()
-
-        if ultima_partida:
-            data_inicio = ultima_partida.date.strftime('%Y-%m-%d')
-        else:
-            data_inicio = '2025-01-01'
-
-        print(f"\n⚽ Time: {team.name} (ID: {team.api_id}) - Buscando partidas a partir de {data_inicio}")
-
-        url = f"https://{API_URL}/v3/fixtures"
-        params = {
-            "team": team.api_id,
-            "season": team.league.season,
-            "from": data_inicio,  # agora funcionando corretamente
-        }
-
-        response = requests.get(url, headers=HEADERS, params=params)
-        print(f"📡 Status da requisição: {response.status_code}")
-
-        if response.status_code == 200:
-            data = response.json()
-            print(f"➡️ Partidas encontradas: {len(data.get('response', []))}")
-
-            for item in data.get("response", []):
-                fixture_data = item.get("fixture", {})
-                league_data = item.get("league", {})
-                teams_data = item.get("teams", {})
-                goals_data = item.get("goals", {})
-                score_data = item.get("score", {})
-                venue_data = fixture_data.get("venue", {})
-
-                league_obj = League.objects.filter(api_id=league_data.get("id")).first()
-                if not league_obj:
-                    print(f"❌ Liga não encontrada para ID: {league_data.get('id')}")
+                if not current_season:
                     continue
 
-                home_data = teams_data.get("home", {})
-                away_data = teams_data.get("away", {})
-
-                home_team_obj, _ = Team.objects.get_or_create(
-                    api_id=home_data.get("id"),
-                    defaults={"name": home_data.get("name"), "league": league_obj}
-                )
-
-                away_team_obj, _ = Team.objects.get_or_create(
-                    api_id=away_data.get("id"),
-                    defaults={"name": away_data.get("name"), "league": league_obj}
-                )
-
-                match_obj, created = Match.objects.update_or_create(
-                    api_id=fixture_data.get("id"),
+                await sync_to_async(League.objects.update_or_create)(
+                    api_id=league["id"],
                     defaults={
-                        'date': fixture_data.get('date'),
-                        'league': league_obj,
-                        'venue_name': venue_data.get('name'),
-                        'venue_city': venue_data.get('city'),
-                        'venue_capacity': venue_data.get('capacity'),
-                        'referee': fixture_data.get('referee'),
-                        'home_team': home_team_obj,
-                        'away_team': away_team_obj,
-                        'home_score': goals_data.get('home'),
-                        'away_score': goals_data.get('away'),
-                        'home_penalties': score_data.get('penalty', {}).get('home'),
-                        'away_penalties': score_data.get('penalty', {}).get('away'),
+                        "name": league["name"],
+                        "type": league["type"],
+                        "country": country["name"],
+                        "logo": league["logo"],
+                        "season": current_season["year"],
+                        "last_fetched_at": now(),
                     }
                 )
-                print(f"{'✅ Criado' if created else '♻️ Atualizado'}: Match ID {match_obj.api_id}")
-        else:
-            print(f"❌ Erro ao buscar partidas do time {team.name}: {response.status_code} - {response.text}")
+                print(f"✅ Liga importada/atualizada: {league['name']}")
 
-        time.sleep(2)
+async def fetch_teams_for_league(client, league):
+    url = f"{BASE_URL}/v3/teams"
+    params = {
+        "league": league.api_id,
+        "season": league.season,
+    }
 
-def import_match_details():
-    leagues = League.objects.all()
-    matches = Match.objects.filter(league__in=leagues)
+    data = await fetch(client, url, params=params)
+    if not data:
+        print(f"❌ Nenhum time retornado para a liga {league.name}")
+        return
 
-    for match in matches:
-        match_id = match.api_id
+    for item in data.get("response", []):
+        team = item["team"]
 
-        # Verifica se já existem eventos ou estatísticas no banco
-        events_exist = MatchEvent.objects.filter(match=match).exists()
-        stats_exist = TeamStatistics.objects.filter(match=match).exists()
+        await sync_to_async(Team.objects.update_or_create)(
+            api_id=team["id"],
+            defaults={
+                "name": team["name"],
+                "code": team.get("code"),
+                "country": team["country"],
+                "logo": team["logo"],
+                "league": league,
+                "last_fetched_at": now(),
+            }
+        )
 
-        # 🔹 1. Buscar eventos, se ainda não existem
-        if not events_exist:
-            url = f"https://{API_URL}/v3/fixtures/events"
-            params = {"fixture": match_id}
-            response = requests.get(url, headers=HEADERS, params=params)
-            print(f"Requisição de eventos para a partida {match_id}")
+    print(f"✅ Times importados/atualizados da liga {league.name}")
 
-            if response.status_code == 200:
-                events = response.json().get("response", [])
-                for event in events:
-                    team_api_id = event.get("team", {}).get("id")
-                    team_obj = Team.objects.filter(api_id=team_api_id).first()
+async def import_teams_async():
+    # Busca as ligas de interesse no banco de forma segura (dentro do contexto async)
+    ligas_atuais = await sync_to_async(list)(
+        League.objects.filter(api_id__in=ids_de_interesse)
+    )
 
-                    MatchEvent.objects.update_or_create(
-                        match=match,
-                        team=team_obj,
-                        player=event.get("player", {}).get("name"),
-                        minute=event.get("time", {}).get("elapsed"),
-                        extra_minute=event.get("time", {}).get("extra"),
-                        type=event.get("type"),
-                        detail=event.get("detail"),
-                        defaults={
-                            "assist": event.get("assist", {}).get("name"),
-                            "comments": event.get("comments"),
-                        }
-                    )
-            else:
-                print(f"Erro ao buscar eventos da partida {match_id}: {response.status_code}")
+    async with httpx.AsyncClient(timeout=20) as client:
+        # Cria tarefas assíncronas para importar os times de cada liga
+        tasks = [fetch_teams_for_league(client, liga) for liga in ligas_atuais]
+        await asyncio.gather(*tasks)
 
-        # 🔹 2. Buscar estatísticas, se ainda não existem
-        if not stats_exist:
-            url_stats = f"https://{API_URL}/v3/fixtures/statistics"
-            params_stats = {"fixture": match_id}
-            response_stats = requests.get(url_stats, headers=HEADERS, params=params_stats)
-            print(f"Requisição de estatísticas para a partida {match_id}")
+# TODO: Refatorar chamadas daqui para baixo para se adequarem as lógicas
 
-            if response_stats.status_code == 200:
-                stats_response = response_stats.json().get("response", [])
-                for team_stats in stats_response:
-                    team_api_id = team_stats.get("team", {}).get("id")
-                    team_obj = Team.objects.filter(api_id=team_api_id).first()
+async def fetch_players_for_team(client, team):
 
-                    stats_dict = {}
-                    for stat in team_stats.get("statistics", []):
-                        stat_name = stat.get("type")
-                        stat_value = stat.get("value")
+    url = f"{BASE_URL}/v3/players/squads"
+    params = {
+        "team": team.api_id,
+        # "season": team.league.season
+    }
 
-                        if stat_name == "Shots on Goal":
-                            stats_dict["shots_on_goal"] = stat_value
-                        elif stat_name == "Shots off Goal":
-                            stats_dict["shots_off_goal"] = stat_value
-                        elif stat_name == "Total Shots":
-                            stats_dict["total_shots"] = stat_value
-                        elif stat_name == "Blocked Shots":
-                            stats_dict["blocked_shots"] = stat_value
-                        elif stat_name == "Shots insidebox":
-                            stats_dict["shots_inside_box"] = stat_value
-                        elif stat_name == "Shots outsidebox":
-                            stats_dict["shots_outside_box"] = stat_value
-                        elif stat_name == "Fouls":
-                            stats_dict["fouls"] = stat_value
-                        elif stat_name == "Corner Kicks":
-                            stats_dict["corner_kicks"] = stat_value
-                        elif stat_name == "Offsides":
-                            stats_dict["offsides"] = stat_value
-                        elif stat_name == "Ball Possession":
-                            stats_dict["ball_possession"] = stat_value
-                        elif stat_name == "Yellow Cards":
-                            stats_dict["yellow_cards"] = stat_value
-                        elif stat_name == "Red Cards":
-                            stats_dict["red_cards"] = stat_value
-                        elif stat_name == "Passes":
-                            stats_dict["passes"] = stat_value
-                        elif stat_name == "Accurate Passes":
-                            stats_dict["accurate_passes"] = stat_value
-                        elif stat_name == "Pass Percentage":
-                            stats_dict["pass_percentage"] = stat_value
+    data = await fetch(client, url, params=params)
 
-                    TeamStatistics.objects.update_or_create(
-                        match=match,
-                        team=team_obj,
-                        defaults=stats_dict
-                    )
-            else:
-                print(f"Erro ao buscar estatísticas da partida {match_id}: {response_stats.status_code}")
+    # print(f"resultado da chamada {data}")
 
-        # Pausa para não estourar o limite da API
-        time.sleep(5)
+    if not data:
+        print(f"❌ Nenhum jogador retornado para o time {team.name}")
+        return
 
-# TODO: Refatorar a função para puxar as partidas dos ultimos 2 dias ou outros
+    for item in data.get("response", []):
+        player_info = item.get("player", {})
+        # stats = item.get("statistics", [])
 
-def import_match_statistics():
-    leagues = League.objects.all()
-    matches = Match.objects.filter(league__in=leagues)
-    request_count = 0
+        # if not stats:
+        #     continue
 
-    for match in matches:
-        match_id = match.api_id
+        # game_stats = stats[0].get("games", {})
+        # goal_stats = stats[0].get("goals", {})
 
-        url_stats = f"https://{API_URL}/v3/fixtures/statistics"
+        player_id = player_info.get("id")
+
+        if not player_id:
+            print(f"❌ Jogador sem ID detectado: {player_info}")
+            continue
+
+        await sync_to_async(Player.objects.update_or_create)(
+            api_id=player_info.get("id"),
+            defaults={
+                "name": player_info.get("name"),
+                "age": player_info.get("age"),
+                "number": player_info.get("number"),
+                "position": player_info.get("position"),
+                # "nationality": player_info.get("nationality"),
+                # "photo": player_info.get("photo"),
+                # "team": team,
+                # "position": game_stats.get("position"),
+                # "number": game_stats.get("number"),
+                # "appearences": game_stats.get("appearences"),
+                # "lineups": game_stats.get("lineups"),
+                # "minutes": game_stats.get("minutes"),
+                # "total_goals": goal_stats.get("total"),
+                # "conceded_goals": goal_stats.get("conceded"),
+                # "assists": goal_stats.get("assists"),
+                # "saves": goal_stats.get("saves"),
+                "last_fetched_at": now(),
+            }
+        )
+
+    print(f"✅ Jogadores importados/atualizados do time {team.name}")
+
+async def import_players_async():
+    # Pré-carrega os times com a relação league (evita erro async)
+    times = await sync_to_async(list)(
+        Team.objects.select_related("league").all()
+    )
+
+    async with httpx.AsyncClient(timeout=30) as client:
+        tasks = [fetch_players_for_team(client, team) for team in times]
+        await asyncio.gather(*tasks)
+
+async def fetch_matches_for_league(client, league):
+    # Busca partidas da liga a partir da última partida salva, para evitar repetições
+    ultima_partida = await sync_to_async(
+        lambda: Match.objects.filter(
+            league=league
+        ).order_by('-date').first()
+    )()
+
+    data_inicio = ultima_partida.date.strftime('%Y-%m-%d') if ultima_partida else '2025-01-01'
+
+    url = f"{BASE_URL}/v3/fixtures"
+    params = {
+        "league": league.api_id,
+        "season": league.season,
+        "from": data_inicio
+    }
+
+    data = await fetch(client, url, params=params)
+
+    if not data or "response" not in data:
+        print(f"❌ Nenhuma partida retornada para a liga {league.name}")
+        return
+
+    for item in data["response"]:
+        fixture = item.get("fixture", {})
+        league_data = item.get("league", {})
+        teams_data = item.get("teams", {})
+        goals = item.get("goals", {})
+
+        # Pega times, já no banco, para referenciar corretamente
+        home_team_obj = await sync_to_async(
+            lambda: Team.objects.filter(api_id=teams_data["home"]["id"]).first()
+        )()
+        away_team_obj = await sync_to_async(
+            lambda: Team.objects.filter(api_id=teams_data["away"]["id"]).first()
+        )()
+
+        if not home_team_obj or not away_team_obj:
+            print(f"⚠️ Times da partida {fixture.get('id')} não encontrados no banco, pulando.")
+            continue
+
+        # Atualiza ou cria a partida
+        await sync_to_async(Match.objects.update_or_create)(
+            api_id=fixture.get("id"),
+            defaults={
+                "date": fixture.get("date"),
+                "league": league,
+                "venue_name": fixture.get("venue", {}).get("name"),
+                "venue_city": fixture.get("venue", {}).get("city"),
+                "venue_capacity": fixture.get("venue", {}).get("capacity"),
+                "referee": fixture.get("referee"),
+                "home_team": home_team_obj,
+                "away_team": away_team_obj,
+                "home_score": goals.get("home"),
+                "away_score": goals.get("away"),
+                "home_penalties": item.get("score", {}).get("penalty", {}).get("home"),
+                "away_penalties": item.get("score", {}).get("penalty", {}).get("away"),
+                "last_fetched_at": now(),
+            }
+        )
+        print(f"✅ Partida importada/atualizada: {home_team_obj.name} x {away_team_obj.name} ({fixture.get('date')})")
+
+async def import_matches_async():
+    # Busca as ligas atuais para fazer as requisições
+    ligas_atuais = await sync_to_async(list)(League.objects.all())
+
+    async with httpx.AsyncClient(timeout=30) as client:
+        tasks = [fetch_matches_for_league(client, liga) for liga in ligas_atuais]
+        await asyncio.gather(*tasks)
+
+async def fetch_match_data(client, match):
+    match_id = match.api_id
+
+    # ==============================
+    # 📦 IMPORTAR EVENTOS
+    # ==============================
+    if not match.events_fetched_at:
+        url_events = f"{BASE_URL}/v3/fixtures/events"
+        params_events = {"fixture": match_id}
+        data_events = await fetch(client, url_events, params_events)
+
+        if data_events and "response" in data_events:
+            for event in data_events["response"]:
+                team_api_id = event.get("team", {}).get("id")
+                team_obj = await sync_to_async(Team.objects.filter(api_id=team_api_id).first)()
+                if not team_obj:
+                    continue
+
+                await sync_to_async(MatchEvent.objects.update_or_create)(
+                    match=match,
+                    team=team_obj,
+                    player=event.get("player", {}).get("name"),
+                    minute=event.get("time", {}).get("elapsed"),
+                    extra_minute=event.get("time", {}).get("extra"),
+                    type=event.get("type"),
+                    detail=event.get("detail"),
+                    defaults={
+                        "assist": event.get("assist", {}).get("name"),
+                        "comments": event.get("comments"),
+                    }
+                )
+            match.events_fetched_at = now()
+            await sync_to_async(match.save)()
+            print(f"✅ Eventos importados para a partida {match_id}")
+
+    # ==============================
+    # 📊 IMPORTAR ESTATÍSTICAS
+    # ==============================
+    if not match.stats_fetched_at:
+        url_stats = f"{BASE_URL}/v3/fixtures/statistics"
         params_stats = {"fixture": match_id}
-        response_stats = requests.get(url_stats, headers=HEADERS, params=params_stats)
-        request_count += 1
+        data_stats = await fetch(client, url_stats, params_stats)
 
-        if response_stats.status_code == 200:
-            stats_response = response_stats.json().get("response", [])
-
-            for team_stats in stats_response:
+        if data_stats and "response" in data_stats:
+            for team_stats in data_stats["response"]:
                 team_api_id = team_stats.get("team", {}).get("id")
-                team_obj = Team.objects.filter(api_id=team_api_id).first()
+                team_obj = await sync_to_async(Team.objects.filter(api_id=team_api_id).first)()
+                if not team_obj:
+                    continue
 
                 stats_dict = {}
                 for stat in team_stats.get("statistics", []):
@@ -364,18 +342,53 @@ def import_match_statistics():
                     elif stat_name == "Pass Percentage":
                         stats_dict["pass_percentage"] = stat_value
 
-                if team_obj:
-                    TeamStatistics.objects.update_or_create(
-                        match=match,
-                        team=team_obj,
-                        defaults=stats_dict
-                    )
-                else:
-                    print(f"Time com API ID {team_api_id} não encontrado para a partida {match_id}")
-        else:
-            print(f"Erro ao buscar estatísticas da partida {match_id}: {response_stats.status_code}")
+                await sync_to_async(TeamStatistics.objects.update_or_create)(
+                    match=match,
+                    team=team_obj,
+                    defaults=stats_dict
+                )
+            match.stats_fetched_at = now()
+            await sync_to_async(match.save)()
+            print(f"✅ Estatísticas importadas para a partida {match_id}")
 
-        # Aguarda a cada 30 requisições
-        if request_count % 30 == 0:
-            print("Limite de 30 requisições atingido. Aguardando 100 segundos...")
-            time.sleep(100)
+async def fetch_match_data_safe(client, match):
+    try:
+        await fetch_match_data(client, match)
+        match.last_fetched_at = now()
+        await sync_to_async(match.save)()
+    except Exception as e:
+        print(f"❌ Erro ao importar dados da partida {match.api_id}: {e}")
+
+RATE_LIMIT_REQUESTS = 30
+RATE_LIMIT_SLEEP = 60  # segundos
+
+def chunk_list(lst, size):
+    for i in range(0, len(lst), size):
+        yield lst[i:i + size]
+
+async def import_match_data_async():
+    limite = now() - timedelta(days=2)
+    matches = await sync_to_async(list)(
+        Match.objects.filter(date__lte=now(), date__gte=limite)
+        .filter(Q(last_fetched_at__isnull=True) | Q(last_fetched_at__lt=limite))
+    )
+
+    if not matches:
+        print("✅ Nenhuma partida pendente para atualização.")
+        return
+
+    async with httpx.AsyncClient(timeout=30) as client:
+        total = len(matches)
+        print(f"🔄 Iniciando importação de {total} partidas (máx {RATE_LIMIT_REQUESTS}/minuto)...")
+
+        for index, batch in enumerate(chunk_list(matches, RATE_LIMIT_REQUESTS), start=1):
+            print(f"\n🚀 Lote {index}: processando {len(batch)} partidas...")
+
+            tasks = [fetch_match_data_safe(client, match) for match in batch]
+            await asyncio.gather(*tasks)
+
+            if (index * RATE_LIMIT_REQUESTS) < total:
+                print(f"⏳ Aguardando {RATE_LIMIT_SLEEP}s para o próximo lote...")
+                await asyncio.sleep(RATE_LIMIT_SLEEP)
+
+    print("\n✅ Importação finalizada com sucesso!")
