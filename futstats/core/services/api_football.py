@@ -10,6 +10,7 @@ import httpx
 from django.utils.timezone import now, timedelta
 from core.models import League
 from asgiref.sync import sync_to_async
+from django.utils import timezone
 
 load_dotenv() # Carrega o conteúdo do .env
 
@@ -119,72 +120,79 @@ async def import_teams_async():
 
 # TODO: Refatorar chamadas daqui para baixo para se adequarem as lógicas
 
-async def fetch_players_for_team(client, team):
+async def import_players_for_team(client, team):
+    print(f"\n🔍 Buscando jogadores do time: {team.name} (ID API: {team.api_id})")
 
     url = f"{BASE_URL}/v3/players/squads"
-    params = {
-        "team": team.api_id,
-        # "season": team.league.season
-    }
-
+    params = {"team": team.api_id}
     data = await fetch(client, url, params=params)
 
-    # print(f"resultado da chamada {data}")
-
-    if not data:
-        print(f"❌ Nenhum jogador retornado para o time {team.name}")
+    if not data or "response" not in data:
+        print(f"⚠️ Nenhum dado retornado para o time {team.name}")
         return
 
-    for item in data.get("response", []):
-        player_info = item.get("player", {})
-        # stats = item.get("statistics", [])
+    squads = data["response"]
+    if not squads:
+        print(f"❌ Squad vazio para o time {team.name}")
+        return
 
-        # if not stats:
-        #     continue
+    jogadores = squads[0].get("players", [])
 
-        # game_stats = stats[0].get("games", {})
-        # goal_stats = stats[0].get("goals", {})
+    for jogador in jogadores:
+        try:
+            api_id = jogador.get("id")
+            name = jogador.get("name")
+            age = jogador.get("age")
+            nationality = jogador.get("nationality")
+            photo = jogador.get("photo")
+            position = jogador.get("position")
+            number = jogador.get("number")
 
-        player_id = player_info.get("id")
+            statistics = jogador.get("statistics", [{}])[0]
+            games = statistics.get("games", {}) if statistics else {}
+            goals = statistics.get("goals", {}) if statistics else {}
 
-        if not player_id:
-            print(f"❌ Jogador sem ID detectado: {player_info}")
-            continue
+            def salvar_jogador():
+                return Player.objects.update_or_create(
+                    api_id=api_id,
+                    defaults={
+                        "name": name,
+                        "age": age,
+                        "nationality": nationality,
+                        "photo": photo,
+                        "team": team,
+                        "position": position,
+                        "number": number,
+                        "appearences": games.get("appearences"),
+                        "lineups": games.get("lineups"),
+                        "minutes": games.get("minutes"),
+                        "total_goals": goals.get("total"),
+                        "conceded_goals": goals.get("conceded"),
+                        "assists": goals.get("assists"),
+                        "saves": goals.get("saves"),
+                        "last_fetched_at": timezone.now()
+                    }
+                )
 
-        await sync_to_async(Player.objects.update_or_create)(
-            api_id=player_info.get("id"),
-            defaults={
-                "name": player_info.get("name"),
-                "age": player_info.get("age"),
-                "number": player_info.get("number"),
-                "position": player_info.get("position"),
-                # "nationality": player_info.get("nationality"),
-                # "photo": player_info.get("photo"),
-                # "team": team,
-                # "position": game_stats.get("position"),
-                # "number": game_stats.get("number"),
-                # "appearences": game_stats.get("appearences"),
-                # "lineups": game_stats.get("lineups"),
-                # "minutes": game_stats.get("minutes"),
-                # "total_goals": goal_stats.get("total"),
-                # "conceded_goals": goal_stats.get("conceded"),
-                # "assists": goal_stats.get("assists"),
-                # "saves": goal_stats.get("saves"),
-                "last_fetched_at": now(),
-            }
-        )
+            player_obj, created = await sync_to_async(salvar_jogador)()
+            action = "🆕 Criado" if created else "🔄 Atualizado"
+            print(f"{action} jogador: {name}")
 
-    print(f"✅ Jogadores importados/atualizados do time {team.name}")
+        except Exception as e:
+            print(f"❌ Erro ao salvar jogador: {jogador.get('name', 'Desconhecido')} — {e}")
 
 async def import_players_async():
-    # Pré-carrega os times com a relação league (evita erro async)
+    print("🚀 Iniciando importação de jogadores...")
+
     times = await sync_to_async(list)(
         Team.objects.select_related("league").all()
     )
 
     async with httpx.AsyncClient(timeout=30) as client:
-        tasks = [fetch_players_for_team(client, team) for team in times]
+        tasks = [import_players_for_team(client, team) for team in times]
         await asyncio.gather(*tasks)
+
+    print("\n✅ Importação de jogadores finalizada.")
 
 async def fetch_matches_for_league(client, league):
     # Busca partidas da liga a partir da última partida salva, para evitar repetições
