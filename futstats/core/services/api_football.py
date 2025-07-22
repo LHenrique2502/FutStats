@@ -118,8 +118,6 @@ async def import_teams_async():
         tasks = [fetch_teams_for_league(client, liga) for liga in ligas_atuais]
         await asyncio.gather(*tasks)
 
-# TODO: Refatorar chamadas daqui para baixo para se adequarem as lógicas
-
 async def import_players_for_team(client, team):
     print(f"\n🔍 Buscando jogadores do time: {team.name} (ID API: {team.api_id})")
 
@@ -194,75 +192,81 @@ async def import_players_async():
 
     print("\n✅ Importação de jogadores finalizada.")
 
-async def fetch_matches_for_league(client, league):
-    # Busca partidas da liga a partir da última partida salva, para evitar repetições
-    ultima_partida = await sync_to_async(
-        lambda: Match.objects.filter(
-            league=league
-        ).order_by('-date').first()
-    )()
+# TODO: Refatorar chamadas daqui para baixo para se adequarem as lógicas
 
-    data_inicio = ultima_partida.date.strftime('%Y-%m-%d') if ultima_partida else '2025-01-01'
+async def fetch_matches_for_league(client, league, team):
+    print(f"\n🔍 Buscando partidas da liga: {team.name} (ID API: {league.api_id})")
 
     url = f"{BASE_URL}/v3/fixtures"
-    params = {
-        "league": league.api_id,
-        "season": league.season,
-        "from": data_inicio
-    }
-
+    params = {"team": team.api_id}, {"season": "2025"}
     data = await fetch(client, url, params=params)
 
     if not data or "response" not in data:
-        print(f"❌ Nenhuma partida retornada para a liga {league.name}")
+        print(f"⚠️ Nenhuma partida retornada para a liga {league.name}")
         return
 
-    for item in data["response"]:
-        fixture = item.get("fixture", {})
-        league_data = item.get("league", {})
-        teams_data = item.get("teams", {})
-        goals = item.get("goals", {})
+    fixtures = data["response"]
+    if not fixtures:
+        print(f"❌ Nenhuma partida encontrada para a liga {league.name}")
+        return
 
-        # Pega times, já no banco, para referenciar corretamente
-        home_team_obj = await sync_to_async(
-            lambda: Team.objects.filter(api_id=teams_data["home"]["id"]).first()
-        )()
-        away_team_obj = await sync_to_async(
-            lambda: Team.objects.filter(api_id=teams_data["away"]["id"]).first()
-        )()
+    partidas = fixtures["response"][0]
 
-        if not home_team_obj or not away_team_obj:
-            print(f"⚠️ Times da partida {fixture.get('id')} não encontrados no banco, pulando.")
-            continue
+    for partida in partidas:
+        try:
+            api_id = partida.get("fixture", {}).get("id")
+            date = partida.get("fixture", {}).get("date")
+            league = partida.get("league", {}).get("id")
 
-        # Atualiza ou cria a partida
-        await sync_to_async(Match.objects.update_or_create)(
-            api_id=fixture.get("id"),
-            defaults={
-                "date": fixture.get("date"),
-                "league": league,
-                "venue_name": fixture.get("venue", {}).get("name"),
-                "venue_city": fixture.get("venue", {}).get("city"),
-                "venue_capacity": fixture.get("venue", {}).get("capacity"),
-                "referee": fixture.get("referee"),
-                "home_team": home_team_obj,
-                "away_team": away_team_obj,
-                "home_score": goals.get("home"),
-                "away_score": goals.get("away"),
-                "home_penalties": item.get("score", {}).get("penalty", {}).get("home"),
-                "away_penalties": item.get("score", {}).get("penalty", {}).get("away"),
-                "last_fetched_at": now(),
-            }
-        )
-        print(f"✅ Partida importada/atualizada: {home_team_obj.name} x {away_team_obj.name} ({fixture.get('date')})")
+            venue_name = partida.get("fixture", {}).get("venue", {}).get("name")
+            venue_city = partida.get("fixture", {}).get("venue", {}).get("city")
+
+            home_team = partida.get("teams", {}).get("home", {}).get("id")
+            away_team = partida.get("teams", {}).get("away", {}).get("id")
+            home_score = partida.get("goals", {}).get("home")
+            away_score = partida.get("goals", {}).get("away")
+            home_penalties = partida.get("score", {}).get("penalty", {}).get("home") 
+            away_penalties = partida.get("score", {}).get("penalty", {}).get("away")
+
+            def salvar_partidas():
+                return Match.objects.update_or_create(
+                    api_id=api_id,
+                    defaults={
+                        "date": date,
+                        "league": league,
+                        "venue_name": venue_name,
+                        "venue_city": venue_city,
+                        "home_team": home_team,
+                        "away_team": away_team,
+                        "home_score": home_score,
+                        "away_score": away_score,
+                        "home_penalties": home_penalties,
+                        "away_penalties": away_penalties,
+                        "last_fetched_at": timezone.now()
+                    }
+                )
+
+            player_obj, created = await sync_to_async(salvar_partidas)()
+            action = "🆕 Criado" if created else "🔄 Atualizado"
+            print(f"{action} partida: {home_team} X {away_team}")
+
+        except Exception as e:
+            print(f"❌ Erro ao salvar partida: {partida.get('home_team','X','away_team' 'Desconhecido')} — {e}")
 
 async def import_matches_async():
-    # Busca as ligas atuais para fazer as requisições
-    ligas_atuais = await sync_to_async(list)(League.objects.all())
+    print("🚀 Iniciando importação de partidas...")
+
+    times = await sync_to_async(list)(
+        Team.objects.select_related("league").all()
+    )
+
+    season = "2025"
 
     async with httpx.AsyncClient(timeout=30) as client:
-        tasks = [fetch_matches_for_league(client, liga) for liga in ligas_atuais]
+        tasks = [fetch_matches_for_league(client, team, season) for team in times]
         await asyncio.gather(*tasks)
+
+    print("\n✅ Importação de partidas finalizada.")
 
 async def fetch_match_data(client, match):
     match_id = match.api_id
