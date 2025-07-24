@@ -1,9 +1,11 @@
+from dotenv import load_dotenv
+load_dotenv() # Carrega o conteúdo do .env
+
 import asyncio
 import requests
 import os
 import time
 from django.db.models import Q
-from dotenv import load_dotenv
 from datetime import datetime
 from core.models import League, Team, Player, Match, MatchEvent, TeamStatistics
 import httpx
@@ -12,7 +14,6 @@ from core.models import League
 from asgiref.sync import sync_to_async
 from django.utils import timezone
 
-load_dotenv() # Carrega o conteúdo do .env
 
 API_HOST = os.getenv("API_HOST")  # só o host, sem https://
 BASE_URL = f"https://{API_HOST}"  # URL completa com protocolo
@@ -44,6 +45,11 @@ async def fetch(client, url, params=None, retries=3):
     return None
 
 async def get_leagues():
+    # print("🔑 API KEY:", repr(os.environ.get("API_KEY")))
+
+    print(f"API_HOST: {API_HOST}")
+    print(f"API_KEY: {API_KEY}")
+
     print("🟢 Iniciando get_leagues()")
 
     url = f"{BASE_URL}/v3/leagues"
@@ -180,6 +186,7 @@ async def import_players_for_team(client, team):
             print(f"❌ Erro ao salvar jogador: {jogador.get('name', 'Desconhecido')} — {e}")
 
 async def import_players_async():
+    # print(repr(os.environ["DATABASE_URL"]))
     print("🚀 Iniciando importação de jogadores...")
 
     times = await sync_to_async(list)(
@@ -194,48 +201,65 @@ async def import_players_async():
 
 # TODO: Refatorar chamadas daqui para baixo para se adequarem as lógicas
 
-async def fetch_matches_for_league(client, league, team):
-    print(f"\n🔍 Buscando partidas da liga: {team.name} (ID API: {league.api_id})")
+async def import_matches_for_team(client, team, season="2025"):
+    print(f"\n🔍 Buscando partidas do time: {team.name} (ID API: {team.api_id})")
 
     url = f"{BASE_URL}/v3/fixtures"
-    params = {"team": team.api_id}, {"season": "2025"}
+    params = {
+        "team": team.api_id,
+        "season": season
+    }
+
     data = await fetch(client, url, params=params)
 
     if not data or "response" not in data:
-        print(f"⚠️ Nenhuma partida retornada para a liga {league.name}")
+        print(f"⚠️ Nenhuma partida retornada para o time {team.name}")
         return
 
     fixtures = data["response"]
     if not fixtures:
-        print(f"❌ Nenhuma partida encontrada para a liga {league.name}")
+        print(f"❌ Nenhuma partida encontrada para o time {team.name}")
         return
 
-    partidas = fixtures["response"][0]
-
-    for partida in partidas:
+    for partida in fixtures:
         try:
-            api_id = partida.get("fixture", {}).get("id")
-            date = partida.get("fixture", {}).get("date")
-            league = partida.get("league", {}).get("id")
+            fixture_data = partida.get("fixture", {})
+            league_data = partida.get("league", {})
+            teams_data = partida.get("teams", {})
+            goals_data = partida.get("goals", {})
+            score_data = partida.get("score", {}).get("penalty", {})
 
-            venue_name = partida.get("fixture", {}).get("venue", {}).get("name")
-            venue_city = partida.get("fixture", {}).get("venue", {}).get("city")
+            api_id = fixture_data.get("id")
+            date = fixture_data.get("date")
 
-            home_team = partida.get("teams", {}).get("home", {}).get("id")
-            away_team = partida.get("teams", {}).get("away", {}).get("id")
-            home_score = partida.get("goals", {}).get("home")
-            away_score = partida.get("goals", {}).get("away")
-            home_penalties = partida.get("score", {}).get("penalty", {}).get("home") 
-            away_penalties = partida.get("score", {}).get("penalty", {}).get("away")
+            venue_name = fixture_data.get("venue", {}).get("name")
+            venue_city = fixture_data.get("venue", {}).get("city")
+            referee = fixture_data.get("referee")
+            # venue_capacity não vem nessa API, está como placeholder
+            venue_capacity = None  
 
-            def salvar_partidas():
+            home_team_id = teams_data.get("home", {}).get("id")
+            away_team_id = teams_data.get("away", {}).get("id")
+
+            # Pega os objetos Team com base no ID (relacionamento ForeignKey)
+            home_team = await sync_to_async(Team.objects.get)(api_id=home_team_id)
+            away_team = await sync_to_async(Team.objects.get)(api_id=away_team_id)
+
+            home_score = goals_data.get("home")
+            away_score = goals_data.get("away")
+            home_penalties = score_data.get("home")
+            away_penalties = score_data.get("away")
+
+            def salvar_partida():
                 return Match.objects.update_or_create(
                     api_id=api_id,
                     defaults={
                         "date": date,
-                        "league": league,
+                        "league": team.league,  # Usa o time para acessar a League
                         "venue_name": venue_name,
                         "venue_city": venue_city,
+                        "venue_capacity": venue_capacity,
+                        "referee": referee,
                         "home_team": home_team,
                         "away_team": away_team,
                         "home_score": home_score,
@@ -245,13 +269,14 @@ async def fetch_matches_for_league(client, league, team):
                         "last_fetched_at": timezone.now()
                     }
                 )
-
-            player_obj, created = await sync_to_async(salvar_partidas)()
+ 
+            match_obj, created = await sync_to_async(salvar_partida)()
             action = "🆕 Criado" if created else "🔄 Atualizado"
-            print(f"{action} partida: {home_team} X {away_team}")
+            print(f"{action} partida: {home_team.name} X {away_team.name}")
 
         except Exception as e:
-            print(f"❌ Erro ao salvar partida: {partida.get('home_team','X','away_team' 'Desconhecido')} — {e}")
+            print(f"❌ Erro ao salvar partida ID {partida.get('fixture', {}).get('id', 'Desconhecido')} — {e}")
+
 
 async def import_matches_async():
     print("🚀 Iniciando importação de partidas...")
@@ -260,10 +285,8 @@ async def import_matches_async():
         Team.objects.select_related("league").all()
     )
 
-    season = "2025"
-
     async with httpx.AsyncClient(timeout=30) as client:
-        tasks = [fetch_matches_for_league(client, team, season) for team in times]
+        tasks = [import_matches_for_team(client, team, season="2025") for team in times]
         await asyncio.gather(*tasks)
 
     print("\n✅ Importação de partidas finalizada.")
