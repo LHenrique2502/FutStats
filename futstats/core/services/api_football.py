@@ -199,8 +199,6 @@ async def import_players_async():
 
     print("\n✅ Importação de jogadores finalizada.")
 
-# TODO: Refatorar chamadas daqui para baixo para se adequarem as lógicas
-
 async def import_matches_for_team(client, team, season="2025"):
     print(f"\n🔍 Buscando partidas do time: {team.name} (ID API: {team.api_id})")
 
@@ -290,6 +288,8 @@ async def import_matches_async():
         await asyncio.gather(*tasks)
 
     print("\n✅ Importação de partidas finalizada.")
+
+# TODO: Refatorar chamadas daqui para baixo para se adequarem as lógicas
 
 async def fetch_match_data(client, match):
     match_id = match.api_id
