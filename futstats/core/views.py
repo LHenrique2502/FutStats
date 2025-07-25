@@ -363,3 +363,12 @@ def card_estatisticas_por_ligas(request):
         })
 
     return JsonResponse(resultado, safe=False)
+
+def filtros_view(request):
+    leagues = list(League.objects.values_list('name', flat=True).distinct())
+    teams = list(Team.objects.values_list('name', flat=True).distinct())
+
+    return JsonResponse({
+        "leagues": leagues,
+        "teams": teams
+    })
