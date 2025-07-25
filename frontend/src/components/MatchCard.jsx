@@ -20,8 +20,10 @@ const MatchCard = ({
     switch (status) {
       case 'completed':
         return 'bg-green-600';
-      default:
+      case 'scheduled':
         return 'bg-blue-500';
+      default:
+        return 'bg-red-500';
     }
   };
 
@@ -29,8 +31,10 @@ const MatchCard = ({
     switch (status) {
       case 'completed':
         return 'FINALIZADO';
-      default:
+      case 'scheduled':
         return 'AGENDADO';
+      default:
+        return 'NULO';
     }
   };
 

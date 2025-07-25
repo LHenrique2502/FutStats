@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import Header from '@/components/Header';
 import MatchCard from '@/components/MatchCard';
@@ -29,7 +29,10 @@ import {
 const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
 
 const Jogos = () => {
-  console.log('API_URL_BACK:', import.meta.env.VITE_API_URL_BACK);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const PAGE_SIZE = 9;
+
   const today = new Date().toISOString().split('T')[0];
 
   const [selectedLeague, setSelectedLeague] = useState('all');
@@ -40,8 +43,9 @@ const Jogos = () => {
   const [leagues, setLeagues] = useState(['all']);
   const [teams, setTeams] = useState(['all']);
 
-  const [leagueStats, setLeagueStats] = useState([]);
+  const [activeTab, setActiveTab] = useState('all');
 
+  // Buscar partidas da API
   const buscarPartidas = async () => {
     try {
       const response = await axios.get(`${API_URL_BACK}matches/`, {
@@ -49,21 +53,29 @@ const Jogos = () => {
           date: selectedDate,
           league: selectedLeague !== 'all' ? selectedLeague : '',
           team: selectedTeam !== 'all' ? selectedTeam : '',
+          page: currentPage,
+          page_size: PAGE_SIZE,
         },
       });
-      setMatches(response.data);
+
+      setMatches(response.data.results);
+      setTotalPages(response.data.total_pages);
     } catch (error) {
       console.error('Erro ao buscar partidas:', error);
     }
   };
 
-  const clearFilters = () => {
-    setSelectedLeague('all');
-    setSelectedTeam('all');
-    setSelectedDate(today);
-    buscarPartidas();
-  };
+  // Resetar página para 1 quando filtros mudam
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedDate, selectedLeague, selectedTeam, activeTab]);
 
+  // Buscar partidas quando filtros, página ou aba mudam
+  useEffect(() => {
+    buscarPartidas();
+  }, [currentPage, selectedDate, selectedLeague, selectedTeam, activeTab]);
+
+  // Buscar ligas e times para filtros no load inicial
   useEffect(() => {
     const fetchFiltros = async () => {
       try {
@@ -79,10 +91,25 @@ const Jogos = () => {
     };
 
     fetchFiltros();
-    buscarPartidas(); // carrega os jogos iniciais
   }, []);
 
-  const filteredMatches = matches;
+  // Filtra os matches localmente conforme a aba ativa
+  const filteredMatches = useMemo(() => {
+    if (activeTab === 'scheduled') {
+      return matches.filter((m) => m.status === 'scheduled');
+    }
+    if (activeTab === 'completed') {
+      return matches.filter((m) => m.status === 'completed');
+    }
+    return matches;
+  }, [matches, activeTab]);
+
+  const clearFilters = () => {
+    setSelectedDate('');
+    setSelectedLeague('all');
+    setSelectedTeam('all');
+    setActiveTab('all');
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -95,38 +122,6 @@ const Jogos = () => {
           <p className="text-muted-foreground">
             Estatísticas detalhadas e informações dos jogos
           </p>
-        </div>
-
-        {/* Estatísticas Gerais dos Jogos */}
-        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-6 animate-fade-in-up">
-          <StatsCard
-            title="Jogos Filtrados"
-            value={filteredMatches.length}
-            icon={Clock}
-            description={`de ${matches.length} total`}
-            trend="neutral"
-          />
-          <StatsCard
-            title="Média de Gols"
-            value="2.4"
-            icon={Target}
-            description="+0.2 vs última semana"
-            trend="up"
-          />
-          <StatsCard
-            title="Total de Partidas"
-            value="1,247"
-            icon={Trophy}
-            description="Esta temporada"
-            trend="neutral"
-          />
-          <StatsCard
-            title="Ligas Ativas"
-            value={leagues.length - 1}
-            icon={BarChart3}
-            description="Em 8 países"
-            trend="neutral"
-          />
         </div>
 
         {/* Filtros */}
@@ -208,10 +203,14 @@ const Jogos = () => {
 
         {/* Tabs dos Jogos */}
         <div className="animate-slide-in-right">
-          <Tabs defaultValue="all" className="w-full">
+          <Tabs
+            defaultValue="all"
+            className="w-full"
+            onValueChange={(value) => setActiveTab(value)}
+          >
             <TabsList className="grid w-full sm:w-auto grid-cols-3">
               <TabsTrigger value="all">Todos</TabsTrigger>
-              <TabsTrigger value="live">Ao Vivo</TabsTrigger>
+              <TabsTrigger value="scheduled">Agendado</TabsTrigger>
               <TabsTrigger value="completed">Finalizados</TabsTrigger>
             </TabsList>
 
@@ -223,122 +222,45 @@ const Jogos = () => {
               </div>
             </TabsContent>
 
-            <TabsContent value="live" className="space-y-6 mt-6">
+            <TabsContent value="scheduled" className="space-y-6 mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredMatches
-                  .filter((match) => match.status === 'live')
-                  .map((match, index) => (
-                    <MatchCard key={index} {...match} />
-                  ))}
+                {filteredMatches.map((match, index) => (
+                  <MatchCard key={index} {...match} />
+                ))}
               </div>
             </TabsContent>
 
             <TabsContent value="completed" className="space-y-6 mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredMatches
-                  .filter((match) => match.status === 'completed')
-                  .map((match, index) => (
-                    <MatchCard key={index} {...match} />
-                  ))}
+                {filteredMatches.map((match, index) => (
+                  <MatchCard key={index} {...match} />
+                ))}
               </div>
             </TabsContent>
           </Tabs>
         </div>
 
-        {/* Estatísticas Detalhadas */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in-up">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Activity className="h-5 w-5" />
-                <span>Estatísticas por Liga</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {leagues
-                  .filter((league) => league !== 'all')
-                  .map((league) => {
-                    const leagueMatches = matches.filter(
-                      (match) => match.league === league
-                    );
-                    const completedMatches = leagueMatches.filter(
-                      (match) => match.status === 'completed'
-                    );
-                    const totalGoals = completedMatches.reduce(
-                      (sum, match) =>
-                        sum + (match.homeScore || 0) + (match.awayScore || 0),
-                      0
-                    );
-                    const avgGoals =
-                      completedMatches.length > 0
-                        ? (totalGoals / completedMatches.length).toFixed(1)
-                        : '0.0';
-
-                    return (
-                      <div
-                        key={league}
-                        className="flex justify-between items-center p-3 rounded-lg border"
-                      >
-                        <div>
-                          <div className="font-medium">{league}</div>
-                          <div className="text-sm text-muted-foreground">
-                            {leagueMatches.length} jogos • Média: {avgGoals}{' '}
-                            gols
-                          </div>
-                        </div>
-                        <Badge variant="outline">
-                          {completedMatches.length} finalizados
-                        </Badge>
-                      </div>
-                    );
-                  })}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <TrendingUp className="h-5 w-5" />
-                <span>Tendências</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="p-3 rounded-lg border">
-                  <div className="font-medium text-green-600">
-                    Time em Melhor Forma
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Flamengo • 5 vitórias consecutivas
-                  </div>
-                </div>
-                <div className="p-3 rounded-lg border">
-                  <div className="font-medium text-blue-600">Maior Goleada</div>
-                  <div className="text-sm text-muted-foreground">
-                    Santos 4 x 0 Botafogo • Rodada 15
-                  </div>
-                </div>
-                <div className="p-3 rounded-lg border">
-                  <div className="font-medium text-purple-600">
-                    Clássico da Rodada
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    São Paulo vs Corinthians • Hoje 21:45
-                  </div>
-                </div>
-                <div className="p-3 rounded-lg border">
-                  <div className="font-medium text-orange-600">
-                    Artilheiro da Rodada
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Pedro (Flamengo) • 2 gols contra o Palmeiras
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Paginação */}
+        <div className="flex justify-center mt-4 space-x-4">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-secondary rounded hover:bg-secondary/80 disabled:opacity-50"
+          >
+            Anterior
+          </button>
+          <span className="flex items-center">
+            Página {currentPage} de {totalPages}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-secondary rounded hover:bg-secondary/80 disabled:opacity-50"
+          >
+            Próxima
+          </button>
         </div>
       </main>
     </div>

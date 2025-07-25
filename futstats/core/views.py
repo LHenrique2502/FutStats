@@ -71,6 +71,8 @@ def listar_partidas(request):
     date = request.GET.get('date', '')
     league = request.GET.get('league', '')
     team = request.GET.get('team', '')
+    page = int(request.GET.get('page', 1))
+    page_size = int(request.GET.get('page_size', 9))  # você pode alterar o padrão
 
     partidas = Match.objects.select_related('home_team', 'away_team', 'league').all().order_by('-date')
 
@@ -84,8 +86,21 @@ def listar_partidas(request):
             Q(away_team__name__icontains=team)
         )
 
+    hoje = timezone.now().date()
+
+    # Paginação
+    paginator = Paginator(partidas, page_size)
+    page_obj = paginator.get_page(page)
+
     data = []
-    for partida in partidas:
+    for partida in page_obj:
+        if partida.home_score is not None and partida.away_score is not None:
+            status = 'completed'
+        elif partida.date.date() >= hoje:
+            status = 'scheduled'
+        else:
+            status = 'unknown'
+
         data.append({
             'matchId': partida.id,
             'homeTeam': partida.home_team.name,
@@ -97,12 +112,20 @@ def listar_partidas(request):
             'date': partida.date.strftime('%Y-%m-%d %H:%M'),
             'stadium': partida.venue_name,
             'league': partida.league.name,
-            # 'status': partida.status,
+            'status': status,
         })
 
-    return JsonResponse(data, safe=False)
+    return JsonResponse({
+        'results': data,
+        'page': page,
+        'page_size': page_size,
+        'total_pages': paginator.num_pages,
+        'total_items': paginator.count,
+        'has_next': page_obj.has_next(),
+        'has_previous': page_obj.has_previous(),
+    })
 
-# COMMIT-BEFORE: VIEW DE TESTE
+
 def ultimas_partidas(request):
     hoje = timezone.now().date()
     ontem = hoje - timedelta(days=1)
