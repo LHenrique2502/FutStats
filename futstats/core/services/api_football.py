@@ -14,7 +14,6 @@ from core.models import League
 from asgiref.sync import sync_to_async
 from django.utils import timezone
 
-
 API_HOST = os.getenv("API_HOST")  # só o host, sem https://
 BASE_URL = f"https://{API_HOST}"  # URL completa com protocolo
 
@@ -26,6 +25,14 @@ HEADERS = {
 }
 
 ids_de_interesse = [39, 140, 61, 135, 78, 71, 15]  # Premier, Espanhol, Francês, Italiano, Alemão, Brasileiro, Copa do Mundo de Clubes
+
+RATE_LIMIT_REQUESTS = 30
+RATE_LIMIT_SLEEP = 60  # segundos
+
+def chunk_list(lst, size):
+    for i in range(0, len(lst), size):
+        yield lst[i:i + size]
+
 
 async def fetch(client, url, params=None, retries=3):
     for attempt in range(retries):
@@ -199,7 +206,7 @@ async def import_players_async():
 
     print("\n✅ Importação de jogadores finalizada.")
 
-async def import_matches_for_team(client, team, season="2025"):
+async def import_matches_for_team(client, team, season="2025", ligas_api_ids=None):
     print(f"\n🔍 Buscando partidas do time: {team.name} (ID API: {team.api_id})")
 
     url = f"{BASE_URL}/v3/fixtures"
@@ -227,19 +234,26 @@ async def import_matches_for_team(client, team, season="2025"):
             goals_data = partida.get("goals", {})
             score_data = partida.get("score", {}).get("penalty", {})
 
-            api_id = fixture_data.get("id")
-            date = fixture_data.get("date")
+            league_api_id = league_data.get("id")
+            if ligas_api_ids is not None and league_api_id not in ligas_api_ids:
+                print(f"⏭️ Ignorando partida de liga não cadastrada (ID: {league_api_id})")
+                continue
 
+            api_id = fixture_data.get("id")
+            exists = await sync_to_async(Match.objects.filter(api_id=api_id).exists)()
+            if exists:
+                print(f"⏭️ Partida já existente (ID: {api_id}), ignorada.")
+                continue
+
+            date = fixture_data.get("date")
             venue_name = fixture_data.get("venue", {}).get("name")
             venue_city = fixture_data.get("venue", {}).get("city")
             referee = fixture_data.get("referee")
-            # venue_capacity não vem nessa API, está como placeholder
-            venue_capacity = None  
+            venue_capacity = None
 
             home_team_id = teams_data.get("home", {}).get("id")
             away_team_id = teams_data.get("away", {}).get("id")
 
-            # Pega os objetos Team com base no ID (relacionamento ForeignKey)
             home_team = await sync_to_async(Team.objects.get)(api_id=home_team_id)
             away_team = await sync_to_async(Team.objects.get)(api_id=away_team_id)
 
@@ -249,31 +263,29 @@ async def import_matches_for_team(client, team, season="2025"):
             away_penalties = score_data.get("away")
 
             def salvar_partida():
-                return Match.objects.update_or_create(
+                return Match.objects.create(
                     api_id=api_id,
-                    defaults={
-                        "date": date,
-                        "league": team.league,  # Usa o time para acessar a League
-                        "venue_name": venue_name,
-                        "venue_city": venue_city,
-                        "venue_capacity": venue_capacity,
-                        "referee": referee,
-                        "home_team": home_team,
-                        "away_team": away_team,
-                        "home_score": home_score,
-                        "away_score": away_score,
-                        "home_penalties": home_penalties,
-                        "away_penalties": away_penalties,
-                        "last_fetched_at": timezone.now()
-                    }
+                    date=date,
+                    league=team.league,
+                    venue_name=venue_name,
+                    venue_city=venue_city,
+                    venue_capacity=venue_capacity,
+                    referee=referee,
+                    home_team=home_team,
+                    away_team=away_team,
+                    home_score=home_score,
+                    away_score=away_score,
+                    home_penalties=home_penalties,
+                    away_penalties=away_penalties,
+                    last_fetched_at=timezone.now()
                 )
- 
-            match_obj, created = await sync_to_async(salvar_partida)()
-            action = "🆕 Criado" if created else "🔄 Atualizado"
-            print(f"{action} partida: {home_team.name} X {away_team.name}")
+
+            match_obj = await sync_to_async(salvar_partida)()
+            print(f"🆕 Criada nova partida: {home_team.name} X {away_team.name}")
 
         except Exception as e:
             print(f"❌ Erro ao salvar partida ID {partida.get('fixture', {}).get('id', 'Desconhecido')} — {e}")
+
 
 
 async def import_matches_async():
@@ -283,33 +295,41 @@ async def import_matches_async():
         Team.objects.select_related("league").all()
     )
 
+    # Carrega todos os IDs das ligas válidas no banco
+    ligas_api_ids = await sync_to_async(list)(
+        League.objects.values_list("api_id", flat=True)
+    )
+
     async with httpx.AsyncClient(timeout=30) as client:
-        tasks = [import_matches_for_team(client, team, season="2025") for team in times]
+        tasks = [
+            import_matches_for_team(client, team, season="2025", ligas_api_ids=ligas_api_ids)
+            for team in times
+        ]
         await asyncio.gather(*tasks)
 
     print("\n✅ Importação de partidas finalizada.")
+
 
 # TODO: Refatorar chamadas daqui para baixo para se adequarem as lógicas
 
 async def fetch_match_data(client, match):
     match_id = match.api_id
 
-    # ==============================
-    # 📦 IMPORTAR EVENTOS
-    # ==============================
+    # ============================== EVENTOS ==============================
     if not match.events_fetched_at:
         url_events = f"{BASE_URL}/v3/fixtures/events"
         params_events = {"fixture": match_id}
         data_events = await fetch(client, url_events, params_events)
 
         if data_events and "response" in data_events:
+            created = 0
             for event in data_events["response"]:
                 team_api_id = event.get("team", {}).get("id")
                 team_obj = await sync_to_async(Team.objects.filter(api_id=team_api_id).first)()
                 if not team_obj:
                     continue
 
-                await sync_to_async(MatchEvent.objects.update_or_create)(
+                exists = await sync_to_async(MatchEvent.objects.filter(
                     match=match,
                     team=team_obj,
                     player=event.get("player", {}).get("name"),
@@ -317,74 +337,94 @@ async def fetch_match_data(client, match):
                     extra_minute=event.get("time", {}).get("extra"),
                     type=event.get("type"),
                     detail=event.get("detail"),
-                    defaults={
-                        "assist": event.get("assist", {}).get("name"),
-                        "comments": event.get("comments"),
-                    }
-                )
-            match.events_fetched_at = now()
-            await sync_to_async(match.save)()
-            print(f"✅ Eventos importados para a partida {match_id}")
+                ).exists)()
 
-    # ==============================
-    # 📊 IMPORTAR ESTATÍSTICAS
-    # ==============================
+                if not exists:
+                    await sync_to_async(MatchEvent.objects.create)(
+                        match=match,
+                        team=team_obj,
+                        player=event.get("player", {}).get("name"),
+                        assist=event.get("assist", {}).get("name"),
+                        type=event.get("type"),
+                        detail=event.get("detail"),
+                        comments=event.get("comments"),
+                        minute=event.get("time", {}).get("elapsed"),
+                        extra_minute=event.get("time", {}).get("extra"),
+                    )
+                    created += 1
+
+            if created > 0:
+                match.events_fetched_at = now()
+                await sync_to_async(match.save)()
+                print(f"✅ {created} eventos importados para a partida {match_id}")
+
+    # =========================== ESTATÍSTICAS ============================
     if not match.stats_fetched_at:
         url_stats = f"{BASE_URL}/v3/fixtures/statistics"
         params_stats = {"fixture": match_id}
         data_stats = await fetch(client, url_stats, params_stats)
 
         if data_stats and "response" in data_stats:
+            created = 0
             for team_stats in data_stats["response"]:
                 team_api_id = team_stats.get("team", {}).get("id")
                 team_obj = await sync_to_async(Team.objects.filter(api_id=team_api_id).first)()
                 if not team_obj:
                     continue
 
-                stats_dict = {}
-                for stat in team_stats.get("statistics", []):
-                    stat_name = stat.get("type")
-                    stat_value = stat.get("value")
-
-                    if stat_name == "Shots on Goal":
-                        stats_dict["shots_on_goal"] = stat_value
-                    elif stat_name == "Shots off Goal":
-                        stats_dict["shots_off_goal"] = stat_value
-                    elif stat_name == "Total Shots":
-                        stats_dict["total_shots"] = stat_value
-                    elif stat_name == "Blocked Shots":
-                        stats_dict["blocked_shots"] = stat_value
-                    elif stat_name == "Shots insidebox":
-                        stats_dict["shots_inside_box"] = stat_value
-                    elif stat_name == "Shots outsidebox":
-                        stats_dict["shots_outside_box"] = stat_value
-                    elif stat_name == "Fouls":
-                        stats_dict["fouls"] = stat_value
-                    elif stat_name == "Corner Kicks":
-                        stats_dict["corner_kicks"] = stat_value
-                    elif stat_name == "Offsides":
-                        stats_dict["offsides"] = stat_value
-                    elif stat_name == "Ball Possession":
-                        stats_dict["ball_possession"] = stat_value
-                    elif stat_name == "Yellow Cards":
-                        stats_dict["yellow_cards"] = stat_value
-                    elif stat_name == "Red Cards":
-                        stats_dict["red_cards"] = stat_value
-                    elif stat_name == "Passes":
-                        stats_dict["passes"] = stat_value
-                    elif stat_name == "Accurate Passes":
-                        stats_dict["accurate_passes"] = stat_value
-                    elif stat_name == "Pass Percentage":
-                        stats_dict["pass_percentage"] = stat_value
-
-                await sync_to_async(TeamStatistics.objects.update_or_create)(
+                exists = await sync_to_async(TeamStatistics.objects.filter(
                     match=match,
-                    team=team_obj,
-                    defaults=stats_dict
-                )
-            match.stats_fetched_at = now()
-            await sync_to_async(match.save)()
-            print(f"✅ Estatísticas importadas para a partida {match_id}")
+                    team=team_obj
+                ).exists)()
+
+                if not exists:
+                    stats_dict = {}
+                    for stat in team_stats.get("statistics", []):
+                        name = stat.get("type")
+                        value = stat.get("value")
+
+                        if name == "Shots on Goal":
+                            stats_dict["shots_on_goal"] = value
+                        elif name == "Shots off Goal":
+                            stats_dict["shots_off_goal"] = value
+                        elif name == "Total Shots":
+                            stats_dict["total_shots"] = value
+                        elif name == "Blocked Shots":
+                            stats_dict["blocked_shots"] = value
+                        elif name == "Shots insidebox":
+                            stats_dict["shots_inside_box"] = value
+                        elif name == "Shots outsidebox":
+                            stats_dict["shots_outside_box"] = value
+                        elif name == "Fouls":
+                            stats_dict["fouls"] = value
+                        elif name == "Corner Kicks":
+                            stats_dict["corner_kicks"] = value
+                        elif name == "Offsides":
+                            stats_dict["offsides"] = value
+                        elif name == "Ball Possession":
+                            stats_dict["ball_possession"] = value
+                        elif name == "Yellow Cards":
+                            stats_dict["yellow_cards"] = value
+                        elif name == "Red Cards":
+                            stats_dict["red_cards"] = value
+                        elif name == "Passes":
+                            stats_dict["passes"] = value
+                        elif name == "Accurate Passes":
+                            stats_dict["accurate_passes"] = value
+                        elif name == "Pass Percentage":
+                            stats_dict["pass_percentage"] = value
+
+                    await sync_to_async(TeamStatistics.objects.create)(
+                        match=match,
+                        team=team_obj,
+                        **stats_dict
+                    )
+                    created += 1
+
+            if created > 0:
+                match.stats_fetched_at = now()
+                await sync_to_async(match.save)()
+                print(f"✅ Estatísticas importadas para a partida {match_id}")
 
 async def fetch_match_data_safe(client, match):
     try:
@@ -394,36 +434,44 @@ async def fetch_match_data_safe(client, match):
     except Exception as e:
         print(f"❌ Erro ao importar dados da partida {match.api_id}: {e}")
 
-RATE_LIMIT_REQUESTS = 30
-RATE_LIMIT_SLEEP = 60  # segundos
-
-def chunk_list(lst, size):
-    for i in range(0, len(lst), size):
-        yield lst[i:i + size]
-
-async def import_match_data_async():
+async def import_match_data_async(client):
     limite = now() - timedelta(days=2)
+
+    # 🔍 Buscar IDs dos times e ligas salvos no banco
+    print(f"🔍 Busca IDs dos times e ligas salvos no banco")
+    team_ids = await sync_to_async(list)(Team.objects.values_list("id", flat=True))
+    league_ids = await sync_to_async(list)(League.objects.values_list("id", flat=True))
+
+    # 📦 Buscar partidas que:
+    # - Já aconteceram
+    # - São de times e ligas salvos
+    # - Não têm dados recentes
     matches = await sync_to_async(list)(
-        Match.objects.filter(date__lte=now(), date__gte=limite)
-        .filter(Q(last_fetched_at__isnull=True) | Q(last_fetched_at__lt=limite))
+        Match.objects.filter(
+            date__lte=now(),
+            date__gte=limite,
+            home_team_id__in=team_ids,
+            away_team_id__in=team_ids,
+            league_id__in=league_ids
+        )
+        .filter(
+            Q(last_fetched_at__isnull=True) |
+            Q(last_fetched_at__lt=limite)
+        )
     )
 
     if not matches:
-        print("✅ Nenhuma partida pendente para atualização.")
+        print("Nenhuma partida nova para atualizar.")
         return
 
-    async with httpx.AsyncClient(timeout=30) as client:
-        total = len(matches)
-        print(f"🔄 Iniciando importação de {total} partidas (máx {RATE_LIMIT_REQUESTS}/minuto)...")
+    print(f"Encontradas {len(matches)} partidas para importar estatísticas/eventos.")
 
-        for index, batch in enumerate(chunk_list(matches, RATE_LIMIT_REQUESTS), start=1):
-            print(f"\n🚀 Lote {index}: processando {len(batch)} partidas...")
+    # 🔄 Rate limit: 30 partidas por minuto
+    for chunk in chunk_list(matches, RATE_LIMIT_REQUESTS):
+        await asyncio.gather(*[
+            fetch_match_data_safe(client, match) for match in chunk
+        ])
+        print(f"Aguardando {RATE_LIMIT_SLEEP}s para o próximo lote...")
+        await asyncio.sleep(RATE_LIMIT_SLEEP)
 
-            tasks = [fetch_match_data_safe(client, match) for match in batch]
-            await asyncio.gather(*tasks)
-
-            if (index * RATE_LIMIT_REQUESTS) < total:
-                print(f"⏳ Aguardando {RATE_LIMIT_SLEEP}s para o próximo lote...")
-                await asyncio.sleep(RATE_LIMIT_SLEEP)
-
-    print("\n✅ Importação finalizada com sucesso!")
+    print("✅ Importação finalizada com sucesso.")

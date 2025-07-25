@@ -76,6 +76,10 @@ class Match(models.Model):
     away_penalties = models.IntegerField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    events_fetched_at = models.DateTimeField(null=True, blank=True)
+    stats_fetched_at = models.DateTimeField(null=True, blank=True)
+
+
     def __str__(self):
         return f"{self.home_team} x {self.away_team} ({self.date.strftime('%Y-%m-%d')})"
 
