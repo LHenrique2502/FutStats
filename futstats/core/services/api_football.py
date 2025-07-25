@@ -240,11 +240,6 @@ async def import_matches_for_team(client, team, season="2025", ligas_api_ids=Non
                 continue
 
             api_id = fixture_data.get("id")
-            exists = await sync_to_async(Match.objects.filter(api_id=api_id).exists)()
-            if exists:
-                print(f"⏭️ Partida já existente (ID: {api_id}), ignorada.")
-                continue
-
             date = fixture_data.get("date")
             venue_name = fixture_data.get("venue", {}).get("name")
             venue_city = fixture_data.get("venue", {}).get("city")
@@ -262,30 +257,49 @@ async def import_matches_for_team(client, team, season="2025", ligas_api_ids=Non
             home_penalties = score_data.get("home")
             away_penalties = score_data.get("away")
 
-            def salvar_partida():
-                return Match.objects.create(
-                    api_id=api_id,
-                    date=date,
-                    league=team.league,
-                    venue_name=venue_name,
-                    venue_city=venue_city,
-                    venue_capacity=venue_capacity,
-                    referee=referee,
-                    home_team=home_team,
-                    away_team=away_team,
-                    home_score=home_score,
-                    away_score=away_score,
-                    home_penalties=home_penalties,
-                    away_penalties=away_penalties,
-                    last_fetched_at=timezone.now()
-                )
+            # 🔄 Atualiza se já existir
+            match_obj = await sync_to_async(Match.objects.filter(api_id=api_id).first)()
+            if match_obj:
+                match_obj.date = date
+                match_obj.league = team.league
+                match_obj.venue_name = venue_name
+                match_obj.venue_city = venue_city
+                match_obj.venue_capacity = venue_capacity
+                match_obj.referee = referee
+                match_obj.home_team = home_team
+                match_obj.away_team = away_team
+                match_obj.home_score = home_score
+                match_obj.away_score = away_score
+                match_obj.home_penalties = home_penalties
+                match_obj.away_penalties = away_penalties
+                match_obj.last_fetched_at = timezone.now()
 
-            match_obj = await sync_to_async(salvar_partida)()
-            print(f"🆕 Criada nova partida: {home_team.name} X {away_team.name}")
+                await sync_to_async(match_obj.save)()
+                print(f"♻️ Atualizada partida: {home_team.name} X {away_team.name}")
+            else:
+                def salvar_partida():
+                    return Match.objects.create(
+                        api_id=api_id,
+                        date=date,
+                        league=team.league,
+                        venue_name=venue_name,
+                        venue_city=venue_city,
+                        venue_capacity=venue_capacity,
+                        referee=referee,
+                        home_team=home_team,
+                        away_team=away_team,
+                        home_score=home_score,
+                        away_score=away_score,
+                        home_penalties=home_penalties,
+                        away_penalties=away_penalties,
+                        last_fetched_at=timezone.now()
+                    )
+
+                match_obj = await sync_to_async(salvar_partida)()
+                print(f"🆕 Criada nova partida: {home_team.name} X {away_team.name}")
 
         except Exception as e:
-            print(f"❌ Erro ao salvar partida ID {partida.get('fixture', {}).get('id', 'Desconhecido')} — {e}")
-
+            print(f"❌ Erro ao salvar/atualizar partida ID {partida.get('fixture', {}).get('id', 'Desconhecido')} — {e}")
 
 
 async def import_matches_async():
@@ -295,7 +309,6 @@ async def import_matches_async():
         Team.objects.select_related("league").all()
     )
 
-    # Carrega todos os IDs das ligas válidas no banco
     ligas_api_ids = await sync_to_async(list)(
         League.objects.values_list("api_id", flat=True)
     )
