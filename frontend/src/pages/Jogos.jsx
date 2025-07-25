@@ -26,7 +26,7 @@ import {
   Filter,
 } from 'lucide-react';
 
-const API_URL_BACK = process.env.REACT_APP_API_URL_BACK;
+const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
 
 const Jogos = () => {
   console.log('API_URL_BACK:', import.meta.env.VITE_API_URL_BACK);
