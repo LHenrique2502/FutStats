@@ -309,9 +309,6 @@ async def import_matches_async():
 
     print("\n✅ Importação de partidas finalizada.")
 
-
-# TODO: Refatorar chamadas daqui para baixo para se adequarem as lógicas
-
 async def fetch_match_data(client, match):
     match_id = match.api_id
 
@@ -447,18 +444,15 @@ async def import_match_data_async(client):
     # - São de times e ligas salvos
     # - Não têm dados recentes
     matches = await sync_to_async(list)(
-        Match.objects.filter(
-            date__lte=now(),
-            date__gte=limite,
-            home_team_id__in=team_ids,
-            away_team_id__in=team_ids,
-            league_id__in=league_ids
-        )
-        .filter(
-            Q(last_fetched_at__isnull=True) |
-            Q(last_fetched_at__lt=limite)
-        )
+    Match.objects.filter(
+        date__lte=now(),
+        home_team_id__in=team_ids,
+        away_team_id__in=team_ids,
+        league_id__in=league_ids,
+        events_fetched_at__isnull=True,
+        stats_fetched_at__isnull=True
     )
+)
 
     if not matches:
         print("Nenhuma partida nova para atualizar.")

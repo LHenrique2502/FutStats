@@ -104,7 +104,19 @@ def listar_partidas(request):
 
 # COMMIT-BEFORE: VIEW DE TESTE
 def ultimas_partidas(request):
-    ultimos_jogos = Match.objects.order_by('date')[:5]  # pega os 5 mais recentes
+    hoje = timezone.now().date()
+    ontem = hoje - timedelta(days=1)
+
+    # 🕑 Pega o intervalo de datas entre 00:00 e 23:59 de ontem
+    inicio_ontem = timezone.make_aware(datetime.combine(ontem, datetime.min.time()))
+    fim_ontem = timezone.make_aware(datetime.combine(ontem, datetime.max.time()))
+
+    # 🧠 Busca jogos que aconteceram ontem e têm placares definidos
+    ultimos_jogos = Match.objects.filter(
+        date__range=(inicio_ontem, fim_ontem),
+        home_score__isnull=False,
+        away_score__isnull=False
+    ).order_by('-date')[:5]
 
     data = []
     for jogo in ultimos_jogos:
@@ -119,11 +131,10 @@ def ultimas_partidas(request):
             "date": jogo.date.strftime('%d/%m/%Y %H:%M'),
             "league": jogo.league.name,
             "stadium": jogo.venue_name,
-            "status": "completed" if jogo.home_score is not None and jogo.away_score is not None else "upcoming"
-
+            "status": "completed"
         })
 
-    return JsonResponse(data, safe=False)  # safe=False permite retornar listas
+    return JsonResponse(data, safe=False)
 
 # Estatísticas gerais do banco
 def estatisticas_gerais(request):
