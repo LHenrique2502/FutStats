@@ -2,10 +2,8 @@ import { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import Header from '@/components/Header';
 import MatchCard from '@/components/MatchCard';
-import StatsCard from '@/components/StatsCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
@@ -15,16 +13,7 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Trophy,
-  Target,
-  Clock,
-  BarChart3,
-  TrendingUp,
-  Activity,
-  Calendar,
-  Filter,
-} from 'lucide-react';
+import { Calendar, Filter } from 'lucide-react';
 
 const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
 
@@ -35,15 +24,55 @@ const Jogos = () => {
 
   const today = new Date().toISOString().split('T')[0];
 
+  const [matches, setMatches] = useState([]);
+
+  const [quantidade, setQuantidade] = useState(null);
+
+  useEffect(() => {
+    async function fetchQuantidade() {
+      try {
+        const response = await axios.get(`${API_URL_BACK}contar_jogos/`);
+        console.log('Quantidade recebida', response);
+        setQuantidade(response.data.quantidade);
+      } catch (error) {
+        console.error('Erro ao buscar quantidade de jogos:', error);
+      }
+    }
+
+    fetchQuantidade();
+  }, []);
+
+  // Buscar ligas e times para filtros no load inicial
   const [selectedLeague, setSelectedLeague] = useState('all');
   const [selectedTeam, setSelectedTeam] = useState('all');
   const [selectedDate, setSelectedDate] = useState(today);
-
-  const [matches, setMatches] = useState([]);
   const [leagues, setLeagues] = useState(['all']);
   const [teams, setTeams] = useState(['all']);
-
   const [activeTab, setActiveTab] = useState('all');
+
+  useEffect(() => {
+    const fetchFiltros = async () => {
+      try {
+        const [ligasRes, timesRes] = await Promise.all([
+          axios.get(`${API_URL_BACK}ligas/`),
+          axios.get(`${API_URL_BACK}times/`),
+        ]);
+        setLeagues(['all', ...ligasRes.data]);
+        setTeams(['all', ...timesRes.data]);
+      } catch (error) {
+        console.error('Erro ao buscar filtros:', error);
+      }
+    };
+
+    fetchFiltros();
+  }, []);
+
+  const clearFilters = () => {
+    setSelectedDate('');
+    setSelectedLeague('all');
+    setSelectedTeam('all');
+    setActiveTab('all');
+  };
 
   // Buscar partidas da API
   const buscarPartidas = async () => {
@@ -75,24 +104,6 @@ const Jogos = () => {
     buscarPartidas();
   }, [currentPage, selectedDate, selectedLeague, selectedTeam, activeTab]);
 
-  // Buscar ligas e times para filtros no load inicial
-  useEffect(() => {
-    const fetchFiltros = async () => {
-      try {
-        const [ligasRes, timesRes] = await Promise.all([
-          axios.get(`${API_URL_BACK}ligas/`),
-          axios.get(`${API_URL_BACK}times/`),
-        ]);
-        setLeagues(['all', ...ligasRes.data]);
-        setTeams(['all', ...timesRes.data]);
-      } catch (error) {
-        console.error('Erro ao buscar filtros:', error);
-      }
-    };
-
-    fetchFiltros();
-  }, []);
-
   // Filtra os matches localmente conforme a aba ativa
   const filteredMatches = useMemo(() => {
     if (activeTab === 'scheduled') {
@@ -104,13 +115,6 @@ const Jogos = () => {
     return matches;
   }, [matches, activeTab]);
 
-  const clearFilters = () => {
-    setSelectedDate('');
-    setSelectedLeague('all');
-    setSelectedTeam('all');
-    setActiveTab('all');
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -120,7 +124,7 @@ const Jogos = () => {
         <div className="animate-fade-in-up">
           <h2 className="text-3xl font-bold mb-2">Análise de Jogos</h2>
           <p className="text-muted-foreground">
-            Estatísticas detalhadas e informações dos jogos
+            Jogos cadastrados: {quantidade !== null ? quantidade : '...'}
           </p>
         </div>
 

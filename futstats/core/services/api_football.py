@@ -29,6 +29,8 @@ ids_de_interesse = [39, 140, 61, 135, 78, 71, 15]  # Premier, Espanhol, Francês
 RATE_LIMIT_REQUESTS = 30
 RATE_LIMIT_SLEEP = 60  # segundos
 
+API_REQUEST_COUNT = 0
+
 def chunk_list(lst, size):
     for i in range(0, len(lst), size):
         yield lst[i:i + size]
@@ -51,18 +53,17 @@ async def fetch(client, url, params=None, retries=3):
             await asyncio.sleep(2 ** attempt)
     return None
 
+# Importação de ligas
 async def get_leagues():
-    # print("🔑 API KEY:", repr(os.environ.get("API_KEY")))
+    global API_REQUEST_COUNT
 
-    print(f"API_HOST: {API_HOST}")
-    print(f"API_KEY: {API_KEY}")
-
-    print("🟢 Iniciando get_leagues()")
+    print("🚀 Iniciando importação de ligas...")
 
     url = f"{BASE_URL}/v3/leagues"
 
     async with httpx.AsyncClient(timeout=20) as client:
         data = await fetch(client, url)
+        API_REQUEST_COUNT += 1
 
         if not data:
             print("❌ Nenhuma liga foi retornada.")
@@ -91,7 +92,15 @@ async def get_leagues():
                 )
                 print(f"✅ Liga importada/atualizada: {league['name']}")
 
+    print(f"\n📊 Total de requisições feitas: {API_REQUEST_COUNT}")
+
+# Importação de times
 async def fetch_teams_for_league(client, league):
+
+    global API_REQUEST_COUNT
+
+    print(f"\n🔍 Buscando times da liga: {team.league}")
+
     url = f"{BASE_URL}/v3/teams"
     params = {
         "league": league.api_id,
@@ -99,6 +108,8 @@ async def fetch_teams_for_league(client, league):
     }
 
     data = await fetch(client, url, params=params)
+    API_REQUEST_COUNT += 1
+
     if not data:
         print(f"❌ Nenhum time retornado para a liga {league.name}")
         return
@@ -121,6 +132,9 @@ async def fetch_teams_for_league(client, league):
     print(f"✅ Times importados/atualizados da liga {league.name}")
 
 async def import_teams_async():
+
+    print("🚀 Iniciando importação de times...")
+
     # Busca as ligas de interesse no banco de forma segura (dentro do contexto async)
     ligas_atuais = await sync_to_async(list)(
         League.objects.filter(api_id__in=ids_de_interesse)
@@ -131,12 +145,21 @@ async def import_teams_async():
         tasks = [fetch_teams_for_league(client, liga) for liga in ligas_atuais]
         await asyncio.gather(*tasks)
 
+    print("\n✅ Importação de times finalizada.")
+    print(f"\n📊 Total de requisições feitas: {API_REQUEST_COUNT}")
+
+# Importação de jogadores
+# Refatorar para diminuir requisições (realizar requisições pela liga)
 async def import_players_for_team(client, team):
+
+    global API_REQUEST_COUNT
+
     print(f"\n🔍 Buscando jogadores do time: {team.name} (ID API: {team.api_id})")
 
     url = f"{BASE_URL}/v3/players/squads"
     params = {"team": team.api_id}
     data = await fetch(client, url, params=params)
+    API_REQUEST_COUNT += 1
 
     if not data or "response" not in data:
         print(f"⚠️ Nenhum dado retornado para o time {team.name}")
@@ -193,6 +216,9 @@ async def import_players_for_team(client, team):
             print(f"❌ Erro ao salvar jogador: {jogador.get('name', 'Desconhecido')} — {e}")
 
 async def import_players_async():
+
+    global API_REQUEST_COUNT
+
     # print(repr(os.environ["DATABASE_URL"]))
     print("🚀 Iniciando importação de jogadores...")
 
@@ -205,46 +231,54 @@ async def import_players_async():
         await asyncio.gather(*tasks)
 
     print("\n✅ Importação de jogadores finalizada.")
+    print(f"\n📊 Total de requisições feitas: {API_REQUEST_COUNT}")
 
-async def import_matches_for_team(client, team, season="2025", ligas_api_ids=None):
-    print(f"\n🔍 Buscando partidas do time: {team.name} (ID API: {team.api_id})")
+# Importação de partidas
+async def import_matches_for_league(client, league, season="2025"):
+
+    global API_REQUEST_COUNT
+
+    print(f"\n🔍 Buscando partidas da liga: {league.name} (ID API: {league.api_id})")
 
     url = f"{BASE_URL}/v3/fixtures"
     params = {
-        "team": team.api_id,
+        "league": league.api_id,
         "season": season
     }
 
     data = await fetch(client, url, params=params)
+    API_REQUEST_COUNT += 1
 
     if not data or "response" not in data:
-        print(f"⚠️ Nenhuma partida retornada para o time {team.name}")
+        print(f"⚠️ Nenhuma partida retornada para a liga {league.name}")
         return
 
     fixtures = data["response"]
-    if not fixtures:
-        print(f"❌ Nenhuma partida encontrada para o time {team.name}")
-        return
+
+    # Define intervalo de datas recentes
+    agora = timezone.now()
+    dias_passados = agora - timedelta(days=5)
+    dias_futuros = agora + timedelta(days=5)
 
     for partida in fixtures:
         try:
             fixture_data = partida.get("fixture", {})
+            date_str = fixture_data.get("date")
+            date = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+
+            # 🧠 Ignora partidas muito antigas ou muito distantes
+            if not (dias_passados <= date <= dias_futuros):
+                continue
+
             league_data = partida.get("league", {})
             teams_data = partida.get("teams", {})
             goals_data = partida.get("goals", {})
             score_data = partida.get("score", {}).get("penalty", {})
 
-            league_api_id = league_data.get("id")
-            if ligas_api_ids is not None and league_api_id not in ligas_api_ids:
-                print(f"⏭️ Ignorando partida de liga não cadastrada (ID: {league_api_id})")
-                continue
-
             api_id = fixture_data.get("id")
-            date = fixture_data.get("date")
             venue_name = fixture_data.get("venue", {}).get("name")
             venue_city = fixture_data.get("venue", {}).get("city")
             referee = fixture_data.get("referee")
-            venue_capacity = None
 
             home_team_id = teams_data.get("home", {}).get("id")
             away_team_id = teams_data.get("away", {}).get("id")
@@ -257,14 +291,12 @@ async def import_matches_for_team(client, team, season="2025", ligas_api_ids=Non
             home_penalties = score_data.get("home")
             away_penalties = score_data.get("away")
 
-            # 🔄 Atualiza se já existir
             match_obj = await sync_to_async(Match.objects.filter(api_id=api_id).first)()
             if match_obj:
                 match_obj.date = date
-                match_obj.league = team.league
+                match_obj.league = league
                 match_obj.venue_name = venue_name
                 match_obj.venue_city = venue_city
-                match_obj.venue_capacity = venue_capacity
                 match_obj.referee = referee
                 match_obj.home_team = home_team
                 match_obj.away_team = away_team
@@ -273,7 +305,6 @@ async def import_matches_for_team(client, team, season="2025", ligas_api_ids=Non
                 match_obj.home_penalties = home_penalties
                 match_obj.away_penalties = away_penalties
                 match_obj.last_fetched_at = timezone.now()
-
                 await sync_to_async(match_obj.save)()
                 print(f"♻️ Atualizada partida: {home_team.name} X {away_team.name}")
             else:
@@ -281,10 +312,9 @@ async def import_matches_for_team(client, team, season="2025", ligas_api_ids=Non
                     return Match.objects.create(
                         api_id=api_id,
                         date=date,
-                        league=team.league,
+                        league=league,
                         venue_name=venue_name,
                         venue_city=venue_city,
-                        venue_capacity=venue_capacity,
                         referee=referee,
                         home_team=home_team,
                         away_team=away_team,
@@ -294,35 +324,34 @@ async def import_matches_for_team(client, team, season="2025", ligas_api_ids=Non
                         away_penalties=away_penalties,
                         last_fetched_at=timezone.now()
                     )
-
-                match_obj = await sync_to_async(salvar_partida)()
+                await sync_to_async(salvar_partida)()
                 print(f"🆕 Criada nova partida: {home_team.name} X {away_team.name}")
 
         except Exception as e:
-            print(f"❌ Erro ao salvar/atualizar partida ID {partida.get('fixture', {}).get('id', 'Desconhecido')} — {e}")
-
+            print(f"❌ Erro ao salvar partida ID {fixture_data.get('id')} — {e}")
 
 async def import_matches_async():
-    print("🚀 Iniciando importação de partidas...")
+    print("🚀 Iniciando importação de partidas por liga...")
 
-    times = await sync_to_async(list)(
-        Team.objects.select_related("league").all()
-    )
+    global API_REQUEST_COUNT
 
-    ligas_api_ids = await sync_to_async(list)(
-        League.objects.values_list("api_id", flat=True)
-    )
+    ligas = await sync_to_async(list)(League.objects.all())
 
     async with httpx.AsyncClient(timeout=30) as client:
         tasks = [
-            import_matches_for_team(client, team, season="2025", ligas_api_ids=ligas_api_ids)
-            for team in times
+            import_matches_for_league(client, liga, season="2025")
+            for liga in ligas
         ]
         await asyncio.gather(*tasks)
 
     print("\n✅ Importação de partidas finalizada.")
+    print(f"\n📊 Total de requisições feitas: {API_REQUEST_COUNT}")
 
+# Importação de estatísticas das partidas
 async def fetch_match_data(client, match):
+
+    global API_REQUEST_COUNT
+
     match_id = match.api_id
 
     # ============================== EVENTOS ==============================
@@ -330,6 +359,7 @@ async def fetch_match_data(client, match):
         url_events = f"{BASE_URL}/v3/fixtures/events"
         params_events = {"fixture": match_id}
         data_events = await fetch(client, url_events, params_events)
+        API_REQUEST_COUNT += 1
 
         if data_events and "response" in data_events:
             created = 0
@@ -373,6 +403,7 @@ async def fetch_match_data(client, match):
         url_stats = f"{BASE_URL}/v3/fixtures/statistics"
         params_stats = {"fixture": match_id}
         data_stats = await fetch(client, url_stats, params_stats)
+        API_REQUEST_COUNT += 1
 
         if data_stats and "response" in data_stats:
             created = 0
@@ -445,6 +476,9 @@ async def fetch_match_data_safe(client, match):
         print(f"❌ Erro ao importar dados da partida {match.api_id}: {e}")
 
 async def import_match_data_async(client):
+
+    global API_REQUEST_COUNT
+
     limite = now() - timedelta(days=2)
 
     # 🔍 Buscar IDs dos times e ligas salvos no banco
@@ -482,3 +516,4 @@ async def import_match_data_async(client):
         await asyncio.sleep(RATE_LIMIT_SLEEP)
 
     print("✅ Importação finalizada com sucesso.")
+    print(f"\n📊 Total de requisições feitas: {API_REQUEST_COUNT}")

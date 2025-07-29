@@ -26,8 +26,18 @@ def listar_ligas(request):
     return JsonResponse(list(ligas), safe=False)
 
 def listar_times(request):
-    times = Team.objects.values_list('name', flat=True).distinct().order_by('name')
-    return JsonResponse(list(times), safe=False)
+    times = Team.objects.select_related('league').all().order_by('name')
+
+    data = []
+    for time in times:
+        data.append({
+            'nome': time.name,
+            'pais': time.country,
+            'logo': time.logo,
+            'liga': time.league.name
+        })
+
+    return JsonResponse(data, safe=False)
 
 def listar_jogadores(request):
     nome = request.GET.get('nome', '')
@@ -124,7 +134,6 @@ def listar_partidas(request):
         'has_next': page_obj.has_next(),
         'has_previous': page_obj.has_previous(),
     })
-
 
 def ultimas_partidas(request):
     hoje = timezone.now().date()
@@ -291,6 +300,10 @@ def enviar_mensagem_telegram(texto):
 def analisar_e_enviar_telegram():
     print("\n🔍 Iniciando análise e envio para Telegram...\n")
 
+    hoje = timezone.localtime().date()
+    inicio_do_dia = timezone.make_aware(timezone.datetime.combine(hoje, timezone.datetime.min.time()))
+    fim_do_dia = timezone.make_aware(timezone.datetime.combine(hoje, timezone.datetime.max.time()))
+
     todos_times = Team.objects.all()
 
     def calcular_gols(matches, time):
@@ -310,7 +323,7 @@ def analisar_e_enviar_telegram():
     for time in todos_times:
         proximo_jogo = Match.objects.filter(
             Q(home_team=time) | Q(away_team=time),
-            date__gte=timezone.now()
+            date__range=(inicio_do_dia, fim_do_dia)
         ).order_by('date').first()
 
         if not proximo_jogo:
@@ -387,11 +400,12 @@ def card_estatisticas_por_ligas(request):
 
     return JsonResponse(resultado, safe=False)
 
-# def filtros_view(request):
-#     leagues = list(League.objects.values_list('name', flat=True).distinct())
-#     teams = list(Team.objects.values_list('name', flat=True).distinct())
+# Página de Jogos
+def contar_jogos(request):
+    quantidade = Match.objects.count()
+    return JsonResponse({'quantidade': quantidade})
 
-#     return JsonResponse({
-#         "leagues": leagues,
-#         "teams": teams
-#     })
+# Página de Times
+def contar_times(request):
+    quantidade = Team.objects.count()
+    return JsonResponse({'quantidade': quantidade})
