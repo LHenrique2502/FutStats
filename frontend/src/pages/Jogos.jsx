@@ -22,17 +22,27 @@ const Jogos = () => {
   const [totalPages, setTotalPages] = useState(1);
   const PAGE_SIZE = 9;
 
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date();
+  const todayLocal = new Date(
+    today.getTime() - today.getTimezoneOffset() * 60000
+  )
+    .toISOString()
+    .split('T')[0];
 
   const [matches, setMatches] = useState([]);
-
   const [quantidade, setQuantidade] = useState(null);
+
+  const [selectedLeague, setSelectedLeague] = useState('all');
+  const [selectedTeam, setSelectedTeam] = useState('Todos os Times');
+  const [selectedDate, setSelectedDate] = useState(todayLocal);
+  const [leagues, setLeagues] = useState(['all']);
+  const [teams, setTeams] = useState([]);
+  const [activeTab, setActiveTab] = useState('all');
 
   useEffect(() => {
     async function fetchQuantidade() {
       try {
         const response = await axios.get(`${API_URL_BACK}contar_jogos/`);
-        console.log('Quantidade recebida', response);
         setQuantidade(response.data.quantidade);
       } catch (error) {
         console.error('Erro ao buscar quantidade de jogos:', error);
@@ -42,14 +52,6 @@ const Jogos = () => {
     fetchQuantidade();
   }, []);
 
-  // Buscar ligas e times para filtros no load inicial
-  const [selectedLeague, setSelectedLeague] = useState('all');
-  const [selectedTeam, setSelectedTeam] = useState('all');
-  const [selectedDate, setSelectedDate] = useState(today);
-  const [leagues, setLeagues] = useState(['all']);
-  const [teams, setTeams] = useState(['all']);
-  const [activeTab, setActiveTab] = useState('all');
-
   useEffect(() => {
     const fetchFiltros = async () => {
       try {
@@ -57,8 +59,15 @@ const Jogos = () => {
           axios.get(`${API_URL_BACK}ligas/`),
           axios.get(`${API_URL_BACK}times/`),
         ]);
+
         setLeagues(['all', ...ligasRes.data]);
-        setTeams(['all', ...timesRes.data]);
+        const allTeam = {
+          nome: 'Todos os Times',
+          pais: '',
+          logo: '',
+          liga: '',
+        };
+        setTeams([allTeam, ...timesRes.data]);
       } catch (error) {
         console.error('Erro ao buscar filtros:', error);
       }
@@ -70,18 +79,17 @@ const Jogos = () => {
   const clearFilters = () => {
     setSelectedDate('');
     setSelectedLeague('all');
-    setSelectedTeam('all');
+    setSelectedTeam('Todos os Times');
     setActiveTab('all');
   };
 
-  // Buscar partidas da API
   const buscarPartidas = async () => {
     try {
       const response = await axios.get(`${API_URL_BACK}matches/`, {
         params: {
           date: selectedDate,
           league: selectedLeague !== 'all' ? selectedLeague : '',
-          team: selectedTeam !== 'all' ? selectedTeam : '',
+          team: selectedTeam !== 'Todos os Times' ? selectedTeam : '',
           page: currentPage,
           page_size: PAGE_SIZE,
         },
@@ -94,17 +102,14 @@ const Jogos = () => {
     }
   };
 
-  // Resetar página para 1 quando filtros mudam
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedDate, selectedLeague, selectedTeam, activeTab]);
 
-  // Buscar partidas quando filtros, página ou aba mudam
   useEffect(() => {
     buscarPartidas();
   }, [currentPage, selectedDate, selectedLeague, selectedTeam, activeTab]);
 
-  // Filtra os matches localmente conforme a aba ativa
   const filteredMatches = useMemo(() => {
     if (activeTab === 'scheduled') {
       return matches.filter((m) => m.status === 'scheduled');
@@ -120,7 +125,6 @@ const Jogos = () => {
       <Header />
 
       <main className="container mx-auto px-4 py-8 space-y-8">
-        {/* Cabeçalho */}
         <div className="animate-fade-in-up">
           <h2 className="text-3xl font-bold mb-2">Análise de Jogos</h2>
           <p className="text-muted-foreground">
@@ -128,7 +132,6 @@ const Jogos = () => {
           </p>
         </div>
 
-        {/* Filtros */}
         <Card className="animate-slide-in-right">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
@@ -179,8 +182,8 @@ const Jogos = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {teams.map((team) => (
-                      <SelectItem key={team} value={team}>
-                        {team === 'all' ? 'Todos os Times' : team}
+                      <SelectItem key={team.nome} value={team.nome}>
+                        {team.nome}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -205,12 +208,11 @@ const Jogos = () => {
           </CardContent>
         </Card>
 
-        {/* Tabs dos Jogos */}
         <div className="animate-slide-in-right">
           <Tabs
             defaultValue="all"
             className="w-full"
-            onValueChange={(value) => setActiveTab(value)}
+            onValueChange={setActiveTab}
           >
             <TabsList className="grid w-full sm:w-auto grid-cols-3">
               <TabsTrigger value="all">Todos</TabsTrigger>
@@ -244,7 +246,6 @@ const Jogos = () => {
           </Tabs>
         </div>
 
-        {/* Paginação */}
         <div className="flex justify-center mt-4 space-x-4">
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
