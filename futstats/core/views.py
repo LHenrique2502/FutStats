@@ -22,8 +22,9 @@ def index(request):
     return render(request, 'futstats/index.html')
 
 def listar_ligas(request):
-    ligas = League.objects.values_list('name', flat=True).distinct().order_by('name')
+    ligas = League.objects.values('name', 'country').distinct().order_by('name')
     return JsonResponse(list(ligas), safe=False)
+
 
 def listar_times(request):
     times = Team.objects.select_related('league').all().order_by('name')

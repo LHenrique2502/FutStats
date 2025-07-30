@@ -35,7 +35,7 @@ const Jogos = () => {
   const [selectedLeague, setSelectedLeague] = useState('all');
   const [selectedTeam, setSelectedTeam] = useState('Todos os Times');
   const [selectedDate, setSelectedDate] = useState(todayLocal);
-  const [leagues, setLeagues] = useState(['all']);
+  const [leagues, setLeagues] = useState([{ name: 'all', country: '' }]);
   const [teams, setTeams] = useState([]);
   const [activeTab, setActiveTab] = useState('all');
 
@@ -60,7 +60,14 @@ const Jogos = () => {
           axios.get(`${API_URL_BACK}times/`),
         ]);
 
-        setLeagues(['all', ...ligasRes.data]);
+        setLeagues([
+          { name: 'all', country: '', label: 'Todas as Ligas' },
+          ...ligasRes.data.map((l) => ({
+            ...l,
+            label: `${l.name} (${l.country})`,
+            value: `${l.name} - ${l.country}`,
+          })),
+        ]);
         const allTeam = {
           nome: 'Todos os Times',
           pais: '',
@@ -85,10 +92,20 @@ const Jogos = () => {
 
   const buscarPartidas = async () => {
     try {
+      let leagueName = '';
+      let leagueCountry = '';
+
+      if (selectedLeague !== 'all') {
+        const [name, country] = selectedLeague.split(' - ');
+        leagueName = name;
+        leagueCountry = country;
+      }
+
       const response = await axios.get(`${API_URL_BACK}matches/`, {
         params: {
           date: selectedDate,
-          league: selectedLeague !== 'all' ? selectedLeague : '',
+          league: leagueName,
+          country: leagueCountry,
           team: selectedTeam !== 'Todos os Times' ? selectedTeam : '',
           page: currentPage,
           page_size: PAGE_SIZE,
@@ -166,8 +183,11 @@ const Jogos = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {leagues.map((league) => (
-                      <SelectItem key={league} value={league}>
-                        {league === 'all' ? 'Todas as Ligas' : league}
+                      <SelectItem
+                        key={league.name === 'all' ? 'all' : league.value}
+                        value={league.name === 'all' ? 'all' : league.value}
+                      >
+                        {league.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
