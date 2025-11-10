@@ -1,86 +1,48 @@
-import {
-  BarChart3,
-  Menu,
-  Trophy,
-  Users,
-  Target,
-  Layers,
-  Moon,
-  Sun,
-  User,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Link, useLocation } from 'react-router-dom';
-import { useTheme } from 'next-themes';
+import { Link } from 'react-router-dom';
+import { BarChart3 } from 'lucide-react';
 
-const Header = () => {
-  const location = useLocation();
-  const { theme, setTheme } = useTheme();
-
-  const navItems = [
-    { path: '/', label: 'Início', icon: BarChart3 },
-    { path: '/jogos', label: 'Jogos', icon: Trophy },
-    { path: '/times', label: 'Times', icon: Users },
-    { path: '/ligas', label: 'Ligas', icon: Layers },
-    { path: '/scouts', label: 'Scouts', icon: Target },
-  ];
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark');
-  };
-
+export const Header = () => {
   return (
-    <header className="bg-primary text-primary-foreground shadow-lg sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="bg-primary-foreground p-2 rounded-lg">
-              <Trophy className="h-6 w-6 text-primary" />
-            </div>
-            <h1 className="text-xl font-bold">Football Analytics</h1>
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2 group">
+          <div className="bg-primary/10 p-2 rounded-lg group-hover:glow-subtle transition-all">
+            <BarChart3 className="w-6 h-6 text-primary" />
           </div>
+          <span className="text-xl font-bold">
+            Fut<span className="text-primary">Stats</span>
+          </span>
+        </Link>
 
-          <nav className="flex space-x-6">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
-
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 hover:bg-primary-foreground/10 ${
-                    isActive ? 'bg-primary-foreground/20' : ''
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="hover:bg-primary-foreground/10"
-            >
-              {theme === 'dark' ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
-            </Button>
-            <Button variant="ghost" size="icon" className="lg:hidden">
-              <User className="h-5 w-5" />
-            </Button>
-          </div>
-        </div>
+        {/* Navigation */}
+        <nav className="hidden md:flex items-center gap-6">
+          <Link
+            to="/"
+            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+          >
+            Home
+          </Link>
+          <Link
+            to="/teams"
+            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+          >
+            Times
+          </Link>
+          <Link
+            to="/matches"
+            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+          >
+            Partidas
+          </Link>
+          <Link
+            to="/leagues"
+            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+          >
+            Ligas
+          </Link>
+        </nav>
       </div>
     </header>
   );
 };
-
-export default Header;

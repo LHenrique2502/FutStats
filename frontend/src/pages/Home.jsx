@@ -1,0 +1,200 @@
+import {
+  Calendar,
+  TrendingUp,
+  Lightbulb,
+  Target,
+  Shield,
+  Flag,
+} from 'lucide-react';
+import { SearchBar } from '@/components/SearchBar';
+import { SectionTitle } from '@/components/SectionTitle';
+import { StatsCard } from '@/components/StatsCard';
+import { InsightsBox } from '@/components/InsightsBox';
+import { mockMatches, mockTeams, mockTrendingInsights } from '@/data/mockData';
+import { Link } from 'react-router-dom';
+
+const Home = () => {
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-8 space-y-12">
+        {/* Hero Section com Busca */}
+        <div className="text-center space-y-6 py-8">
+          <div className="space-y-2">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground">
+              Análise Inteligente de{' '}
+              <span className="text-primary">Apostas</span>
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Estatísticas em tempo real, insights automáticos e probabilidades
+              calculadas
+            </p>
+          </div>
+          <div className="max-w-2xl mx-auto">
+            <SearchBar />
+          </div>
+        </div>
+
+        {/* Próximas Partidas */}
+        <section className="space-y-6">
+          <SectionTitle
+            title="Próximas Partidas"
+            subtitle="Jogos com análises disponíveis"
+            icon={Calendar}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {mockMatches.map((match) => (
+              <Link
+                key={match.id}
+                to={`/match/${match.id}`}
+                className="bg-card border border-border rounded-lg p-6 hover:border-primary hover:glow-subtle transition-all group"
+              >
+                <div className="space-y-4">
+                  {/* Cabeçalho da partida */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                      {match.league}
+                    </span>
+                    <span className="text-xs text-primary font-medium">
+                      {match.date} • {match.time}
+                    </span>
+                  </div>
+
+                  {/* Times */}
+                  <div className="grid grid-cols-3 gap-4 items-center">
+                    <div className="text-center">
+                      <div className="text-3xl mb-2">{match.homeTeam.logo}</div>
+                      <p className="text-sm font-semibold text-foreground">
+                        {match.homeTeam.name}
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-xs text-muted-foreground">VS</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl mb-2">{match.awayTeam.logo}</div>
+                      <p className="text-sm font-semibold text-foreground">
+                        {match.awayTeam.name}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Quick insights */}
+                  <div className="pt-3 border-t border-border space-y-2">
+                    {match.insights.slice(0, 2).map((insight) => (
+                      <div
+                        key={insight.id}
+                        className="flex items-center justify-between text-sm"
+                      >
+                        <span className="text-muted-foreground">
+                          {insight.title}
+                        </span>
+                        <span className="text-primary font-bold">
+                          {insight.probability}%
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Tendências da Rodada */}
+        <section className="space-y-6">
+          <SectionTitle
+            title="Tendências da Rodada"
+            subtitle="Padrões estatísticos mais relevantes"
+            icon={TrendingUp}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <StatsCard
+              title="Times Over 2.5"
+              value="Barcelona"
+              subtitle="85% dos últimos jogos"
+              icon={Target}
+              trend="up"
+            />
+            <StatsCard
+              title="Mais BTTS"
+              value="Liverpool"
+              subtitle="70% de ambos marcam"
+              icon={Shield}
+              trend="up"
+            />
+            <StatsCard
+              title="Mais Escanteios"
+              value="Man City"
+              subtitle="Média 8.5 por jogo"
+              icon={Flag}
+              trend="stable"
+            />
+          </div>
+        </section>
+
+        {/* Insights da Semana */}
+        <section className="space-y-6">
+          <SectionTitle
+            title="Insights da Semana"
+            subtitle="Análises automáticas baseadas em dados"
+            icon={Lightbulb}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {mockTrendingInsights.map((insight) => (
+              <InsightsBox
+                key={insight.id}
+                title={insight.title}
+                description={insight.description}
+                probability={insight.percentage}
+                trend={insight.trend}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Quick Stats Overview */}
+        <section className="space-y-6">
+          <SectionTitle
+            title="Times em Destaque"
+            subtitle="Principais estatísticas"
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {mockTeams.map((team) => (
+              <Link
+                key={team.id}
+                to={`/team/${team.id}`}
+                className="bg-card border border-border rounded-lg p-4 hover:border-primary hover:glow-subtle transition-all"
+              >
+                <div className="text-center space-y-3">
+                  <div className="text-4xl">{team.logo}</div>
+                  <div>
+                    <p className="font-semibold text-foreground">{team.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {team.league}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="bg-muted/50 rounded p-2">
+                      <p className="text-muted-foreground">Gols</p>
+                      <p className="font-bold text-foreground">
+                        {team.statistics.goalsAverage}
+                      </p>
+                    </div>
+                    <div className="bg-muted/50 rounded p-2">
+                      <p className="text-muted-foreground">Over</p>
+                      <p className="font-bold text-foreground">
+                        {team.statistics.overPercentage}%
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+};
+
+export default Home;

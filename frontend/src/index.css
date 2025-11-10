@@ -2,92 +2,99 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Sistema de design personalizado para análise de futebol */
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* FutStats Design System - Minimalista Tech */
+    
+    /* Core Colors - Preto Carvão + Azul Byte */
+    --background: 0 0% 5%;  /* #0D0D0D - Preto carvão */
+    --foreground: 0 0% 96%; /* #F5F5F5 - Branco gelo */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Cards - Background escuro com borda azul */
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 96%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 96%;
 
-    --primary: 142 76% 36%;
-    --primary-foreground: 355.7 100% 97.3%;
+    /* Primary - Verde Futebol para destaques */
+    --primary: 142 76% 36%; /* #22C55E - Verde Gramado */
+    --primary-foreground: 0 0% 96%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Variação do card */
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 96%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 44%; /* Melhor contraste */
+    /* Muted - Tons intermediários */
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
 
+    /* Accent - Verde Futebol suave */
     --accent: 142 76% 36%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent-foreground: 0 0% 96%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Destructive - Vermelho para avisos */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 96%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    /* Borders e inputs - Verde muito sutil */
+    --border: 142 30% 20%;
+    --input: 0 0% 12%;
     --ring: 142 76% 36%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    /* Cores customizadas para futebol */
-    --football-green: 142 76% 36%;
-    --football-blue: 217 91% 60%;
-    --football-gold: 45 93% 47%;
-    --pitch-green: 120 60% 25%;
-    --sidebar-background: 142 76% 36%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 217 91% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 142 70% 30%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 142 60% 20%;
-    --sidebar-ring: 217 91% 60%;
+    /* Glow effects - Verde com transparência */
+    --glow-primary: 142 76% 36%;
+    --glow-subtle: 142 60% 30%;
+    
+    /* Success - Verde tech */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 96%;
+    
+    /* Warning - Amarelo tech */
+    --warning: 45 93% 47%;
+    --warning-foreground: 0 0% 10%;
   }
+}
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 142 76% 36%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 70%; /* Melhor contraste no modo escuro */
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 142 76% 36%;
-
-    --sidebar-background: 142 50% 15%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 217 91% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 142 40% 20%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 142 30% 25%;
-    --sidebar-ring: 217 91% 60%;
+@layer utilities {
+  /* Glow effects para hover e destaques */
+  .glow-primary {
+    box-shadow: 0 0 20px hsla(var(--glow-primary) / 0.3);
+  }
+  
+  .glow-subtle {
+    box-shadow: 0 0 10px hsla(var(--glow-subtle) / 0.2);
+  }
+  
+  .border-glow {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 10px hsla(var(--primary) / 0.2);
+  }
+  
+  /* Transitions suaves */
+  .transition-glow {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Gradient azul sutil para backgrounds */
+  .gradient-primary {
+    background: linear-gradient(135deg, 
+      hsl(var(--card)) 0%, 
+      hsla(var(--primary) / 0.05) 100%
+    );
+  }
+  
+  .gradient-border {
+    border-image: linear-gradient(135deg, 
+      hsl(var(--primary)), 
+      transparent
+    ) 1;
   }
 }
 
@@ -97,128 +104,24 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-    font-feature-settings:
-      'rlig' 1,
-      'calt' 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    @apply bg-background text-foreground font-sans antialiased;
   }
-
-  /* Melhor tipografia e legibilidade */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply text-foreground;
-    line-height: 1.2;
-    font-weight: 600;
+  
+  /* Scrollbar personalizada */
+  ::-webkit-scrollbar {
+    width: 8px;
   }
-
-  p {
-    line-height: 1.6;
+  
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
   }
-
-  /* Textos pequenos com melhor contraste */
-  .text-xs {
-    @apply text-foreground/80;
-    font-weight: 500;
+  
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 4px;
   }
-
-  .text-sm {
-    @apply text-foreground/90;
-    font-weight: 500;
-  }
-
-  .text-muted-foreground {
-    @apply text-foreground/70;
-    font-weight: 500;
-  }
-
-  /* Estados hover melhorados */
-  .hover\:text-primary:hover {
-    transition: color 0.2s ease;
-  }
-}
-
-@layer components {
-  /* Container responsivo personalizado */
-  .container {
-    @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
-  }
-
-  /* Grid responsivo melhorado */
-  .stats-grid {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6;
-  }
-
-  .content-grid {
-    @apply grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8;
-  }
-
-  /* Cards responsivos */
-  .card-responsive {
-    @apply hover:shadow-lg transition-all duration-300 hover:-translate-y-1;
-  }
-
-  /* Texto responsivo */
-  .title-responsive {
-    @apply text-2xl sm:text-3xl font-bold;
-  }
-
-  .subtitle-responsive {
-    @apply text-sm sm:text-base text-muted-foreground;
-  }
-}
-
-/* Animações customizadas */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-.animate-slide-in-right {
-  animation: slideInRight 0.5s ease-out;
-}
-
-/* Melhorias para mobile */
-@media (max-width: 640px) {
-  .container {
-    @apply px-3;
-  }
-
-  h1 {
-    @apply text-xl;
-  }
-
-  h2 {
-    @apply text-lg;
-  }
-
-  h3 {
-    @apply text-base;
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary));
   }
 }
