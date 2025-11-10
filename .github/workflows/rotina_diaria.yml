@@ -4,6 +4,7 @@ on:
   schedule:
     # 03:00 no Brasil = 06:00 UTC
     - cron: "0 6 * * *"
+  workflow_dispatch:
 
 jobs:
   run-tasks:
