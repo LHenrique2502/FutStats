@@ -16,7 +16,12 @@ load_dotenv() # Carrega o conteúdo do .env
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHANNEL_ID  = os.getenv("TELEGRAM_CHANNEL_ID")
 
-bot = Bot(token=TELEGRAM_BOT_TOKEN)
+def get_bot():
+    token = TELEGRAM_BOT_TOKEN
+    if not token:
+        return None
+    return Bot(token=token)
+
 
 def index(request):
     return render(request, 'futstats/index.html')
@@ -288,14 +293,18 @@ def match_details(request, id):
     return JsonResponse(data, safe=False)
 
 def enviar_mensagem_telegram(texto):
-    url = f'https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage'
-    payload = {
-        'chat_id': TELEGRAM_CHANNEL_ID,
-        'text': texto,
-        'parse_mode': 'Markdown'
-    }
-    response = requests.post(url, data=payload)
-    return response.ok
+    bot = get_bot()
+    if not bot:
+        print("⚠️ TELEGRAM_BOT_TOKEN não configurado. Mensagem não enviada.")
+        return False
+
+    chat_id = TELEGRAM_CHANNEL_ID
+    try:
+        bot.send_message(chat_id=chat_id, text=texto, parse_mode='Markdown')
+        return True
+    except Exception as e:
+        print("❌ Erro ao enviar mensagem:", e)
+        return False
 
 def analisar_e_enviar_telegram():
     print("\n🔍 Iniciando análise e envio para Telegram...\n")
