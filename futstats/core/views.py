@@ -1,8 +1,10 @@
+from .utils import gerar_insights_rapidos
 from django.utils import timezone
-import requests
-from datetime import datetime
+from rest_framework.response import Response
+from datetime import date
 from datetime import timedelta
 from django.core.paginator import Paginator
+from rest_framework.decorators import api_view
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import Avg, Count, Q, F, Sum
@@ -29,7 +31,6 @@ def index(request):
 def listar_ligas(request):
     ligas = League.objects.values('name', 'country').distinct().order_by('name')
     return JsonResponse(list(ligas), safe=False)
-
 
 def listar_times(request):
     times = Team.objects.select_related('league').all().order_by('name')
@@ -141,37 +142,40 @@ def listar_partidas(request):
         'has_previous': page_obj.has_previous(),
     })
 
-def ultimas_partidas(request):
-    hoje = timezone.now().date()
-    ontem = hoje - timedelta(days=1)
+@api_view(["GET"])
+def matches_today(request):
+    today = date.today()
+    
+    matches = (
+    Match.objects
+    .select_related("home_team", "away_team", "league")
+    .filter(date__gte=timezone.now())
+    .order_by("date")[:3]
+)
 
-    # 🕑 Pega o intervalo de datas entre 00:00 e 23:59 de ontem
-    inicio_ontem = timezone.make_aware(datetime.combine(ontem, datetime.min.time()))
-    fim_ontem = timezone.make_aware(datetime.combine(ontem, datetime.max.time()))
-
-    # 🧠 Busca jogos que aconteceram ontem e têm placares definidos
-    ultimos_jogos = Match.objects.filter(
-        date__range=(inicio_ontem, fim_ontem),
-        home_score__isnull=False,
-        away_score__isnull=False
-    ).order_by('-date')[:5]
-
-    data = []
-    for jogo in ultimos_jogos:
-        data.append({
-            "id": jogo.id,
-            "home_team": jogo.home_team.name,
-            "away_team": jogo.away_team.name,
-            "home_score": jogo.home_score,
-            "away_score": jogo.away_score,
-            "home_logo": jogo.home_team.logo,
-            "away_logo": jogo.away_team.logo,
-            "date": jogo.date.strftime('%d/%m/%Y %H:%M'),
-            "league": jogo.league.name,
-            "status": "completed"
+    results = []
+    for match in matches:
+        results.append({
+            "id": match.id,
+            "league": match.league.name,
+            "date": match.date.strftime("%d/%m"),   # ✅ data
+            "time": match.date.strftime("%H:%M"),   # ✅ hora extraída
+            "homeTeam": {
+                "id": match.home_team.id,
+                "name": match.home_team.name,
+                "logo": match.home_team.logo,
+            },
+            "awayTeam": {
+                "id": match.away_team.id,
+                "name": match.away_team.name,
+                "logo": match.away_team.logo,
+            },
+            "insights": gerar_insights_rapidos(match),
         })
 
-    return JsonResponse(data, safe=False)
+    return Response(results)
+
+
 
 # Estatísticas gerais do banco
 def estatisticas_gerais(request):

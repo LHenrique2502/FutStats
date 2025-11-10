@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Calendar,
   TrendingUp,
@@ -13,7 +14,18 @@ import { InsightsBox } from '@/components/InsightsBox';
 import { mockMatches, mockTeams, mockTrendingInsights } from '@/data/mockData';
 import { Link } from 'react-router-dom';
 
+const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
+
 const Home = () => {
+  const [matches, setMatches] = useState([]);
+
+  useEffect(() => {
+    fetch(`${API_URL_BACK}matches/today`)
+      .then((res) => res.json())
+      .then((data) => setMatches(data))
+      .catch((err) => console.error('Erro ao carregar jogos:', err));
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 space-y-12">
@@ -41,8 +53,8 @@ const Home = () => {
             subtitle="Jogos com análises disponíveis"
             icon={Calendar}
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {mockMatches.map((match) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {matches.map((match) => (
               <Link
                 key={match.id}
                 to={`/match/${match.id}`}
@@ -62,7 +74,12 @@ const Home = () => {
                   {/* Times */}
                   <div className="grid grid-cols-3 gap-4 items-center">
                     <div className="text-center">
-                      <div className="text-3xl mb-2">{match.homeTeam.logo}</div>
+                      <img
+                        src={match.homeTeam.logo}
+                        className="w-10 h-10 mx-auto"
+                        alt={match.homeTeam.name}
+                      />
+
                       <p className="text-sm font-semibold text-foreground">
                         {match.homeTeam.name}
                       </p>
@@ -71,7 +88,12 @@ const Home = () => {
                       <p className="text-xs text-muted-foreground">VS</p>
                     </div>
                     <div className="text-center">
-                      <div className="text-3xl mb-2">{match.awayTeam.logo}</div>
+                      <img
+                        src={match.awayTeam.logo}
+                        className="w-10 h-10 mx-auto"
+                        alt={match.awayTeam.name}
+                      />
+
                       <p className="text-sm font-semibold text-foreground">
                         {match.awayTeam.name}
                       </p>
