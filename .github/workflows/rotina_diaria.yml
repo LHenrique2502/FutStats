@@ -1,4 +1,8 @@
 name: FutStats Daily Cron
+run: |
+          echo "DATABASE: $DATABASE_URL"
+          echo "BASE: $THESPORTSDB_BASE_URL"
+          echo "APIKEY: ${#THESPORTSDB_API_KEY} chars"
 
 on:
   schedule:
