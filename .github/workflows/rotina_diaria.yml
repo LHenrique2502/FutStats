@@ -1,0 +1,29 @@
+name: FutStats Daily Cron
+
+on:
+  schedule:
+    # 03:00 no Brasil = 06:00 UTC
+    - cron: "0 6 * * *"
+
+jobs:
+  run-tasks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Run routine
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          THESPORTSDB_API_KEY: ${{ secrets.THESPORTSDB_API_KEY }}
+          THESPORTSDB_BASE_URL: ${{ secrets.THESPORTSDB_BASE_URL }}
+        run: python manage.py rotina_diaria
