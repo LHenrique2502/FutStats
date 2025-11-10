@@ -1,9 +1,11 @@
 from django.core.management.base import BaseCommand
+from core.services.api_thesportsdb import import_teams_async
 import asyncio
-from core.services.api_football import import_teams_async
+
 
 class Command(BaseCommand):
-    help = "Importa times das ligas da API-FOOTBALL para o banco"
+    help = "Importa os times da API TheSportsDB"
+
 
     def handle(self, *args, **kwargs):
         asyncio.run(import_teams_async())

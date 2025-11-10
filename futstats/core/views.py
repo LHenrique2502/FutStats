@@ -163,7 +163,6 @@ def ultimas_partidas(request):
             "away_logo": jogo.away_team.logo,
             "date": jogo.date.strftime('%d/%m/%Y %H:%M'),
             "league": jogo.league.name,
-            "stadium": jogo.venue_name,
             "status": "completed"
         })
 
