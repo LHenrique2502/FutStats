@@ -1,8 +1,4 @@
 name: FutStats Daily Cron
-run: |
-          echo "DATABASE: $DATABASE_URL"
-          echo "BASE: $THESPORTSDB_BASE_URL"
-          echo "APIKEY: ${#THESPORTSDB_API_KEY} chars"
 
 on:
   schedule:
@@ -21,6 +17,16 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.12"
+
+      - name: Debug environment variables
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          THESPORTSDB_API_KEY: ${{ secrets.THESPORTSDB_API_KEY }}
+          THESPORTSDB_BASE_URL: ${{ secrets.THESPORTSDB_BASE_URL }}
+        run: |
+          echo "DATABASE: $DATABASE_URL"
+          echo "BASE: $THESPORTSDB_BASE_URL"
+          echo "APIKEY length: ${#THESPORTSDB_API_KEY}"
 
       - name: Install dependencies
         run: |
