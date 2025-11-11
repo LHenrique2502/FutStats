@@ -20,6 +20,7 @@ const Home = () => {
   const [matches, setMatches] = useState([]);
   const [tendencias, setTendencias] = useState(null);
   const [insightsSemana, setInsightsSemana] = useState([]);
+  const [highlightTeams, setHighlightTeams] = useState([]);
 
   useEffect(() => {
     fetch(`${API_URL_BACK}matches/today/`)
@@ -39,6 +40,13 @@ const Home = () => {
       .then((res) => res.json())
       .then((data) => setInsightsSemana(data))
       .catch((err) => console.error('Erro ao carregar insights:', err));
+  }, []);
+
+  useEffect(() => {
+    fetch(`${API_URL_BACK}times_destaque/`)
+      .then((res) => res.json())
+      .then((data) => setHighlightTeams(data))
+      .catch((err) => console.error('Erro ao carregar times destaque:', err));
   }, []);
 
   if (!tendencias) {
@@ -210,31 +218,41 @@ const Home = () => {
             subtitle="Principais estatísticas"
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {mockTeams.map((team) => (
+            {highlightTeams.map((team) => (
               <Link
                 key={team.id}
                 to={`/team/${team.id}`}
                 className="bg-card border border-border rounded-lg p-4 hover:border-primary hover:glow-subtle transition-all"
               >
                 <div className="text-center space-y-3">
-                  <div className="text-4xl">{team.logo}</div>
+                  {/* Logo do time */}
+                  <img
+                    src={team.logo}
+                    alt={team.name}
+                    className="w-14 h-14 object-contain mx-auto"
+                  />
+
+                  {/* Nome + Liga */}
                   <div>
                     <p className="font-semibold text-foreground">{team.name}</p>
                     <p className="text-xs text-muted-foreground">
                       {team.league}
                     </p>
                   </div>
+
+                  {/* Estatísticas */}
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="bg-muted/50 rounded p-2">
                       <p className="text-muted-foreground">Gols</p>
                       <p className="font-bold text-foreground">
-                        {team.statistics.goalsAverage}
+                        {team.goalsAverage}
                       </p>
                     </div>
+
                     <div className="bg-muted/50 rounded p-2">
                       <p className="text-muted-foreground">Over</p>
                       <p className="font-bold text-foreground">
-                        {team.statistics.overPercentage}%
+                        {team.overPercentage}%
                       </p>
                     </div>
                   </div>

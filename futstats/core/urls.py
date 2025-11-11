@@ -13,5 +13,6 @@ urlpatterns = [
     path('api/matches/today/', views.matches_today, name='matches_today'),
     path('api/tendencias_rodada/', views.tendencias_rodada, name='tendencias_rodada'),
     path('api/insights_semana/', views.insights_semana, name='insights_semana'),
+    path("api/times_destaque/", views.times_em_destaque, name="times_em_destaque"),
 
 ]

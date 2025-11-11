@@ -1,4 +1,4 @@
-from .utils import gerar_insights_rapidos
+from .utils import gerar_insights_rapidos, calcular_over25,calcular_media_gols
 from django.utils import timezone
 from rest_framework.response import Response
 from datetime import date
@@ -144,14 +144,17 @@ def listar_partidas(request):
 
 @api_view(["GET"])
 def matches_today(request):
-    today = date.today()
-    
+    from .utils import preload_ultimos_jogos, gerar_insights_rapidos
+
+    # ✅ carregamos o cache APENAS UMA VEZ
+    cache = preload_ultimos_jogos()
+
     matches = (
-    Match.objects
-    .select_related("home_team", "away_team", "league")
-    .filter(date__gte=timezone.now())
-    .order_by("date")[:3]
-)
+        Match.objects
+        .select_related("home_team", "away_team", "league")
+        .filter(date__gte=timezone.now())
+        .order_by("date")[:3]
+    )
 
     results = []
     for match in matches:
@@ -160,6 +163,7 @@ def matches_today(request):
             "league": match.league.name,
             "date": match.date.strftime("%d/%m"),
             "time": match.date.strftime("%H:%M"),
+
             "homeTeam": {
                 "id": match.home_team.id,
                 "name": match.home_team.name,
@@ -170,7 +174,9 @@ def matches_today(request):
                 "name": match.away_team.name,
                 "logo": match.away_team.logo,
             },
-            "insights": gerar_insights_rapidos(match),
+
+            # ✅ insights agora usam CACHE
+            "insights": gerar_insights_rapidos(match, cache),
         })
 
     return Response(results)
@@ -178,8 +184,12 @@ def matches_today(request):
 @api_view(["GET"])
 def tendencias_rodada(request):
     from datetime import timedelta
+    from .utils import preload_ultimos_jogos, gerar_insights_rapidos
+
     agora = timezone.now()
     futuro = agora + timedelta(days=3)
+
+    cache = preload_ultimos_jogos()
 
     proximos = (
         Match.objects
@@ -191,22 +201,19 @@ def tendencias_rodada(request):
     resultados = []
 
     for match in proximos:
-        insights = gerar_insights_rapidos(match)
+        insights = gerar_insights_rapidos(match, cache)
 
         resultados.append({
             "matchId": match.id,
             "league": match.league.name,
             "date": match.date.strftime("%d/%m %H:%M"),
 
-            # ✅ Nomes
             "home": match.home_team.name,
             "away": match.away_team.name,
 
-            # ✅ Logos (o que estava faltando!)
             "home_logo": match.home_team.logo,
             "away_logo": match.away_team.logo,
 
-            # ✅ Insights
             "insights": insights
         })
 
@@ -231,58 +238,79 @@ def tendencias_rodada(request):
 
     return Response(resposta)
 
+
 @api_view(["GET"])
 def insights_semana(request):
     from datetime import timedelta
+    from .utils import preload_ultimos_jogos, gerar_insights_rapidos
 
     hoje = timezone.now()
     sete_dias_depois = hoje + timedelta(days=7)
 
-    # ✅ 1 — Pegamos TODOS os jogos que insights vão precisar
-    ultimos_20_dias = hoje - timedelta(days=20)
+    cache = preload_ultimos_jogos()
 
-    jogos_historico = (
+    proximos = (
         Match.objects
         .select_related("home_team", "away_team")
-        .filter(date__gte=ultimos_20_dias, date__lte=sete_dias_depois)
-        .prefetch_related("matchevent_set", "teamstatistics_set")
+        .filter(date__gte=hoje, date__lte=sete_dias_depois)
+        .order_by("date")
     )
-
-    # Indexar jogos por time para acesso instantâneo
-    jogos_por_time = {}
-    for jogo in jogos_historico:
-        jogos_por_time.setdefault(jogo.home_team_id, []).append(jogo)
-        jogos_por_time.setdefault(jogo.away_team_id, []).append(jogo)
-
-    # ✅ 2 — Buscar só os jogos dos próximos 7 dias
-    proximos_jogos = [
-        jogo for jogo in jogos_historico
-        if hoje <= jogo.date <= sete_dias_depois
-    ]
 
     resultados = []
 
-    for match in proximos_jogos:
-        # ✅ 3 — enviamos para insights só os jogos já carregados
-        insights = gerar_insights_rapidos(match)
-
-
-        melhor_insight = max(insights, key=lambda i: i["probability"])
+    for match in proximos:
+        insights = gerar_insights_rapidos(match, cache)
+        melhor = max(insights, key=lambda i: i["probability"])
 
         resultados.append({
             "id": match.id,
             "title": f"{match.home_team.name} x {match.away_team.name}",
-            "description": melhor_insight["title"],
-            "percentage": melhor_insight["probability"],
-            "trend": "up" if melhor_insight["probability"] >= 60 else "down",
-            "insight_type": melhor_insight["id"],
-            "insight_title": melhor_insight["title"],
+            "description": melhor["title"],
+            "percentage": melhor["probability"],
+            "trend": "up" if melhor["probability"] >= 60 else "down",
+            "insight_type": melhor["id"],
+            "insight_title": melhor["title"],
             "date": match.date.strftime("%d/%m %H:%M"),
         })
 
-    melhores_3 = sorted(resultados, key=lambda x: x["percentage"], reverse=True)[:3]
+    top3 = sorted(resultados, key=lambda x: x["percentage"], reverse=True)[:3]
+    return Response(top3)
 
-    return Response(melhores_3)
+
+@api_view(["GET"])
+def times_em_destaque(request):
+    from .utils import (
+        preload_ultimos_jogos,
+        calcular_media_gols,
+        calcular_over25,
+    )
+
+    cache = preload_ultimos_jogos()
+
+    times = Team.objects.select_related("league").all()
+
+    resultados = []
+
+    for time in times:
+        gols = calcular_media_gols(time, cache)
+        over = calcular_over25(time, cache)
+
+        resultados.append({
+            "id": time.id,
+            "name": time.name,
+            "league": time.league.name,
+            "logo": time.logo,
+            "goalsAverage": round(gols, 2),
+            "overPercentage": int(over),
+        })
+
+    top = sorted(
+        resultados,
+        key=lambda t: (t["goalsAverage"], t["overPercentage"]),
+        reverse=True
+    )[:4]
+
+    return Response(top)
 
 
 
