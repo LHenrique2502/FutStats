@@ -11,5 +11,6 @@ urlpatterns = [
     path('api/matches/', views.listar_partidas, name='api_listar_partidas'),
     # Matches
     path('api/matches/today', views.matches_today, name='matches_today'),
+    path('api/tendencias_rodada', views.tendencias_rodada, name='tendencias_rodada'),
 
 ]

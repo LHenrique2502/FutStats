@@ -35,7 +35,7 @@ export const StatsCard = ({
       </div>
 
       <div className="space-y-1">
-        <p className="text-sm text-muted-foreground font-medium">{title}</p>
+        <p className="text-md text-muted-foreground font-medium">{title}</p>
         <p className="text-2xl font-bold text-foreground">{value}</p>
         {subtitle && (
           <p className="text-xs text-muted-foreground">{subtitle}</p>

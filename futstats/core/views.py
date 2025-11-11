@@ -8,12 +8,12 @@ from rest_framework.decorators import api_view
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import Avg, Count, Q, F, Sum
-from .models import League, Team, Player, Match, MatchEvent, TeamStatistics  # ou .models se o model estiver no mesmo app
+from .models import League, Team, Player, Match, MatchEvent, TeamStatistics
 from dotenv import load_dotenv
 import os
 from telegram import Bot
 
-load_dotenv() # Carrega o conteúdo do .env
+load_dotenv()
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHANNEL_ID  = os.getenv("TELEGRAM_CHANNEL_ID")
@@ -158,8 +158,8 @@ def matches_today(request):
         results.append({
             "id": match.id,
             "league": match.league.name,
-            "date": match.date.strftime("%d/%m"),   # ✅ data
-            "time": match.date.strftime("%H:%M"),   # ✅ hora extraída
+            "date": match.date.strftime("%d/%m"),
+            "time": match.date.strftime("%H:%M"),
             "homeTeam": {
                 "id": match.home_team.id,
                 "name": match.home_team.name,
@@ -174,6 +174,62 @@ def matches_today(request):
         })
 
     return Response(results)
+
+@api_view(["GET"])
+def tendencias_rodada(request):
+    from datetime import timedelta
+    agora = timezone.now()
+    futuro = agora + timedelta(days=3)
+
+    proximos = (
+        Match.objects
+        .select_related("home_team", "away_team", "league")
+        .filter(date__gte=agora, date__lte=futuro)
+        .order_by("date")
+    )
+
+    resultados = []
+
+    for match in proximos:
+        insights = gerar_insights_rapidos(match)
+
+        resultados.append({
+            "matchId": match.id,
+            "league": match.league.name,
+            "date": match.date.strftime("%d/%m %H:%M"),
+
+            # ✅ Nomes
+            "home": match.home_team.name,
+            "away": match.away_team.name,
+
+            # ✅ Logos (o que estava faltando!)
+            "home_logo": match.home_team.logo,
+            "away_logo": match.away_team.logo,
+
+            # ✅ Insights
+            "insights": insights
+        })
+
+    def top_por_id(lista, insight_id):
+        filtrados = [
+            m for m in lista
+            if any(i["id"] == insight_id for i in m["insights"])
+        ]
+        ordenados = sorted(
+            filtrados,
+            key=lambda m: next(i["probability"] for i in m["insights"] if i["id"] == insight_id),
+            reverse=True
+        )
+        return ordenados[:1]
+
+    resposta = {
+        "best_over25": top_por_id(resultados, "over25"),
+        "best_btts": top_por_id(resultados, "btts"),
+        "best_cards": top_por_id(resultados, "cards"),
+        "best_corners": top_por_id(resultados, "corners"),
+    }
+
+    return Response(resposta)
 
 
 

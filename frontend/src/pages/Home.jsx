@@ -18,6 +18,7 @@ const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
 
 const Home = () => {
   const [matches, setMatches] = useState([]);
+  const [tendencias, setTendencias] = useState(null);
 
   useEffect(() => {
     fetch(`${API_URL_BACK}matches/today`)
@@ -25,6 +26,16 @@ const Home = () => {
       .then((data) => setMatches(data))
       .catch((err) => console.error('Erro ao carregar jogos:', err));
   }, []);
+
+  useEffect(() => {
+    fetch(`${API_URL_BACK}tendencias_rodada`)
+      .then((res) => res.json())
+      .then((data) => setTendencias(data));
+  }, []);
+
+  if (!tendencias) {
+    return <div>Carregando estatísticas...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -129,27 +140,37 @@ const Home = () => {
             subtitle="Padrões estatísticos mais relevantes"
             icon={TrendingUp}
           />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <StatsCard
-              title="Times Over 2.5"
-              value="Barcelona"
-              subtitle="85% dos últimos jogos"
+              title="Melhor oportunidade Over 2.5"
+              value={`${tendencias.best_over25[0].insights[0].probability}%`}
+              subtitle={`${tendencias.best_over25[0].home} x ${tendencias.best_over25[0].away}`}
               icon={Target}
               trend="up"
             />
+
             <StatsCard
               title="Mais BTTS"
-              value="Liverpool"
-              subtitle="70% de ambos marcam"
+              value={`${tendencias.best_btts[0].insights[0].probability}%`}
+              subtitle={`${tendencias.best_btts[0].home} x ${tendencias.best_btts[0].away}`}
               icon={Shield}
               trend="up"
             />
+
             <StatsCard
               title="Mais Escanteios"
-              value="Man City"
-              subtitle="Média 8.5 por jogo"
+              value={tendencias.best_corners[0].insights[0].probability}
+              subtitle={`${tendencias.best_corners[0].home} x ${tendencias.best_corners[0].away}`}
               icon={Flag}
               trend="stable"
+            />
+
+            <StatsCard
+              title="Partida com mais cartões"
+              value={tendencias.best_cards[0].insights[0].probability}
+              subtitle={`${tendencias.best_cards[0].home} x ${tendencias.best_cards[0].away}`}
+              icon={Target}
+              trend="up"
             />
           </div>
         </section>
