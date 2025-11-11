@@ -19,18 +19,26 @@ const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
 const Home = () => {
   const [matches, setMatches] = useState([]);
   const [tendencias, setTendencias] = useState(null);
+  const [insightsSemana, setInsightsSemana] = useState([]);
 
   useEffect(() => {
-    fetch(`${API_URL_BACK}matches/today`)
+    fetch(`${API_URL_BACK}matches/today/`)
       .then((res) => res.json())
       .then((data) => setMatches(data))
       .catch((err) => console.error('Erro ao carregar jogos:', err));
   }, []);
 
   useEffect(() => {
-    fetch(`${API_URL_BACK}tendencias_rodada`)
+    fetch(`${API_URL_BACK}tendencias_rodada/`)
       .then((res) => res.json())
       .then((data) => setTendencias(data));
+  }, []);
+
+  useEffect(() => {
+    fetch(`${API_URL_BACK}insights_semana/`)
+      .then((res) => res.json())
+      .then((data) => setInsightsSemana(data))
+      .catch((err) => console.error('Erro ao carregar insights:', err));
   }, []);
 
   if (!tendencias) {
@@ -183,7 +191,7 @@ const Home = () => {
             icon={Lightbulb}
           />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockTrendingInsights.map((insight) => (
+            {insightsSemana.map((insight) => (
               <InsightsBox
                 key={insight.id}
                 title={insight.title}

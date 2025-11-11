@@ -10,7 +10,8 @@ urlpatterns = [
     path('jogadores/', views.listar_jogadores, name='listar_jogadores'),
     path('api/matches/', views.listar_partidas, name='api_listar_partidas'),
     # Matches
-    path('api/matches/today', views.matches_today, name='matches_today'),
-    path('api/tendencias_rodada', views.tendencias_rodada, name='tendencias_rodada'),
+    path('api/matches/today/', views.matches_today, name='matches_today'),
+    path('api/tendencias_rodada/', views.tendencias_rodada, name='tendencias_rodada'),
+    path('api/insights_semana/', views.insights_semana, name='insights_semana'),
 
 ]

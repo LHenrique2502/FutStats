@@ -231,6 +231,60 @@ def tendencias_rodada(request):
 
     return Response(resposta)
 
+@api_view(["GET"])
+def insights_semana(request):
+    from datetime import timedelta
+
+    hoje = timezone.now()
+    sete_dias_depois = hoje + timedelta(days=7)
+
+    # ✅ 1 — Pegamos TODOS os jogos que insights vão precisar
+    ultimos_20_dias = hoje - timedelta(days=20)
+
+    jogos_historico = (
+        Match.objects
+        .select_related("home_team", "away_team")
+        .filter(date__gte=ultimos_20_dias, date__lte=sete_dias_depois)
+        .prefetch_related("matchevent_set", "teamstatistics_set")
+    )
+
+    # Indexar jogos por time para acesso instantâneo
+    jogos_por_time = {}
+    for jogo in jogos_historico:
+        jogos_por_time.setdefault(jogo.home_team_id, []).append(jogo)
+        jogos_por_time.setdefault(jogo.away_team_id, []).append(jogo)
+
+    # ✅ 2 — Buscar só os jogos dos próximos 7 dias
+    proximos_jogos = [
+        jogo for jogo in jogos_historico
+        if hoje <= jogo.date <= sete_dias_depois
+    ]
+
+    resultados = []
+
+    for match in proximos_jogos:
+        # ✅ 3 — enviamos para insights só os jogos já carregados
+        insights = gerar_insights_rapidos(match)
+
+
+        melhor_insight = max(insights, key=lambda i: i["probability"])
+
+        resultados.append({
+            "id": match.id,
+            "title": f"{match.home_team.name} x {match.away_team.name}",
+            "description": melhor_insight["title"],
+            "percentage": melhor_insight["probability"],
+            "trend": "up" if melhor_insight["probability"] >= 60 else "down",
+            "insight_type": melhor_insight["id"],
+            "insight_title": melhor_insight["title"],
+            "date": match.date.strftime("%d/%m %H:%M"),
+        })
+
+    melhores_3 = sorted(resultados, key=lambda x: x["percentage"], reverse=True)[:3]
+
+    return Response(melhores_3)
+
+
 
 
 # Estatísticas gerais do banco
