@@ -248,7 +248,7 @@ async def import_match_events_async():
                     # ✅ Sem estatísticas → NÃO marca como importado
                     if not timeline:
                         print(
-                            f"⚠️ Nenhum dado para a partida {match.api_id} "
+                            f"⚠️ Nenhum evento para a partida {match.api_id} "
                             f"{match.home_team.name} x {match.away_team.name} (não marcado)"
                         )
                         return
@@ -273,7 +273,7 @@ async def import_match_events_async():
                     await sync_to_async(match.save)()
 
                     print(
-                        f"✅ Estatísticas importadas para {match.api_id} "
+                        f"✅ Eventos importados para {match.api_id} "
                         f"{match.home_team.name} x {match.away_team.name}"
                     )
 

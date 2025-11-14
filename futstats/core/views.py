@@ -238,7 +238,6 @@ def tendencias_rodada(request):
 
     return Response(resposta)
 
-
 @api_view(["GET"])
 def insights_semana(request):
     from datetime import timedelta
@@ -276,7 +275,6 @@ def insights_semana(request):
     top3 = sorted(resultados, key=lambda x: x["percentage"], reverse=True)[:3]
     return Response(top3)
 
-
 @api_view(["GET"])
 def times_em_destaque(request):
     from .utils import (
@@ -312,51 +310,15 @@ def times_em_destaque(request):
 
     return Response(top)
 
-
-
+@api_view(["GET"])
+def estatisticas_gerais(request):
+    return Response({
+        "total_matches": Match.objects.count(),
+        "total_teams": Team.objects.count(),
+        "total_leagues": League.objects.count(),
+    })
 
 # Estatísticas gerais do banco
-def estatisticas_gerais(request):
-    hoje = timezone.now()
-
-    # Início e fim do mês atual e do mês anterior
-    inicio_mes_atual = hoje.replace(day=1)
-    inicio_mes_passado = (inicio_mes_atual - timedelta(days=1)).replace(day=1)
-    fim_mes_passado = inicio_mes_atual - timedelta(days=1)
-
-    def contar_no_mes(model, inicio, fim=None):
-        filtro = {"created_at__gte": inicio}
-        if fim:
-            filtro["created_at__lte"] = fim
-        return model.objects.filter(**filtro).count()
-
-    def calcular_percentual(atual, anterior):
-        if anterior == 0:
-            return 100 if atual > 0 else 0
-        return round(((atual - anterior) / anterior) * 100)
-
-    # Assumindo que Match, Team e Player possuem um campo 'created_at' do tipo DateTimeField
-    jogos_atuais = contar_no_mes(Match, inicio_mes_atual)
-    jogos_passados = contar_no_mes(Match, inicio_mes_passado, fim_mes_passado)
-
-    times_atuais = contar_no_mes(Team, inicio_mes_atual)
-    times_passados = contar_no_mes(Team, inicio_mes_passado, fim_mes_passado)
-
-    jogadores_atuais = contar_no_mes(Player, inicio_mes_atual)
-    jogadores_passados = contar_no_mes(Player, inicio_mes_passado, fim_mes_passado)
-
-    data = {
-        "total_jogos": Match.objects.count(),
-        "total_ligas": League.objects.count(),
-        "total_times": Team.objects.count(),
-        "total_jogadores": Player.objects.count(),
-        # TODO: depois editar o valor total de analises
-        "total_analises": 8593,  # valor fixo ou você pode calcular depois
-        "crescimento_jogos": calcular_percentual(jogos_atuais, jogos_passados),
-        "crescimento_times": calcular_percentual(times_atuais, times_passados),
-        "crescimento_jogadores": calcular_percentual(jogadores_atuais, jogadores_passados),
-    }
-    return JsonResponse(data)
 
 def match_details(request, id):
     try:
