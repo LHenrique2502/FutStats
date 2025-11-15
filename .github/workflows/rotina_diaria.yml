@@ -31,4 +31,3 @@ jobs:
         run: |
           cd futstats
           python manage.py rotina_diaria
-        retry: 3
