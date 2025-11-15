@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd futstats
-          pip install -r requirements.txt
+       	      pip install -r requirements.txt
 
       - name: Run routine
         env:
@@ -41,3 +41,4 @@ jobs:
         run: |
           cd futstats
           python manage.py rotina_diaria
+        retry: 3
