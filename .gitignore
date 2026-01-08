@@ -1,0 +1,71 @@
+#######################################
+# Python / Django
+#######################################
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pot
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# SQLite
+*.sqlite3
+db.sqlite3
+
+# Django-specific
+*.log
+*.pyc
+*.pyo
+
+# Migrations - apenas cache
+**/migrations/__pycache__/
+**/migrations/*.py[cod]
+
+# Environment variables
+.env
+
+#######################################
+# React / Node
+#######################################
+node_modules/
+.next/
+.env.local
+build/
+dist/
+.cache/
+*.tgz
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# React production
+public/static/
+
+#######################################
+# Coverage
+#######################################
+coverage/
+
+#######################################
+# OS e Editor
+#######################################
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+#######################################
+# Outras ferramentas (se usar)
+#######################################
+*.log
+*.lock
+*.bak

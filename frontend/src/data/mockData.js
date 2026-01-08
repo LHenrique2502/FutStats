@@ -1,0 +1,162 @@
+// Mock Teams
+export const mockTeams = [
+  {
+    id: '1',
+    name: 'Manchester City',
+    logo: '⚽',
+    league: 'Premier League',
+    statistics: {
+      goalsAverage: 2.8,
+      goalsFirstHalf: 1.2,
+      goalsSecondHalf: 1.6,
+      cornersAverage: 6.5,
+      cardsAverage: 2.1,
+      overPercentage: 75,
+      bttsPercentage: 60,
+      cleanSheetPercentage: 45,
+      form: ['W', 'W', 'D', 'W', 'L'],
+    },
+  },
+  {
+    id: '2',
+    name: 'Liverpool',
+    logo: '🔴',
+    league: 'Premier League',
+    statistics: {
+      goalsAverage: 2.5,
+      goalsFirstHalf: 1.0,
+      goalsSecondHalf: 1.5,
+      cornersAverage: 7.2,
+      cardsAverage: 1.8,
+      overPercentage: 70,
+      bttsPercentage: 65,
+      cleanSheetPercentage: 40,
+      form: ['W', 'W', 'W', 'D', 'W'],
+    },
+  },
+  {
+    id: '3',
+    name: 'Barcelona',
+    logo: '🔵',
+    league: 'La Liga',
+    statistics: {
+      goalsAverage: 3.1,
+      goalsFirstHalf: 1.5,
+      goalsSecondHalf: 1.6,
+      cornersAverage: 8.1,
+      cardsAverage: 2.5,
+      overPercentage: 80,
+      bttsPercentage: 55,
+      cleanSheetPercentage: 50,
+      form: ['W', 'W', 'W', 'W', 'D'],
+    },
+  },
+  {
+    id: '4',
+    name: 'Real Madrid',
+    logo: '⚪',
+    league: 'La Liga',
+    statistics: {
+      goalsAverage: 2.9,
+      goalsFirstHalf: 1.3,
+      goalsSecondHalf: 1.6,
+      cornersAverage: 7.5,
+      cardsAverage: 2.2,
+      overPercentage: 78,
+      bttsPercentage: 58,
+      cleanSheetPercentage: 48,
+      form: ['W', 'D', 'W', 'W', 'W'],
+    },
+  },
+];
+
+// Mock Matches
+export const mockMatches = [
+  {
+    id: '1',
+    homeTeam: mockTeams[0],
+    awayTeam: mockTeams[1],
+    date: '2025-11-15',
+    time: '16:00',
+    league: 'Premier League',
+    status: 'scheduled',
+    insights: [
+      {
+        id: '1',
+        type: 'over',
+        title: 'Alta probabilidade de Over 2.5',
+        description: 'Ambos times marcaram em 80% dos últimos jogos',
+        probability: 82,
+        trend: 'up',
+      },
+      {
+        id: '2',
+        type: 'btts',
+        title: 'BTTS favorável',
+        description: 'Manchester City sofre gols em casa',
+        probability: 75,
+        trend: 'up',
+      },
+      {
+        id: '3',
+        type: 'corners',
+        title: 'Muitos escanteios esperados',
+        description: 'Média combinada de 13.7 escanteios por jogo',
+        probability: 85,
+        trend: 'stable',
+      },
+    ],
+  },
+  {
+    id: '2',
+    homeTeam: mockTeams[2],
+    awayTeam: mockTeams[3],
+    date: '2025-11-16',
+    time: '20:00',
+    league: 'La Liga',
+    status: 'scheduled',
+    insights: [
+      {
+        id: '4',
+        type: 'over',
+        title: 'Expectativa de muitos gols',
+        description: 'El Clásico sempre entrega',
+        probability: 88,
+        trend: 'up',
+      },
+      {
+        id: '5',
+        type: 'cards',
+        title: 'Jogo quente',
+        description: 'Rivalidade aumenta cartões',
+        probability: 70,
+        trend: 'up',
+      },
+    ],
+  },
+];
+
+// Mock Insights para Home
+export const mockTrendingInsights = [
+  {
+    id: '1',
+    title: 'Barcelona com 85% de Over 2.5',
+    description: 'Time marca em todos os últimos 6 jogos',
+    trend: 'up',
+    percentage: 85,
+  },
+  {
+    id: '2',
+    title: 'Manchester City sofre no 2º tempo',
+    description: 'Vulnerável após 60 minutos',
+    trend: 'down',
+    percentage: 68,
+  },
+  {
+    id: '3',
+    title: 'Liverpool domina escanteios',
+    description: 'Média de 8.5 escanteios por jogo',
+    trend: 'up',
+    percentage: 92,
+  },
+];

@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* FutStats Design System - Minimalista Tech */
+    
+    /* Core Colors - Preto Carvão + Azul Byte */
+    --background: 0 0% 5%;  /* #0D0D0D - Preto carvão */
+    --foreground: 0 0% 96%; /* #F5F5F5 - Branco gelo */
+
+    /* Cards - Background escuro com borda azul */
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 96%;
+
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 96%;
+
+    /* Primary - Verde Futebol para destaques */
+    --primary: 142 76% 36%; /* #22C55E - Verde Gramado */
+    --primary-foreground: 0 0% 96%;
+
+    /* Secondary - Variação do card */
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 96%;
+
+    /* Muted - Tons intermediários */
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
+
+    /* Accent - Verde Futebol suave */
+    --accent: 142 76% 36%;
+    --accent-foreground: 0 0% 96%;
+
+    /* Destructive - Vermelho para avisos */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 96%;
+
+    /* Borders e inputs - Verde muito sutil */
+    --border: 142 30% 20%;
+    --input: 0 0% 12%;
+    --ring: 142 76% 36%;
+
+    --radius: 0.5rem;
+
+    /* Glow effects - Verde com transparência */
+    --glow-primary: 142 76% 36%;
+    --glow-subtle: 142 60% 30%;
+    
+    /* Success - Verde tech */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 96%;
+    
+    /* Warning - Amarelo tech */
+    --warning: 45 93% 47%;
+    --warning-foreground: 0 0% 10%;
+  }
+}
+
+@layer utilities {
+  /* Glow effects para hover e destaques */
+  .glow-primary {
+    box-shadow: 0 0 20px hsla(var(--glow-primary) / 0.3);
+  }
+  
+  .glow-subtle {
+    box-shadow: 0 0 10px hsla(var(--glow-subtle) / 0.2);
+  }
+  
+  .border-glow {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 10px hsla(var(--primary) / 0.2);
+  }
+  
+  /* Transitions suaves */
+  .transition-glow {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Gradient azul sutil para backgrounds */
+  .gradient-primary {
+    background: linear-gradient(135deg, 
+      hsl(var(--card)) 0%, 
+      hsla(var(--primary) / 0.05) 100%
+    );
+  }
+  
+  .gradient-border {
+    border-image: linear-gradient(135deg, 
+      hsl(var(--primary)), 
+      transparent
+    ) 1;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  
+  /* Scrollbar personalizada */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary));
+  }
+}
