@@ -14,5 +14,8 @@ urlpatterns = [
     path('api/tendencias_rodada/', views.tendencias_rodada, name='tendencias_rodada'),
     path('api/insights_semana/', views.insights_semana, name='insights_semana'),
     path("api/times_destaque/", views.times_em_destaque, name="times_em_destaque"),
+    path('api/value-bets/', views.value_bets, name='value_bets'),
+    path('api/debug-odds/', views.debug_odds, name='debug_odds'),
+    path('api/bookmakers/available/', views.available_bookmakers, name='available_bookmakers'),
 
 ]
