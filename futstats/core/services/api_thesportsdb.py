@@ -66,6 +66,21 @@ async def import_leagues_async():
                 continue
 
             lg = data["lookup"][0]
+            season_atual_api = lg["strCurrentSeason"]
+
+            # Verificar se a liga já existe e qual season ela tem
+            liga_existente = await sync_to_async(
+                lambda: League.objects.filter(api_id=lg["idLeague"]).first()
+            )()
+
+            if liga_existente:
+                season_anterior = liga_existente.season
+                if season_anterior != season_atual_api:
+                    print(f"🔄 Season atualizada para {league_name}: {season_anterior} → {season_atual_api}")
+                else:
+                    print(f"✅ Season mantida para {league_name}: {season_atual_api}")
+            else:
+                print(f"🆕 Nova liga criada: {league_name} (Season: {season_atual_api})")
 
             await sync_to_async(League.objects.update_or_create)(
                 api_id=lg["idLeague"],
@@ -73,12 +88,12 @@ async def import_leagues_async():
                     "name": lg["strLeague"],
                     "country": lg["strCountry"],
                     "logo": lg["strBadge"],
-                    "season": lg["strCurrentSeason"],
+                    "season": season_atual_api,
                     "last_fetched_at": now(),
                 }
             )
 
-            print(f"✅ Liga salva: {league_name}")
+            print(f"✅ Liga salva: {league_name} (Season: {season_atual_api})")
 
 
 # ==========================

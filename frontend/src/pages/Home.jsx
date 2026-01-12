@@ -199,20 +199,15 @@ const Home = () => {
                   </div>
 
                   {/* Estatísticas */}
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="bg-muted/50 rounded p-2">
-                      <p className="text-muted-foreground">Gols</p>
-                      <p className="font-bold text-foreground">
-                        {team.goalsAverage}
-                      </p>
-                    </div>
-
-                    <div className="bg-muted/50 rounded p-2">
-                      <p className="text-muted-foreground">Over</p>
-                      <p className="font-bold text-foreground">
-                        {team.overPercentage}%
-                      </p>
-                    </div>
+                  <div className="bg-muted/50 rounded p-2">
+                    <p className="text-muted-foreground text-xs">
+                      {team.stat_label}
+                    </p>
+                    <p className="font-bold text-foreground text-lg">
+                      {team.stat_type === 'ambas_marcam' 
+                        ? `${team.stat_value}%` 
+                        : team.stat_value}
+                    </p>
                   </div>
                 </div>
               </Link>

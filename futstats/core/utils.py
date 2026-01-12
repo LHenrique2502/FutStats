@@ -1,5 +1,6 @@
 from django.db.models import Q, Count
 from .models import Match, MatchEvent, TeamStatistics
+from datetime import datetime, date
 
 
 # ============================================================
@@ -151,3 +152,45 @@ def gerar_insights_rapidos(match, cache):
     })
 
     return insights
+
+
+# ============================================================
+# ✅ Função auxiliar para determinar range de datas de uma season
+# ============================================================
+def get_season_date_range(season_str):
+    """
+    Determina o range de datas de uma season.
+    
+    Suporta dois formatos:
+    - "2026" (formato brasileiro): janeiro a dezembro de 2026
+    - "2024-2025" (formato europeu): agosto de 2024 a maio de 2025
+    
+    Retorna uma tupla (data_inicio, data_fim)
+    """
+    if not season_str:
+        return None, None
+    
+    # Formato brasileiro: "2026"
+    if '-' not in season_str:
+        try:
+            year = int(season_str)
+            start_date = date(year, 1, 1)
+            end_date = date(year, 12, 31)
+            return start_date, end_date
+        except ValueError:
+            return None, None
+    
+    # Formato europeu: "2024-2025"
+    try:
+        parts = season_str.split('-')
+        if len(parts) == 2:
+            start_year = int(parts[0])
+            end_year = int(parts[1])
+            # Temporada europeia: agosto do ano inicial até maio do ano final
+            start_date = date(start_year, 8, 1)
+            end_date = date(end_year, 5, 31)
+            return start_date, end_date
+    except ValueError:
+        pass
+    
+    return None, None
