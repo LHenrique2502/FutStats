@@ -19,7 +19,7 @@ const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
 const Home = () => {
   const [matches, setMatches] = useState([]);
   const [tendencias, setTendencias] = useState(null);
-  const [insightsSemana, setInsightsSemana] = useState([]);
+  const [topProbabilities, setTopProbabilities] = useState([]);
   const [highlightTeams, setHighlightTeams] = useState([]);
 
   useEffect(() => {
@@ -36,10 +36,21 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`${API_URL_BACK}insights_semana/`)
+    fetch(`${API_URL_BACK}value-bets/?limit=3`)
       .then((res) => res.json())
-      .then((data) => setInsightsSemana(data))
-      .catch((err) => console.error('Erro ao carregar insights:', err));
+      .then((data) => {
+        // Formatar dados para o formato esperado pelo InsightsBox
+        const formatted = data.map((item, index) => ({
+          id: item.match_id || index,
+          title: item.match,
+          description: `${item.bet_name} - ${item.league}`,
+          percentage: item.calculated_probability,
+          trend: item.calculated_probability >= 60 ? "up" : "down",
+          date: item.date,
+        }));
+        setTopProbabilities(formatted);
+      })
+      .catch((err) => console.error('Erro ao carregar probabilidades:', err));
   }, []);
 
   useEffect(() => {
@@ -191,22 +202,27 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Insights da Semana */}
+        {/* Maiores Probabilidades do Dia */}
         <section className="space-y-6">
           <SectionTitle
-            title="Insights da Semana"
-            subtitle="Análises automáticas baseadas em dados"
+            title="Maiores Probabilidades do Dia"
+            subtitle="Top 3 apostas com maior probabilidade calculada"
             icon={Lightbulb}
           />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {insightsSemana.map((insight) => (
-              <InsightsBox
+            {topProbabilities.map((insight) => (
+              <Link
                 key={insight.id}
-                title={insight.title}
-                description={insight.description}
-                probability={insight.percentage}
-                trend={insight.trend}
-              />
+                to={`/match/${insight.id}`}
+                className="block"
+              >
+                <InsightsBox
+                  title={insight.title}
+                  description={insight.description}
+                  probability={insight.percentage}
+                  trend={insight.trend}
+                />
+              </Link>
             ))}
           </div>
         </section>

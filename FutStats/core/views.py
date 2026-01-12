@@ -239,53 +239,33 @@ def tendencias_rodada(request):
     return Response(resposta)
 
 @api_view(["GET"])
-def insights_semana(request):
-    from datetime import timedelta
-    from .utils import preload_ultimos_jogos, gerar_insights_rapidos
-
-    hoje = timezone.now()
-    sete_dias_depois = hoje + timedelta(days=7)
-
-    cache = preload_ultimos_jogos()
-
-    proximos = (
-        Match.objects
-        .select_related("home_team", "away_team")
-        .filter(date__gte=hoje, date__lte=sete_dias_depois)
-        .order_by("date")
-    )
-
-    resultados = []
-
-    for match in proximos:
-        insights = gerar_insights_rapidos(match, cache)
-        melhor = max(insights, key=lambda i: i["probability"])
-
-        resultados.append({
-            "id": match.id,
-            "title": f"{match.home_team.name} x {match.away_team.name}",
-            "description": melhor["title"],
-            "percentage": melhor["probability"],
-            "trend": "up" if melhor["probability"] >= 60 else "down",
-            "insight_type": melhor["id"],
-            "insight_title": melhor["title"],
-            "date": match.date.strftime("%d/%m %H:%M"),
-        })
-
-    top3 = sorted(resultados, key=lambda x: x["percentage"], reverse=True)[:3]
-    return Response(top3)
-
-@api_view(["GET"])
 def times_em_destaque(request):
     from .utils import (
         preload_ultimos_jogos,
         calcular_media_gols,
         calcular_over25,
     )
+    from datetime import timedelta
 
     cache = preload_ultimos_jogos()
 
-    times = Team.objects.select_related("league").all()
+    # Otimização: buscar apenas times que têm partidas nos últimos 30 dias ou futuras
+    hoje = timezone.now()
+    trinta_dias_atras = hoje - timedelta(days=30)
+    
+    # Buscar times que têm partidas recentes ou futuras
+    home_team_ids = set(Match.objects.filter(
+        date__gte=trinta_dias_atras
+    ).values_list('home_team_id', flat=True))
+    
+    away_team_ids = set(Match.objects.filter(
+        date__gte=trinta_dias_atras
+    ).values_list('away_team_id', flat=True))
+    
+    # Combinar e limitar a 50 times para processar
+    times_ids = list(home_team_ids.union(away_team_ids))[:50]
+
+    times = Team.objects.filter(id__in=times_ids).select_related("league")
 
     resultados = []
 
