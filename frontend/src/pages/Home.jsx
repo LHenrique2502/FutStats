@@ -1,15 +1,10 @@
 import { useEffect, useState } from 'react';
 import {
   Calendar,
-  TrendingUp,
   Lightbulb,
-  Target,
-  Shield,
-  Flag,
 } from 'lucide-react';
 import { SearchBar } from '@/components/SearchBar';
 import { SectionTitle } from '@/components/SectionTitle';
-import { StatsCard } from '@/components/StatsCard';
 import { InsightsBox } from '@/components/InsightsBox';
 import { mockMatches, mockTeams, mockTrendingInsights } from '@/data/mockData';
 import { Link } from 'react-router-dom';
@@ -18,7 +13,6 @@ const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
 
 const Home = () => {
   const [matches, setMatches] = useState([]);
-  const [tendencias, setTendencias] = useState(null);
   const [topProbabilities, setTopProbabilities] = useState([]);
   const [highlightTeams, setHighlightTeams] = useState([]);
 
@@ -27,12 +21,6 @@ const Home = () => {
       .then((res) => res.json())
       .then((data) => setMatches(data))
       .catch((err) => console.error('Erro ao carregar jogos:', err));
-  }, []);
-
-  useEffect(() => {
-    fetch(`${API_URL_BACK}tendencias_rodada/`)
-      .then((res) => res.json())
-      .then((data) => setTendencias(data));
   }, []);
 
   useEffect(() => {
@@ -59,10 +47,6 @@ const Home = () => {
       .then((data) => setHighlightTeams(data))
       .catch((err) => console.error('Erro ao carregar times destaque:', err));
   }, []);
-
-  if (!tendencias) {
-    return <div>Carregando estatísticas...</div>;
-  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -157,48 +141,6 @@ const Home = () => {
                 </div>
               </Link>
             ))}
-          </div>
-        </section>
-
-        {/* Tendências da Rodada */}
-        <section className="space-y-6">
-          <SectionTitle
-            title="Tendências da Rodada"
-            subtitle="Padrões estatísticos mais relevantes"
-            icon={TrendingUp}
-          />
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <StatsCard
-              title="Melhor oportunidade Over 2.5"
-              value={`${tendencias.best_over25[0].insights[0].probability}%`}
-              subtitle={`${tendencias.best_over25[0].home} x ${tendencias.best_over25[0].away}`}
-              icon={Target}
-              trend="up"
-            />
-
-            <StatsCard
-              title="Mais BTTS"
-              value={`${tendencias.best_btts[0].insights[0].probability}%`}
-              subtitle={`${tendencias.best_btts[0].home} x ${tendencias.best_btts[0].away}`}
-              icon={Shield}
-              trend="up"
-            />
-
-            <StatsCard
-              title="Mais Escanteios"
-              value={tendencias.best_corners[0].insights[0].probability}
-              subtitle={`${tendencias.best_corners[0].home} x ${tendencias.best_corners[0].away}`}
-              icon={Flag}
-              trend="stable"
-            />
-
-            <StatsCard
-              title="Partida com mais cartões"
-              value={tendencias.best_cards[0].insights[0].probability}
-              subtitle={`${tendencias.best_cards[0].home} x ${tendencias.best_cards[0].away}`}
-              icon={Target}
-              trend="up"
-            />
           </div>
         </section>
 
