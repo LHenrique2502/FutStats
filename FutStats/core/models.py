@@ -116,3 +116,77 @@ class TeamStatistics(models.Model):
 
     def __str__(self):
         return f"{self.match} - {self.team} Statistics"
+
+
+class Bookmaker(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    api_key = models.CharField(max_length=50, null=True, blank=True)  # Key da The Odds API
+    is_brazilian = models.BooleanField(default=False)  # Indica se é casa de apostas brasileira
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.name
+
+
+class MatchOdds(models.Model):
+    match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name='odds')
+    bookmaker = models.ForeignKey(Bookmaker, on_delete=models.CASCADE)
+    
+    # Odds principais (decimal format)
+    home_win_odd = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    draw_odd = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    away_win_odd = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    
+    # Over/Under
+    over_25_odd = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    under_25_odd = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    
+    # BTTS
+    btts_yes_odd = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    btts_no_odd = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    
+    # ID do evento na The Odds API (para matching)
+    odds_api_event_id = models.CharField(max_length=100, null=True, blank=True)
+    
+    last_api_fetch = models.DateTimeField(null=True, blank=True)  # Última vez que foi buscado da API
+    last_updated = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['match', 'bookmaker']
+        indexes = [
+            models.Index(fields=['match', 'bookmaker']),
+        ]
+    
+    def __str__(self):
+        return f"{self.match} - {self.bookmaker.name}"
+
+
+class BetRecommendation(models.Model):
+    match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name='recommendations')
+    bet_type = models.CharField(max_length=50)  # 'over_25', 'btts_yes', 'home_win', etc.
+    
+    # Probabilidades
+    calculated_probability = models.DecimalField(max_digits=5, decimal_places=2)  # Nossa probabilidade
+    implied_probability = models.DecimalField(max_digits=5, decimal_places=2)  # Probabilidade da odd
+    odd_value = models.DecimalField(max_digits=6, decimal_places=2)  # Odd oferecida
+    
+    # Valor esperado
+    expected_value = models.DecimalField(max_digits=6, decimal_places=2)  # EV = (prob * odd) - 1
+    value_percentage = models.DecimalField(max_digits=5, decimal_places=2)  # % de valor
+    
+    # Recomendação
+    is_value_bet = models.BooleanField(default=False)  # True se EV > 0
+    confidence = models.CharField(max_length=20)  # 'high', 'medium', 'low'
+    
+    bookmaker = models.ForeignKey(Bookmaker, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-expected_value']
+        indexes = [
+            models.Index(fields=['is_value_bet', '-expected_value']),
+        ]
+    
+    def __str__(self):
+        return f"{self.match} - {self.bet_type} ({self.value_percentage}% value)"

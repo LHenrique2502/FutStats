@@ -7,12 +7,17 @@ from .models import Match, MatchEvent, TeamStatistics
 # ============================================================
 def preload_ultimos_jogos(limit=5):
     """
-    Carrega os últimos `limit` jogos de todos os times de uma vez.
+    Carrega os últimos `limit` jogos FINALIZADOS de todos os times de uma vez.
     Retorna um dicionário: { team_id: [jogos] }
     """
+    # Buscar apenas partidas finalizadas (com placar) e ordenadas por data
     jogos = (
         Match.objects
         .select_related("home_team", "away_team")
+        .filter(
+            home_score__isnull=False,
+            away_score__isnull=False
+        )
         .order_by("-date")
         .all()
     )
@@ -32,8 +37,6 @@ def preload_ultimos_jogos(limit=5):
         if len(cache[tid_away]) < limit:
             cache[tid_away].append(match)
 
-        # Se todos os times já tiverem 5 jogos, podemos parar (micro-otimização)
-        # — totalmente opcional
     return cache
 
 

@@ -522,3 +522,144 @@ def contar_jogos(request):
 def contar_times(request):
     quantidade = Team.objects.count()
     return JsonResponse({'quantidade': quantidade})
+
+@api_view(["GET"])
+def value_bets(request):
+    """
+    Retorna as melhores probabilidades de cada tipo de aposta bater
+    Ordenadas por probabilidade calculada (maior primeiro)
+    """
+    from .betting_utils import get_best_probabilities
+    
+    limit = int(request.GET.get('limit', 10))
+    probabilities = get_best_probabilities(limit)
+    
+    results = []
+    for prob in probabilities:
+        # Formatar data: se hora for 00:00, mostrar apenas data
+        match_date = prob["match"].date
+        if match_date.hour == 0 and match_date.minute == 0:
+            date_str = match_date.strftime("%d/%m")
+        else:
+            date_str = match_date.strftime("%d/%m %H:%M")
+        
+        # Buscar todas as casas disponíveis para este mercado
+        from .models import MatchOdds
+        all_odds_for_market = MatchOdds.objects.filter(
+            match=prob["match"],
+            **{f"{prob['bet_type']}_odd__isnull": False}
+        ).select_related('bookmaker')
+        
+        # Encontrar melhor odd e se é brasileira
+        best_odd = prob["odd"]
+        best_bookmaker = prob["bookmaker"]
+        is_brazilian = best_bookmaker.is_brazilian if best_bookmaker else False
+        
+        # Lista de todas as casas disponíveis
+        available_bookmakers = []
+        for match_odd in all_odds_for_market:
+            odd_value = getattr(match_odd, f"{prob['bet_type']}_odd")
+            if odd_value:
+                available_bookmakers.append({
+                    "name": match_odd.bookmaker.name,
+                    "odd": float(odd_value),
+                    "is_brazilian": match_odd.bookmaker.is_brazilian
+                })
+        
+        results.append({
+            "match_id": prob["match"].id,
+            "match": f"{prob['match'].home_team.name} x {prob['match'].away_team.name}",
+            "league": prob["match"].league.name,
+            "date": date_str,
+            "bet_type": prob["bet_type"],
+            "bet_name": prob["bet_name"],
+            "odd": float(prob["odd"]),
+            "calculated_probability": round(prob["calculated_probability"], 2),
+            "implied_probability": round(prob["implied_probability"], 2),
+            "difference": round(prob["difference"], 2),
+            "best_bookmaker": best_bookmaker.name if best_bookmaker else None,
+            "is_brazilian_bookmaker": is_brazilian,
+            "available_bookmakers": available_bookmakers,
+        })
+    
+    return Response(results)
+
+@api_view(["GET"])
+def available_bookmakers(request):
+    """
+    Verifica quais bookmakers estão disponíveis na API para um esporte
+    """
+    from .services.odds_api import get_available_bookmakers, BRASIL_BOOKMAKERS, LEAGUE_TO_SPORT_KEY
+    import asyncio
+    
+    sport_key = request.GET.get('sport_key', 'soccer_epl')
+    
+    # Buscar bookmakers disponíveis
+    bookmakers_list = asyncio.run(get_available_bookmakers(sport_key))
+    
+    # Preparar resposta
+    available = []
+    brazilian_found = []
+    
+    for bk_key in bookmakers_list:
+        is_brazilian = bk_key.lower() in [b.lower() for b in BRASIL_BOOKMAKERS]
+        available.append({
+            "key": bk_key,
+            "title": bk_key.replace("_", " ").title(),
+            "is_brazilian": is_brazilian
+        })
+        if is_brazilian:
+            brazilian_found.append(bk_key)
+    
+    return Response({
+        "sport_key": sport_key,
+        "total_bookmakers": len(bookmakers_list),
+        "brazilian_bookmakers": brazilian_found,
+        "available_bookmakers": available,
+        "leagues_configured": list(LEAGUE_TO_SPORT_KEY.keys())
+    })
+
+
+@api_view(["GET"])
+def debug_odds(request):
+    """
+    Endpoint de debug para verificar odds no banco
+    """
+    from .models import MatchOdds, Match
+    from django.utils import timezone
+    from datetime import timedelta
+    
+    future_date = timezone.now() + timedelta(days=3)
+    matches = Match.objects.filter(
+        date__gte=timezone.now(),
+        date__lte=future_date
+    )
+    
+    total_odds = MatchOdds.objects.filter(match__in=matches).count()
+    total_bookmakers = MatchOdds.objects.filter(match__in=matches).values('bookmaker').distinct().count()
+    
+    # Exemplos de odds
+    sample_odds = MatchOdds.objects.filter(match__in=matches).select_related('match', 'bookmaker')[:5]
+    
+    # Listar bookmakers encontrados
+    bookmakers_list = list(MatchOdds.objects.filter(match__in=matches).values_list('bookmaker__name', flat=True).distinct())
+    
+    results = {
+        "total_matches_futuras": matches.count(),
+        "total_odds_salvas": total_odds,
+        "total_bookmakers": total_bookmakers,
+        "bookmakers_encontrados": bookmakers_list,
+        "exemplos": [
+            {
+                "match": f"{odd.match.home_team.name} x {odd.match.away_team.name}",
+                "bookmaker": odd.bookmaker.name,
+                "over_25_odd": float(odd.over_25_odd) if odd.over_25_odd else None,
+                "home_win_odd": float(odd.home_win_odd) if odd.home_win_odd else None,
+                "away_win_odd": float(odd.away_win_odd) if odd.away_win_odd else None,
+                "draw_odd": float(odd.draw_odd) if odd.draw_odd else None,
+            }
+            for odd in sample_odds
+        ]
+    }
+    
+    return Response(results)
