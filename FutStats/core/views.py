@@ -1,8 +1,7 @@
-from .utils import gerar_insights_rapidos, calcular_over25,calcular_media_gols
+from .utils import gerar_insights_rapidos, calcular_over25, calcular_media_gols, get_season_date_range
 from django.utils import timezone
 from rest_framework.response import Response
-from datetime import date
-from datetime import timedelta
+from datetime import date, datetime, timedelta
 from django.core.paginator import Paginator
 from rest_framework.decorators import api_view
 from django.shortcuts import render
@@ -145,15 +144,21 @@ def listar_partidas(request):
 @api_view(["GET"])
 def matches_today(request):
     from .utils import preload_ultimos_jogos, gerar_insights_rapidos
+    from datetime import datetime, time
 
     # ✅ carregamos o cache APENAS UMA VEZ
     cache = preload_ultimos_jogos()
 
+    # Calcular início e fim do dia de hoje
+    hoje = timezone.now().date()
+    inicio_do_dia = timezone.make_aware(datetime.combine(hoje, time.min))
+    fim_do_dia = timezone.make_aware(datetime.combine(hoje, time.max))
+
     matches = (
         Match.objects
         .select_related("home_team", "away_team", "league")
-        .filter(date__gte=timezone.now())
-        .order_by("date")[:3]
+        .filter(date__gte=inicio_do_dia, date__lte=fim_do_dia)
+        .order_by("date")
     )
 
     results = []
@@ -240,55 +245,224 @@ def tendencias_rodada(request):
 
 @api_view(["GET"])
 def times_em_destaque(request):
-    from .utils import (
-        preload_ultimos_jogos,
-        calcular_media_gols,
-        calcular_over25,
-    )
-    from datetime import timedelta
+    from django.db.models import Sum, Count, Case, When, IntegerField, Q, F
+    from django.utils.timezone import make_aware
+    from functools import reduce
+    from operator import or_
 
-    cache = preload_ultimos_jogos()
-
-    # Otimização: buscar apenas times que têm partidas nos últimos 30 dias ou futuras
+    # Buscar todas as ligas que estão no sistema e que têm season válida
+    ligas_do_sistema = League.objects.exclude(season__isnull=True).exclude(season='')
+    
+    if not ligas_do_sistema.exists():
+        return Response([])
+    
     hoje = timezone.now()
-    trinta_dias_atras = hoje - timedelta(days=30)
     
-    # Buscar times que têm partidas recentes ou futuras
-    home_team_ids = set(Match.objects.filter(
-        date__gte=trinta_dias_atras
-    ).values_list('home_team_id', flat=True))
+    # Validar cada liga e construir filtros baseados na season atual
+    # Para cada liga, vamos usar o range de datas da season atual
+    ligas_validas = []
+    filtros_partidas = []
     
-    away_team_ids = set(Match.objects.filter(
-        date__gte=trinta_dias_atras
-    ).values_list('away_team_id', flat=True))
+    for liga in ligas_do_sistema:
+        # Obter range de datas da season atual
+        data_inicio_season, data_fim_season = get_season_date_range(liga.season)
+        
+        if not data_inicio_season or not data_fim_season:
+            # Se não conseguir determinar o range, pula esta liga
+            continue
+        
+        # Converter para datetime aware para comparação
+        data_inicio_season_dt = make_aware(datetime.combine(data_inicio_season, datetime.min.time()))
+        data_fim_season_dt = make_aware(datetime.combine(data_fim_season, datetime.max.time()))
+        
+        # Verificar se há partidas finalizadas nesta season
+        # Usar o menor valor entre fim da season e hoje para garantir partidas até hoje
+        data_limite = min(data_fim_season_dt, hoje)
+        
+        partidas_liga_season = Match.objects.filter(
+            league=liga,
+            home_score__isnull=False,
+            away_score__isnull=False,
+            date__gte=data_inicio_season_dt,
+            date__lte=data_limite  # Apenas partidas até hoje e dentro da season
+        )
+        
+        if partidas_liga_season.exists():
+            ligas_validas.append(liga.id)
+            # Adicionar filtro para esta liga com seu range de datas
+            filtros_partidas.append(
+                Q(league=liga) & 
+                Q(home_score__isnull=False) & 
+                Q(away_score__isnull=False) &
+                Q(date__gte=data_inicio_season_dt) &
+                Q(date__lte=data_limite)
+            )
     
-    # Combinar e limitar a 50 times para processar
-    times_ids = list(home_team_ids.union(away_team_ids))[:50]
+    # Se não houver ligas válidas, retorna lista vazia
+    if not ligas_validas or not filtros_partidas:
+        return Response([])
+    
+    # Combinar todos os filtros com OR (cada liga tem seu próprio range de datas)
+    filtro_combinado = reduce(or_, filtros_partidas)
+    
+    # Buscar apenas partidas finalizadas da season atual de cada liga válida
+    partidas_finalizadas = Match.objects.filter(
+        filtro_combinado
+    ).select_related('league')
+    
+    # Se não houver partidas, retorna lista vazia
+    if not partidas_finalizadas.exists():
+        return Response([])
 
-    times = Team.objects.filter(id__in=times_ids).select_related("league")
+    # Buscar todos os times que têm partidas recentes usando uma única query
+    times_ids = set(
+        partidas_finalizadas.values_list('home_team_id', flat=True)
+    ) | set(
+        partidas_finalizadas.values_list('away_team_id', flat=True)
+    )
 
-    resultados = []
+    if not times_ids:
+        return Response([])
 
-    for time in times:
-        gols = calcular_media_gols(time, cache)
-        over = calcular_over25(time, cache)
+    # Calcular estatísticas usando agregações do Django ORM (muito mais rápido)
+    # Estatísticas como mandante
+    stats_home = partidas_finalizadas.values('home_team').annotate(
+        gols_feitos_home=Sum('home_score'),
+        gols_sofridos_home=Sum('away_score'),
+        vitorias_home=Count('id', filter=Q(home_score__gt=F('away_score'))),
+        empates_home=Count('id', filter=Q(home_score=F('away_score'))),
+        derrotas_home=Count('id', filter=Q(home_score__lt=F('away_score'))),
+        ambas_marcam_home=Count('id', filter=Q(home_score__gt=0, away_score__gt=0)),
+        total_home=Count('id')
+    )
 
-        resultados.append({
-            "id": time.id,
-            "name": time.name,
-            "league": time.league.name,
-            "logo": time.logo,
-            "goalsAverage": round(gols, 2),
-            "overPercentage": int(over),
-        })
+    # Estatísticas como visitante
+    stats_away = partidas_finalizadas.values('away_team').annotate(
+        gols_feitos_away=Sum('away_score'),
+        gols_sofridos_away=Sum('home_score'),
+        vitorias_away=Count('id', filter=Q(away_score__gt=F('home_score'))),
+        empates_away=Count('id', filter=Q(away_score=F('home_score'))),
+        derrotas_away=Count('id', filter=Q(away_score__lt=F('home_score'))),
+        ambas_marcam_away=Count('id', filter=Q(home_score__gt=0, away_score__gt=0)),
+        total_away=Count('id')
+    )
 
-    top = sorted(
-        resultados,
-        key=lambda t: (t["goalsAverage"], t["overPercentage"]),
-        reverse=True
-    )[:4]
+    # Combinar estatísticas em um dicionário por time_id
+    estatisticas_dict = {}
+    
+    for stat in stats_home:
+        team_id = stat['home_team']
+        estatisticas_dict[team_id] = {
+            'gols_feitos': stat['gols_feitos_home'] or 0,
+            'gols_sofridos': stat['gols_sofridos_home'] or 0,
+            'vitorias': stat['vitorias_home'] or 0,
+            'empates': stat['empates_home'] or 0,
+            'derrotas': stat['derrotas_home'] or 0,
+            'ambas_marcam': stat['ambas_marcam_home'] or 0,
+            'total_jogos': stat['total_home'] or 0,
+        }
+    
+    for stat in stats_away:
+        team_id = stat['away_team']
+        if team_id in estatisticas_dict:
+            estatisticas_dict[team_id]['gols_feitos'] += stat['gols_feitos_away'] or 0
+            estatisticas_dict[team_id]['gols_sofridos'] += stat['gols_sofridos_away'] or 0
+            estatisticas_dict[team_id]['vitorias'] += stat['vitorias_away'] or 0
+            estatisticas_dict[team_id]['empates'] += stat['empates_away'] or 0
+            estatisticas_dict[team_id]['derrotas'] += stat['derrotas_away'] or 0
+            estatisticas_dict[team_id]['ambas_marcam'] += stat['ambas_marcam_away'] or 0
+            estatisticas_dict[team_id]['total_jogos'] += stat['total_away'] or 0
+        else:
+            estatisticas_dict[team_id] = {
+                'gols_feitos': stat['gols_feitos_away'] or 0,
+                'gols_sofridos': stat['gols_sofridos_away'] or 0,
+                'vitorias': stat['vitorias_away'] or 0,
+                'empates': stat['empates_away'] or 0,
+                'derrotas': stat['derrotas_away'] or 0,
+                'ambas_marcam': stat['ambas_marcam_away'] or 0,
+                'total_jogos': stat['total_away'] or 0,
+            }
 
-    return Response(top)
+    # Buscar informações dos times em uma única query (apenas campos necessários)
+    # Garantir que os times pertencem apenas às ligas válidas do sistema
+    times = Team.objects.filter(
+        id__in=times_ids,
+        league_id__in=ligas_validas
+    ).select_related("league").only('id', 'name', 'logo', 'league__name')
+    times_dict = {time.id: time for time in times}
+
+    # Montar lista final de estatísticas
+    estatisticas_times = []
+    for team_id, stats in estatisticas_dict.items():
+        if team_id in times_dict:
+            time = times_dict[team_id]
+            total_jogos = stats['total_jogos']
+            porcentagem_ambas_marcam = (stats['ambas_marcam'] / total_jogos * 100) if total_jogos > 0 else 0
+            
+            estatisticas_times.append({
+                "id": time.id,
+                "name": time.name,
+                "league": time.league.name,
+                "logo": time.logo,
+                "gols_feitos": stats['gols_feitos'],
+                "gols_sofridos": stats['gols_sofridos'],
+                "vitorias": stats['vitorias'],
+                "empates": stats['empates'],
+                "derrotas": stats['derrotas'],
+                "ambas_marcam": round(porcentagem_ambas_marcam, 1),
+                "total_jogos": total_jogos,
+            })
+
+    # Encontrar os 4 times destacados
+    if not estatisticas_times:
+        return Response([])
+    
+    time_mais_gols_feitos = max(estatisticas_times, key=lambda t: t["gols_feitos"])
+    time_mais_gols_sofridos = max(estatisticas_times, key=lambda t: t["gols_sofridos"])
+    time_mais_vitorias = max(estatisticas_times, key=lambda t: t["vitorias"])
+    time_ambas_marcam = max(estatisticas_times, key=lambda t: t["ambas_marcam"])
+
+    # Formatar resposta para o frontend
+    resultados = [
+        {
+            "id": time_mais_gols_feitos["id"],
+            "name": time_mais_gols_feitos["name"],
+            "league": time_mais_gols_feitos["league"],
+            "logo": time_mais_gols_feitos["logo"],
+            "stat_type": "gols_feitos",
+            "stat_value": time_mais_gols_feitos["gols_feitos"],
+            "stat_label": "Gols Feitos",
+        },
+        {
+            "id": time_mais_gols_sofridos["id"],
+            "name": time_mais_gols_sofridos["name"],
+            "league": time_mais_gols_sofridos["league"],
+            "logo": time_mais_gols_sofridos["logo"],
+            "stat_type": "gols_sofridos",
+            "stat_value": time_mais_gols_sofridos["gols_sofridos"],
+            "stat_label": "Gols Sofridos",
+        },
+        {
+            "id": time_mais_vitorias["id"],
+            "name": time_mais_vitorias["name"],
+            "league": time_mais_vitorias["league"],
+            "logo": time_mais_vitorias["logo"],
+            "stat_type": "vitorias",
+            "stat_value": time_mais_vitorias["vitorias"],
+            "stat_label": "Vitórias",
+        },
+        {
+            "id": time_ambas_marcam["id"],
+            "name": time_ambas_marcam["name"],
+            "league": time_ambas_marcam["league"],
+            "logo": time_ambas_marcam["logo"],
+            "stat_type": "ambas_marcam",
+            "stat_value": time_ambas_marcam["ambas_marcam"],
+            "stat_label": "Ambas Marcam",
+        },
+    ]
+
+    return Response(resultados)
 
 @api_view(["GET"])
 def estatisticas_gerais(request):
