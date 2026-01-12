@@ -276,13 +276,15 @@ def times_em_destaque(request):
         data_fim_season_dt = make_aware(datetime.combine(data_fim_season, datetime.max.time()))
         
         # Verificar se há partidas finalizadas nesta season
+        # Usar o menor valor entre fim da season e hoje para garantir partidas até hoje
+        data_limite = min(data_fim_season_dt, hoje)
+        
         partidas_liga_season = Match.objects.filter(
             league=liga,
             home_score__isnull=False,
             away_score__isnull=False,
             date__gte=data_inicio_season_dt,
-            date__lte=data_fim_season_dt,
-            date__lte=hoje  # Apenas partidas até hoje
+            date__lte=data_limite  # Apenas partidas até hoje e dentro da season
         )
         
         if partidas_liga_season.exists():
@@ -293,8 +295,7 @@ def times_em_destaque(request):
                 Q(home_score__isnull=False) & 
                 Q(away_score__isnull=False) &
                 Q(date__gte=data_inicio_season_dt) &
-                Q(date__lte=data_fim_season_dt) &
-                Q(date__lte=hoje)
+                Q(date__lte=data_limite)
             )
     
     # Se não houver ligas válidas, retorna lista vazia
@@ -386,7 +387,7 @@ def times_em_destaque(request):
     # Garantir que os times pertencem apenas às ligas válidas do sistema
     times = Team.objects.filter(
         id__in=times_ids,
-        league_id__in=ligas_validas_ids
+        league_id__in=ligas_validas
     ).select_related("league").only('id', 'name', 'logo', 'league__name')
     times_dict = {time.id: time for time in times}
 

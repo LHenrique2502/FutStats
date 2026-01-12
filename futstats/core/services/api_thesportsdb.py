@@ -76,24 +76,42 @@ async def import_leagues_async():
             if liga_existente:
                 season_anterior = liga_existente.season
                 if season_anterior != season_atual_api:
+                    # Season mudou - atualizar explicitamente
                     print(f"🔄 Season atualizada para {league_name}: {season_anterior} → {season_atual_api}")
+                    liga_existente.season = season_atual_api
+                    liga_existente.name = lg["strLeague"]
+                    liga_existente.country = lg["strCountry"]
+                    liga_existente.logo = lg["strBadge"]
+                    liga_existente.last_fetched_at = now()
+                    await sync_to_async(liga_existente.save)()
+                    print(f"✅ Liga atualizada no banco: {league_name} (Season: {season_atual_api})")
                 else:
+                    # Season é a mesma - apenas atualizar outros campos se necessário
                     print(f"✅ Season mantida para {league_name}: {season_atual_api}")
+                    await sync_to_async(League.objects.update_or_create)(
+                        api_id=lg["idLeague"],
+                        defaults={
+                            "name": lg["strLeague"],
+                            "country": lg["strCountry"],
+                            "logo": lg["strBadge"],
+                            "season": season_atual_api,
+                            "last_fetched_at": now(),
+                        }
+                    )
             else:
+                # Nova liga - criar
                 print(f"🆕 Nova liga criada: {league_name} (Season: {season_atual_api})")
-
-            await sync_to_async(League.objects.update_or_create)(
-                api_id=lg["idLeague"],
-                defaults={
-                    "name": lg["strLeague"],
-                    "country": lg["strCountry"],
-                    "logo": lg["strBadge"],
-                    "season": season_atual_api,
-                    "last_fetched_at": now(),
-                }
-            )
-
-            print(f"✅ Liga salva: {league_name} (Season: {season_atual_api})")
+                await sync_to_async(League.objects.update_or_create)(
+                    api_id=lg["idLeague"],
+                    defaults={
+                        "name": lg["strLeague"],
+                        "country": lg["strCountry"],
+                        "logo": lg["strBadge"],
+                        "season": season_atual_api,
+                        "last_fetched_at": now(),
+                    }
+                )
+                print(f"✅ Liga salva: {league_name} (Season: {season_atual_api})")
 
 
 # ==========================
