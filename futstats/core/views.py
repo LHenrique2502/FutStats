@@ -145,15 +145,21 @@ def listar_partidas(request):
 @api_view(["GET"])
 def matches_today(request):
     from .utils import preload_ultimos_jogos, gerar_insights_rapidos
+    from datetime import datetime, time
 
     # ✅ carregamos o cache APENAS UMA VEZ
     cache = preload_ultimos_jogos()
 
+    # Calcular início e fim do dia de hoje
+    hoje = timezone.now().date()
+    inicio_do_dia = timezone.make_aware(datetime.combine(hoje, time.min))
+    fim_do_dia = timezone.make_aware(datetime.combine(hoje, time.max))
+
     matches = (
         Match.objects
         .select_related("home_team", "away_team", "league")
-        .filter(date__gte=timezone.now())
-        .order_by("date")[:3]
+        .filter(date__gte=inicio_do_dia, date__lte=fim_do_dia)
+        .order_by("date")
     )
 
     results = []
