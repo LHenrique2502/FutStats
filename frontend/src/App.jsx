@@ -3,38 +3,36 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from 'next-themes';
-import Index from './pages/Index';
-import Jogos from './pages/Jogos';
-import Times from './pages/Times';
-import Ligas from './pages/Ligas';
-import Scouts from './pages/Scouts';
-import Jogadores from './pages/Jogadores';
-import MatchDetails from './pages/MatchDetails';
+import { Header } from './components/Header';
+import Home from './pages/Home';
+import Teams from './pages/Teams';
+import Matches from './pages/Matches';
+import Team from './pages/Team';
+import Match from './pages/Match';
+import League from './pages/League';
 import NotFound from './pages/NotFound';
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/jogos" element={<Jogos />} />
-            <Route path="/times" element={<Times />} />
-            <Route path="/ligas" element={<Ligas />} />
-            <Route path="/scouts" element={<Scouts />} />
-            <Route path="/jogadores" element={<Jogadores />} />
-            <Route path="/partida/:id" element={<MatchDetails />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/teams" element={<Teams />} />
+          <Route path="/matches" element={<Matches />} />
+          <Route path="/team/:id" element={<Team />} />
+          <Route path="/match/:id" element={<Match />} />
+          <Route path="/leagues" element={<League />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
   </QueryClientProvider>
 );
 

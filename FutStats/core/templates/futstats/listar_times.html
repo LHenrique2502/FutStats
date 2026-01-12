@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lista de Times</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <header class="p-3">
+      <h2><a href="/times">Lista de Times</a></h2>
+      <nav><a href="/">Home</a> | <a href="/ligas/">Ligas</a> |
+        <a href="/jogadores/">Jogadores</a> |
+        <a href="/partidas/">Partidas</a> |</nav>
+    </header>
+
+    <hr />
+
+    <!-- Filtros -->
+    <form method="get" class="m-2">
+      <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+          <label for="nome" class="form-label">Nome do time</label>
+          <input
+            type="text"
+            name="nome"
+            id="nome"
+            class="form-control"
+            placeholder="Buscar por nome"
+            value="{{ request.GET.nome }}"
+          />
+        </div>
+
+        <div class="col-md-3">
+          <label for="pais" class="form-label">País</label>
+          <select name="pais" id="pais" class="form-control">
+            <option value="">Todos os países</option>
+            {% for p in paises %}
+            <option value="{{ p }}" {% if request.GET.pais == p %}selected{% endif %}>{{ p }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label for="liga" class="form-label">Liga</label>
+          <select name="liga" id="liga" class="form-control">
+            <option value="">Todas as ligas</option>
+            {% for l in ligas %}
+            <option value="{{ l }}" {% if request.GET.liga == l %}selected{% endif %}>{{ l }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+          <a href="/times" class="btn btn-outline-secondary w-100 mt-2">Limpar filtros</a>
+        </div>
+      </div>
+    </form>
+
+    <!-- Tabela e paginação -->
+    <div class="d-flex justify-content-center">
+      <table class="table table-light table-striped m-2">
+        <thead class="table-secondary">
+          <tr>
+            <th>Escudo</th>
+            <th>Time</th>
+            <th>Liga</th>
+            <th>País</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if page_obj %} {% for time in page_obj %}
+          <tr>
+            <td>
+              <img
+                src="{{ time.logo }}"
+                alt="Escudo do Time"
+                style="height: 30px"
+              />
+            </td>
+            <td>{{ time.name }}</td>
+            <td>{{ time.league }}</td>
+            <td>{{ time.country }}</td>
+          </tr>
+          {% endfor %}
+
+          <!-- Paginação embutida na tabela -->
+          {% if page_obj.has_other_pages %}
+          <tr>
+            <td colspan="4" class="text-center">
+              {% if page_obj.has_previous %}
+              <a href="?page=1{% if request.GET.nome or request.GET.pais or request.GET.liga %}&nome={{ request.GET.nome }}&pais={{ request.GET.pais }}&liga={{ request.GET.liga }}{% endif %}" class="btn btn-sm btn-outline-primary">&laquo;</a>
+              <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.nome or request.GET.pais or request.GET.liga %}&nome={{ request.GET.nome }}&pais={{ request.GET.pais }}&liga={{ request.GET.liga }}{% endif %}" class="btn btn-sm btn-outline-primary">Anterior</a>
+              {% endif %}
+
+              <span class="mx-2">
+                Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+              </span>
+
+              {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}{% if request.GET.nome or request.GET.pais or request.GET.liga %}&nome={{ request.GET.nome }}&pais={{ request.GET.pais }}&liga={{ request.GET.liga }}{% endif %}" class="btn btn-sm btn-outline-primary">Próxima</a>
+              <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.nome or request.GET.pais or request.GET.liga %}&nome={{ request.GET.nome }}&pais={{ request.GET.pais }}&liga={{ request.GET.liga }}{% endif %}" class="btn btn-sm btn-outline-primary">&raquo;</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endif %}
+
+          {% else %}
+          <tr>
+            <td colspan="4" class="text-center">Nenhum time encontrado.</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,60 +1,46 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Link } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 
-const StatsCard = ({
+export const StatsCard = ({
   title,
   value,
   icon: Icon,
-  description,
+  subtitle,
   trend,
-  className = '',
-  href,
+  className,
 }) => {
-  const getTrendColor = () => {
-    switch (trend) {
-      case 'up':
-        return 'text-green-600 dark:text-green-400';
-      case 'down':
-        return 'text-red-600 dark:text-red-400';
-      default:
-        return 'text-muted-foreground';
-    }
-  };
-
-  const CardComponent = (
-    <Card
-      className={`hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${
-        href ? 'cursor-pointer' : ''
-      } ${className}`}
+  return (
+    <div
+      className={cn(
+        'bg-card border border-border rounded-lg p-4 transition-glow hover:border-glow',
+        'gradient-primary',
+        className
+      )}
     >
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-xs sm:text-sm font-semibold text-foreground">
-          {title}
-        </CardTitle>
-        <Icon className="h-4 w-4 text-primary flex-shrink-0" />
-      </CardHeader>
-      <CardContent className="pt-2">
-        <div className="text-xl sm:text-2xl font-bold text-foreground mb-1">
-          {value}
+      <div className="flex items-start justify-between mb-3">
+        <div className="bg-primary/10 p-2 rounded-lg">
+          <Icon className="w-5 h-5 text-primary" />
         </div>
-        {description && (
-          <p className={`text-xs font-medium ${getTrendColor()}`}>
-            {description}
-          </p>
+        {trend && (
+          <span
+            className={cn(
+              'text-xs font-medium px-2 py-1 rounded-full',
+              trend === 'up' && 'bg-success/20 text-success',
+              trend === 'down' && 'bg-destructive/20 text-destructive',
+              trend === 'stable' && 'bg-muted/50 text-muted-foreground'
+            )}
+          >
+            {trend === 'up' ? '↑' : trend === 'down' ? '↓' : '→'}
+          </span>
         )}
-      </CardContent>
-    </Card>
+      </div>
+
+      <div className="space-y-1">
+        <p className="text-md text-muted-foreground font-medium">{title}</p>
+        <p className="text-2xl font-bold text-foreground">{value}</p>
+        {subtitle && (
+          <p className="text-xs text-muted-foreground">{subtitle}</p>
+        )}
+      </div>
+    </div>
   );
-
-  if (href) {
-    return (
-      <Link to={href} className="block">
-        {CardComponent}
-      </Link>
-    );
-  }
-
-  return CardComponent;
 };
-
-export default StatsCard;
