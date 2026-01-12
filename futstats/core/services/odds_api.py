@@ -33,6 +33,18 @@ BRASIL_BOOKMAKERS = [
     "blaze",            # Blaze (conhecida no Brasil)
 ]
 
+# Lista de bookmakers permitidos para o sistema (edite aqui para adicionar/remover casas)
+ALLOWED_BOOKMAKERS = [
+    "betway",           # Betway
+    # Adicione ou remova casas de apostas desta lista conforme necessário
+    # Exemplos de outras casas disponíveis:
+    # "bet365",
+    # "betfair",
+    # "unibet",
+    # "pinnacle",
+    # "1xbet",
+]
+
 # Mapeamento de ligas para sport_key da The Odds API
 LEAGUE_TO_SPORT_KEY = {
     "English Premier League": "soccer_epl",
@@ -47,6 +59,15 @@ LEAGUE_TO_SPORT_KEY = {
 def get_sport_key_for_league(league_name):
     """Retorna o sport_key da The Odds API para uma liga"""
     return LEAGUE_TO_SPORT_KEY.get(league_name, "soccer_epl")  # Default para EPL
+
+
+def get_allowed_bookmakers():
+    """
+    Retorna lista de bookmakers permitidos.
+    Para alterar as casas de apostas, edite a constante ALLOWED_BOOKMAKERS no topo deste arquivo.
+    """
+    # Retornar lista em lowercase para comparação (case-insensitive)
+    return [bk.lower() for bk in ALLOWED_BOOKMAKERS]
 
 
 async def get_available_bookmakers(sport_key, regions="us,uk", markets="h2h,totals"):
@@ -237,6 +258,10 @@ async def process_and_save_odds(odds_data, league=None, days_ahead=1):
         print(f"⚠️ Formato de dados inesperado: {type(odds_data)}")
         return
     
+    # Obter lista de bookmakers permitidos
+    allowed_bookmakers = get_allowed_bookmakers()
+    print(f"🔒 Filtrando bookmakers: {', '.join(allowed_bookmakers)}")
+    
     print(f"\n📊 Processando {len(odds_data)} eventos da API...")
     
     # Buscar partidas de hoje até X dias à frente
@@ -302,10 +327,9 @@ async def process_and_save_odds(odds_data, league=None, days_ahead=1):
             bookmaker_key = bookmaker_data.get("key")
             bookmaker_title = bookmaker_data.get("title", bookmaker_key)
             
-            # ✅ FILTRO DESABILITADO: Salvando todas as casas de apostas
-            # Para filtrar apenas brasileiras, descomente as linhas abaixo:
-            # if bookmaker_key.lower() not in [b.lower() for b in BRASIL_BOOKMAKERS]:
-            #     continue  # Pular bookmakers não brasileiros
+            # Filtrar bookmakers permitidos
+            if bookmaker_key.lower() not in allowed_bookmakers:
+                continue  # Pular bookmakers não permitidos
             
             # Criar ou buscar bookmaker e marcar se é brasileiro
             is_brazilian = bookmaker_key.lower() in [b.lower() for b in BRASIL_BOOKMAKERS]
