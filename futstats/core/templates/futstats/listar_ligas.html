@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lista de Ligas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <header class="p-3">
+      <h2><a href="/ligas">Lista de Ligas</a></h2>
+      <nav>
+        <a href="/">Home</a> | <a href="/times/">Times</a> |
+        <a href="/jogadores/">Jogadores</a> |
+        <a href="/partidas/">Partidas</a> |
+      </nav>
+    </header>
+
+    <hr />
+
+    <div class="d-flex justify-content-center">
+      <table class="table table-light table-striped m-2">
+        <thead class="table-secondary">
+          <tr>
+            <th>Logo</th>
+            <th>Campeonato</th>
+            <th>País</th>
+            <th>Tipo</th>
+            <th>Temporada</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if ligas %} {% for liga in ligas %}
+          <tr>
+            <td>
+              <img
+                src="{{ liga.logo }}"
+                alt="Logo da liga"
+                style="height: 30px"
+              />
+            </td>
+            <td>{{liga.name}}</td>
+            <td>{{liga.country}}</td>
+            <td>{{liga.type}}</td>
+            <td>{{liga.season}}</td>
+          </tr>
+          {% endfor %} {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
