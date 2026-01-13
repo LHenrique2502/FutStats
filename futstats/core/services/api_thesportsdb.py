@@ -30,6 +30,10 @@ LEAGUES_OF_INTEREST = {
     "Italian Serie A": 4332,
     "French Ligue 1": 4334,
     "Brazil Serie A": 4351,
+    "Campeonato Paulista":5767,
+    "Campeonato Carioca":5688,
+    "Campeonato Mineiro":5763,
+    "UEFA Champions League":4480,
 }
 
 # ============================================================
