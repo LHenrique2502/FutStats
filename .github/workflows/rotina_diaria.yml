@@ -2,7 +2,7 @@ name: FutStats Daily Cron
 
 on:
   schedule:
-    - cron: "0 6 * * *"  # 03:00 no Brasil
+    - cron: "0 6 * * *" # 03:00 no Brasil
   workflow_dispatch:
 
 jobs:
@@ -31,3 +31,4 @@ jobs:
         run: |
           cd futstats
           python manage.py rotina_diaria
+          python manage.py importar_odds
