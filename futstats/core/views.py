@@ -1,4 +1,11 @@
-from .utils import gerar_insights_rapidos, calcular_over25, calcular_media_gols, get_season_date_range
+from .utils import (
+    gerar_insights_rapidos,
+    preload_ultimos_jogos,
+    calcular_over25,
+    calcular_btts,
+    calcular_media_gols,
+    get_season_date_range,
+)
 from django.utils import timezone
 from rest_framework.response import Response
 from datetime import date, datetime, timedelta
@@ -182,6 +189,44 @@ def matches_today(request):
 
             # ✅ insights agora usam CACHE
             "insights": gerar_insights_rapidos(match, cache),
+        })
+
+    return Response(results)
+
+@api_view(["GET"])
+def probabilities_today(request):
+    """
+    Retorna para TODOS os jogos de hoje as probabilidades dos 2 mercados atuais:
+    - over_25  (Mais de 2.5 Gols)
+    - btts_yes (Ambos Marcam)
+    """
+    from datetime import datetime, time
+
+    cache = preload_ultimos_jogos()
+
+    hoje = timezone.now().date()
+    inicio_do_dia = timezone.make_aware(datetime.combine(hoje, time.min))
+    fim_do_dia = timezone.make_aware(datetime.combine(hoje, time.max))
+
+    matches = (
+        Match.objects
+        .select_related("home_team", "away_team", "league")
+        .filter(date__gte=inicio_do_dia, date__lte=fim_do_dia)
+        .order_by("date")
+    )
+
+    results = []
+    for match in matches:
+        home = match.home_team
+        away = match.away_team
+
+        over25_prob = (calcular_over25(home, cache) + calcular_over25(away, cache)) / 2
+        btts_prob = (calcular_btts(home, cache) + calcular_btts(away, cache)) / 2
+
+        results.append({
+            "match_id": match.id,
+            "over_25": round(float(over25_prob), 2),
+            "btts_yes": round(float(btts_prob), 2),
         })
 
     return Response(results)

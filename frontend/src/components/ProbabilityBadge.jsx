@@ -15,6 +15,12 @@ export const ProbabilityBadge = ({ percentage, label, size = 'md' }) => {
     lg: 'text-base px-4 py-2',
   };
 
+  const percentageSizeClasses = {
+    sm: 'text-sm',
+    md: 'text-base',
+    lg: 'text-lg',
+  };
+
   return (
     <div
       className={cn(
@@ -28,7 +34,7 @@ export const ProbabilityBadge = ({ percentage, label, size = 'md' }) => {
           'bg-destructive/20 text-destructive border border-destructive/30'
       )}
     >
-      <span className="text-lg">{percentage}%</span>
+      <span className={percentageSizeClasses[size]}>{percentage}%</span>
       {label && <span className="font-medium opacity-90">{label}</span>}
     </div>
   );

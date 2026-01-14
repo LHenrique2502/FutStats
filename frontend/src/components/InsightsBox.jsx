@@ -3,6 +3,13 @@ import { TrendIndicator } from './TrendIndicator';
 import { ProbabilityBadge } from './ProbabilityBadge';
 
 export const InsightsBox = ({ title, description, probability, trend }) => {
+  const computedTrend =
+    probability !== undefined && probability !== null
+      ? Number(probability) > 50
+        ? 'up'
+        : 'down'
+      : trend;
+
   return (
     <div className="bg-card border border-primary/30 rounded-lg p-4 glow-subtle transition-glow hover:glow-primary">
       <div className="flex items-start gap-3">
@@ -13,7 +20,7 @@ export const InsightsBox = ({ title, description, probability, trend }) => {
         <div className="flex-1 space-y-2">
           <div className="flex items-start justify-between gap-2">
             <h3 className="font-semibold text-foreground">{title}</h3>
-            {trend && <TrendIndicator trend={trend} size="sm" />}
+            {computedTrend && <TrendIndicator trend={computedTrend} size="sm" />}
           </div>
 
           <p className="text-sm text-muted-foreground leading-relaxed">

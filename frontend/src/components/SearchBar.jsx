@@ -4,6 +4,8 @@ import { Input } from '@/components/ui/input';
 export const SearchBar = ({
   placeholder = 'Buscar times, partidas ou ligas...',
   onSearch,
+  value,
+  onChange,
 }) => {
   return (
     <div className="relative w-full">
@@ -12,7 +14,11 @@ export const SearchBar = ({
         type="text"
         placeholder={placeholder}
         className="pl-12 h-12 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-        onChange={(e) => onSearch?.(e.target.value)}
+        value={value}
+        onChange={(e) => {
+          onChange?.(e);
+          onSearch?.(e.target.value);
+        }}
       />
     </div>
   );

@@ -22,6 +22,8 @@ const Home = () => {
   const [matches, setMatches] = useState([]);
   const [topProbabilities, setTopProbabilities] = useState([]);
   const [highlightTeams, setHighlightTeams] = useState([]);
+  const viewAllButtonClass =
+    'text-muted-foreground hover:text-primary hover:bg-transparent p-0 h-auto font-normal';
 
   useEffect(() => {
     fetch(`${API_URL_BACK}matches/today/`)
@@ -168,7 +170,7 @@ const Home = () => {
                 <Link to="/matches">
                   <Button 
                     variant="ghost" 
-                    className="text-muted-foreground hover:text-primary hover:bg-transparent p-0 h-auto font-normal"
+                    className={viewAllButtonClass}
                   >
                     Ver tudo
                   </Button>
@@ -204,6 +206,13 @@ const Home = () => {
                 />
               </Link>
             ))}
+          </div>
+          <div className="flex justify-end mt-6">
+            <Link to="/value-bets">
+              <Button variant="ghost" className={viewAllButtonClass}>
+                Ver tudo
+              </Button>
+            </Link>
           </div>
         </section>
 

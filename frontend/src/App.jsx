@@ -7,6 +7,7 @@ import { Header } from './components/Header';
 import Home from './pages/Home';
 import Teams from './pages/Teams';
 import Matches from './pages/Matches';
+import ValueBets from './pages/ValueBets';
 import Team from './pages/Team';
 import Match from './pages/Match';
 import League from './pages/League';
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/" element={<Home />} />
           <Route path="/teams" element={<Teams />} />
           <Route path="/matches" element={<Matches />} />
+          <Route path="/value-bets" element={<ValueBets />} />
           <Route path="/team/:id" element={<Team />} />
           <Route path="/match/:id" element={<Match />} />
           <Route path="/leagues" element={<League />} />

@@ -24,22 +24,16 @@ export const Header = () => {
             Home
           </Link>
           <Link
-            to="/teams"
-            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-          >
-            Times
-          </Link>
-          <Link
             to="/matches"
             className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
           >
             Partidas
           </Link>
           <Link
-            to="/leagues"
+            to="/value-bets"
             className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
           >
-            Ligas
+            Probabilidades
           </Link>
         </nav>
       </div>
