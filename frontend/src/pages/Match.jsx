@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
 import {
   Calendar,
-  Clock,
   TrendingUp,
   Target,
   Flag,
@@ -80,17 +79,11 @@ const Match = () => {
       <div className="container mx-auto px-4 py-8 space-y-12">
         {/* Match Header */}
         <div className="bg-card border border-border rounded-lg p-8">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center mb-6">
             <div className="flex items-center gap-3">
               <Calendar className="w-5 h-5 text-muted-foreground" />
               <span className="text-sm text-muted-foreground">
                 {match.date}
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Clock className="w-5 h-5 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">
-                {match.time}
               </span>
             </div>
           </div>

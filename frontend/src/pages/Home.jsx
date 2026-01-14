@@ -6,8 +6,15 @@ import {
 import { SearchBar } from '@/components/SearchBar';
 import { SectionTitle } from '@/components/SectionTitle';
 import { InsightsBox } from '@/components/InsightsBox';
-import { mockMatches, mockTeams, mockTrendingInsights } from '@/data/mockData';
 import { Link } from 'react-router-dom';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import { Button } from '@/components/ui/button';
 
 const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
 
@@ -75,73 +82,104 @@ const Home = () => {
             subtitle="Jogos com análises disponíveis"
             icon={Calendar}
           />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {matches.map((match) => (
-              <Link
-                key={match.id}
-                to={`/match/${match.id}`}
-                className="bg-card border border-border rounded-lg p-6 hover:border-primary hover:glow-subtle transition-all group"
+          {matches.length > 0 ? (
+            <div className="relative px-12">
+              <Carousel
+                opts={{
+                  align: "start",
+                  slidesToScroll: 1,
+                }}
+                className="w-full"
               >
-                <div className="space-y-4">
-                  {/* Cabeçalho da partida */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                      {match.league}
-                    </span>
-                    <span className="text-xs text-primary font-medium">
-                      {match.date} • {match.time}
-                    </span>
-                  </div>
-
-                  {/* Times */}
-                  <div className="grid grid-cols-3 gap-4 items-center">
-                    <div className="text-center">
-                      <img
-                        src={match.homeTeam.logo}
-                        className="w-10 h-10 mx-auto"
-                        alt={match.homeTeam.name}
-                      />
-
-                      <p className="text-sm font-semibold text-foreground">
-                        {match.homeTeam.name}
-                      </p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-xs text-muted-foreground">VS</p>
-                    </div>
-                    <div className="text-center">
-                      <img
-                        src={match.awayTeam.logo}
-                        className="w-10 h-10 mx-auto"
-                        alt={match.awayTeam.name}
-                      />
-
-                      <p className="text-sm font-semibold text-foreground">
-                        {match.awayTeam.name}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Quick insights */}
-                  <div className="pt-3 border-t border-border space-y-2">
-                    {match.insights.slice(0, 2).map((insight) => (
-                      <div
-                        key={insight.id}
-                        className="flex items-center justify-between text-sm"
+                <CarouselContent className="-ml-2 md:-ml-4">
+                  {matches.map((match) => (
+                    <CarouselItem key={match.id} className="pl-2 md:pl-4 md:basis-1/3">
+                      <Link
+                        to={`/match/${match.id}`}
+                        className="bg-card border border-border rounded-lg p-6 hover:border-primary hover:glow-subtle transition-all group block h-full"
                       >
-                        <span className="text-muted-foreground">
-                          {insight.title}
-                        </span>
-                        <span className="text-primary font-bold">
-                          {insight.probability}%
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                        <div className="space-y-4">
+                          {/* Cabeçalho da partida */}
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                              {match.league}
+                            </span>
+                            <span className="text-xs text-primary font-medium">
+                              {match.date}
+                            </span>
+                          </div>
+
+                          {/* Times */}
+                          <div className="grid grid-cols-3 gap-4 items-center">
+                            <div className="text-center">
+                              <img
+                                src={match.homeTeam.logo}
+                                className="w-10 h-10 mx-auto"
+                                alt={match.homeTeam.name}
+                              />
+                              <p className="text-sm font-semibold text-foreground mt-2">
+                                {match.homeTeam.name}
+                              </p>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-xs text-muted-foreground">VS</p>
+                            </div>
+                            <div className="text-center">
+                              <img
+                                src={match.awayTeam.logo}
+                                className="w-10 h-10 mx-auto"
+                                alt={match.awayTeam.name}
+                              />
+                              <p className="text-sm font-semibold text-foreground mt-2">
+                                {match.awayTeam.name}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Quick insights */}
+                          <div className="pt-3 border-t border-border space-y-2">
+                            {match.insights?.slice(0, 2).map((insight) => (
+                              <div
+                                key={insight.id}
+                                className="flex items-center justify-between text-sm"
+                              >
+                                <span className="text-muted-foreground">
+                                  {insight.title}
+                                </span>
+                                <span className="text-primary font-bold">
+                                  {insight.probability}%
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </Link>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                {matches.length > 3 && (
+                  <>
+                    <CarouselPrevious className="-left-12" />
+                    <CarouselNext className="-right-12" />
+                  </>
+                )}
+              </Carousel>
+              <div className="flex justify-end mt-6">
+                <Link to="/matches">
+                  <Button 
+                    variant="ghost" 
+                    className="text-muted-foreground hover:text-primary hover:bg-transparent p-0 h-auto font-normal"
+                  >
+                    Ver tudo
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-8 text-muted-foreground">
+              Nenhuma partida disponível hoje
+            </div>
+          )}
         </section>
 
         {/* Maiores Probabilidades do Dia */}
