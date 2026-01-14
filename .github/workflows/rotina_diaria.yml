@@ -8,6 +8,7 @@ on:
 jobs:
   run-routine:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repo
@@ -30,5 +31,5 @@ jobs:
           THESPORTSDB_BASE_URL: ${{ secrets.THESPORTSDB_BASE_URL }}
         run: |
           cd futstats
-          python manage.py rotina_diaria
-          python manage.py importar_odds
+          python manage.py rotina_diaria || echo "⚠️ Rotina diária teve erros, mas continuando..."
+          python manage.py importar_odds || echo "⚠️ Importação de odds teve erros"

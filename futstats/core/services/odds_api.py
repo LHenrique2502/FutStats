@@ -444,16 +444,22 @@ async def import_odds_for_league(league, days_ahead=1):
     Importa odds para uma liga específica
     days_ahead: quantos dias à frente buscar (padrão 1 = apenas hoje)
     """
-    sport_key = get_sport_key_for_league(league.name)
-    print(f"\n🔍 Buscando odds para {league.name} (sport_key: {sport_key})")
-    
-    # Buscar apenas h2h e totals (btts não disponível no plano gratuito)
-    odds_data = await fetch_odds_for_sport(sport_key, markets="h2h,totals")
-    
-    if odds_data:
-        await process_and_save_odds(odds_data, league, days_ahead)
-    else:
-        print(f"⚠️ Nenhuma odd encontrada para {league.name}")
+    try:
+        sport_key = get_sport_key_for_league(league.name)
+        print(f"\n🔍 Buscando odds para {league.name} (sport_key: {sport_key})")
+        
+        # Buscar apenas h2h e totals (btts não disponível no plano gratuito)
+        odds_data = await fetch_odds_for_sport(sport_key, markets="h2h,totals")
+        
+        if odds_data:
+            await process_and_save_odds(odds_data, league, days_ahead)
+        else:
+            print(f"⚠️ Nenhuma odd encontrada para {league.name}")
+    except Exception as e:
+        print(f"❌ Erro ao processar liga {league.name}: {e}")
+        import traceback
+        traceback.print_exc()
+        raise  # Re-raise para que o contador de erros funcione
 
 
 async def import_all_odds(days_ahead=1, force=False, smart=True):
@@ -487,50 +493,59 @@ async def import_all_odds(days_ahead=1, force=False, smart=True):
     
     requests_made = 0
     requests_skipped = 0
+    requests_failed = 0
     
     for league in leagues:
-        if smart and not force:
-            # Verificar se há partidas que precisam de atualização
-            current_time = now()
-            start_date = current_time.replace(hour=0, minute=0, second=0, microsecond=0)
-            end_date = start_date + timedelta(days=days_ahead)
-            
-            # Buscar partidas futuras desta liga
-            matches = await sync_to_async(list)(
-                Match.objects.filter(
-                    league=league,
-                    date__gte=start_date,
-                    date__lt=end_date
-                )
-            )
-            
-            if matches:
-                # Verificar se todas as partidas têm odds recentes (< 6 horas)
-                needs_update = False
-                for match in matches:
-                    recent_odds = await sync_to_async(MatchOdds.objects.filter(
-                        match=match,
-                        last_api_fetch__gte=current_time - timedelta(hours=6)
-                    ).exists)()
-                    if not recent_odds:
-                        needs_update = True
-                        break
+        try:
+            if smart and not force:
+                # Verificar se há partidas que precisam de atualização
+                current_time = now()
+                start_date = current_time.replace(hour=0, minute=0, second=0, microsecond=0)
+                end_date = start_date + timedelta(days=days_ahead)
                 
-                if not needs_update:
-                    print(f"⏭️  Pulando {league.name}: odds já atualizadas recentemente")
-                    requests_skipped += 1
-                    continue
-        
-        # Fazer requisição
-        await import_odds_for_league(league, days_ahead)
-        requests_made += 1
-        
-        # Pequeno delay para evitar rate limit
-        import asyncio
-        await asyncio.sleep(2)
+                # Buscar partidas futuras desta liga
+                matches = await sync_to_async(list)(
+                    Match.objects.filter(
+                        league=league,
+                        date__gte=start_date,
+                        date__lt=end_date
+                    )
+                )
+                
+                if matches:
+                    # Verificar se todas as partidas têm odds recentes (< 6 horas)
+                    needs_update = False
+                    for match in matches:
+                        recent_odds = await sync_to_async(MatchOdds.objects.filter(
+                            match=match,
+                            last_api_fetch__gte=current_time - timedelta(hours=6)
+                        ).exists)()
+                        if not recent_odds:
+                            needs_update = True
+                            break
+                    
+                    if not needs_update:
+                        print(f"⏭️  Pulando {league.name}: odds já atualizadas recentemente")
+                        requests_skipped += 1
+                        continue
+            
+            # Fazer requisição
+            await import_odds_for_league(league, days_ahead)
+            requests_made += 1
+            
+            # Pequeno delay para evitar rate limit
+            import asyncio
+            await asyncio.sleep(2)
+        except Exception as e:
+            requests_failed += 1
+            print(f"❌ Erro ao processar liga {league.name}: {e}")
+            print(f"   Continuando com as próximas ligas...")
+            # Continuar com a próxima liga mesmo se esta falhar
+            continue
     
     print(f"\n📊 Estatísticas de quota:")
     print(f"   Requisições feitas: {requests_made}")
     print(f"   Requisições economizadas: {requests_skipped}")
+    print(f"   Requisições com erro: {requests_failed}")
     print(f"   Economia estimada: {requests_skipped} créditos")
     print("\n✅ Importação de odds concluída!")
