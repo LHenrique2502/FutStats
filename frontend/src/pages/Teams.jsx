@@ -1,13 +1,31 @@
-import { Users, TrendingUp } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Users } from 'lucide-react';
 import { SectionTitle } from '@/components/SectionTitle';
 import { SearchBar } from '@/components/SearchBar';
-import { StatsCard } from '@/components/StatsCard';
 import { mockTeams } from '@/data/mockData';
 import { Link } from 'react-router-dom';
+import { SEO } from '@/components/SEO';
+import { trackEvent } from '@/lib/analytics';
 
 const Teams = () => {
+  const [query, setQuery] = useState('');
+
+  const filtered = useMemo(() => {
+    const q = String(query || '').trim().toLowerCase();
+    if (!q) return mockTeams;
+    return (Array.isArray(mockTeams) ? mockTeams : []).filter((t) => {
+      const hay = [t?.name, t?.league].filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }, [query]);
+
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Times"
+        description="Lista de times e estatísticas resumidas."
+        pathname="/teams"
+      />
       <div className="container mx-auto px-4 py-8 space-y-8">
         {/* Header */}
         <div className="space-y-6">
@@ -16,16 +34,23 @@ const Teams = () => {
             subtitle="Análise completa de estatísticas"
             icon={Users}
           />
-          <SearchBar placeholder="Buscar times..." />
+          <SearchBar
+            placeholder="Buscar times..."
+            value={query}
+            onSearch={(v) => setQuery(v)}
+          />
         </div>
 
         {/* Teams Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockTeams.map((team) => (
+          {filtered.map((team) => (
             <Link
               key={team.id}
               to={`/team/${team.id}`}
               className="bg-card border border-border rounded-lg p-6 hover:border-primary hover:glow-subtle transition-all group"
+              onClick={() =>
+                trackEvent('team_click', { team_id: String(team.id), source: 'teams_list' })
+              }
             >
               <div className="space-y-4">
                 {/* Team Header */}

@@ -1,13 +1,17 @@
 import { cn } from '@/lib/utils';
 
 export const ProbabilityBadge = ({ percentage, label, size = 'md' }) => {
+  const value =
+    typeof percentage === 'number' ? percentage : Number(percentage);
+  const isValid = Number.isFinite(value);
+
   const getColor = (value) => {
     if (value >= 75) return 'success';
     if (value >= 50) return 'warning';
     return 'destructive';
   };
 
-  const color = getColor(percentage);
+  const color = isValid ? getColor(value) : 'neutral';
 
   const sizeClasses = {
     sm: 'text-xs px-2 py-1',
@@ -26,6 +30,8 @@ export const ProbabilityBadge = ({ percentage, label, size = 'md' }) => {
       className={cn(
         'inline-flex items-center gap-2 rounded-full font-bold',
         sizeClasses[size],
+        color === 'neutral' &&
+          'bg-muted text-muted-foreground border border-border',
         color === 'success' &&
           'bg-success/20 text-success border border-success/30',
         color === 'warning' &&
@@ -34,7 +40,9 @@ export const ProbabilityBadge = ({ percentage, label, size = 'md' }) => {
           'bg-destructive/20 text-destructive border border-destructive/30'
       )}
     >
-      <span className={percentageSizeClasses[size]}>{percentage}%</span>
+      <span className={percentageSizeClasses[size]}>
+        {isValid ? `${Math.round(value)}%` : '--'}
+      </span>
       {label && <span className="font-medium opacity-90">{label}</span>}
     </div>
   );

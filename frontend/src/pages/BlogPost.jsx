@@ -5,6 +5,8 @@ import { SectionTitle } from '@/components/SectionTitle';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { blogPosts } from '@/data/blogPosts';
+import { SEO } from '@/components/SEO';
+import { trackEvent } from '@/lib/analytics';
 
 const formatDatePtBr = (isoDate) => {
   const d = new Date(isoDate);
@@ -26,11 +28,17 @@ const BlogPost = () => {
   const post = useMemo(() => {
     const list = Array.isArray(blogPosts) ? blogPosts : [];
     return list.find((p) => String(p?.id) === String(id)) || null;
-  }, [id]);
+  }, [id, blogPosts]);
 
   if (!post) {
     return (
       <div className="min-h-screen bg-background">
+        <SEO
+          title="Post não encontrado"
+          description="Esse conteúdo não existe (ou foi removido)."
+          pathname={`/blog/${id || ''}`}
+          noIndex
+        />
         <div className="container mx-auto px-4 py-10 space-y-6">
           <div className="max-w-3xl mx-auto">
             <div className="bg-card border border-border rounded-lg p-6">
@@ -59,6 +67,11 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={post.title}
+        description={post.excerpt || 'Conteúdo do FutStats'}
+        pathname={`/blog/${post.id}`}
+      />
       <div className="container mx-auto px-4 py-8 space-y-8">
         <div className="max-w-3xl mx-auto space-y-6">
           <div className="flex items-center justify-between gap-3">
@@ -99,6 +112,49 @@ const BlogPost = () => {
               </p>
             )}
           </article>
+
+          <div className="bg-card border border-border rounded-lg p-6">
+            <h3 className="text-base font-semibold text-foreground">
+              Quer ver isso na prática?
+            </h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Use as páginas do FutStats para aplicar o conteúdo do post em jogos reais.
+            </p>
+            <div className="mt-4 flex flex-col sm:flex-row gap-3">
+              <Link to="/value-bets">
+                <Button
+                  className="w-full sm:w-auto"
+                  onClick={() =>
+                    trackEvent('cta_click_valuebets', { source: 'blog_post' })
+                  }
+                >
+                  Ver Probabilidades do Dia
+                </Button>
+              </Link>
+              <Link to="/matches">
+                <Button
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                  onClick={() =>
+                    trackEvent('cta_click_partidas', { source: 'blog_post' })
+                  }
+                >
+                  Ver Partidas
+                </Button>
+              </Link>
+              <Link to="/metodologia">
+                <Button
+                  variant="ghost"
+                  className="w-full sm:w-auto"
+                  onClick={() =>
+                    trackEvent('cta_click_metodologia', { source: 'blog_post' })
+                  }
+                >
+                  Ler Metodologia
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>

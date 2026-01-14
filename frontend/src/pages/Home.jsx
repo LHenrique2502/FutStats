@@ -15,6 +15,8 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { Button } from '@/components/ui/button';
+import { trackEvent } from '@/lib/analytics';
+import { SEO } from '@/components/SEO';
 
 const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
 
@@ -22,8 +24,18 @@ const Home = () => {
   const [matches, setMatches] = useState([]);
   const [topProbabilities, setTopProbabilities] = useState([]);
   const [highlightTeams, setHighlightTeams] = useState([]);
+  const heroVariant = import.meta.env.VITE_HERO_VARIANT || 'A';
   const viewAllButtonClass =
     'text-muted-foreground hover:text-primary hover:bg-transparent p-0 h-auto font-normal';
+
+  useEffect(() => {
+    trackEvent('experiment_exposure', {
+      experiment: 'home_hero_variant',
+      variant: heroVariant,
+    });
+    // run once per mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetch(`${API_URL_BACK}matches/today/`)
@@ -59,6 +71,11 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Início"
+        description="Probabilidades estimadas, insights automáticos e análises de futebol para mercados como Over 2.5 e BTTS."
+        pathname="/"
+      />
       <div className="container mx-auto px-4 py-8 space-y-12">
         {/* Hero Section com Busca */}
         <div className="text-center space-y-6 py-8">
@@ -68,12 +85,79 @@ const Home = () => {
               <span className="text-primary">Apostas</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Estatísticas em tempo real, insights automáticos e probabilidades
-              calculadas
+              Estatísticas, insights automáticos e probabilidades estimadas para
+              mercados como <span className="text-foreground/80">Over 2.5</span> e{' '}
+              <span className="text-foreground/80">BTTS</span>
             </p>
           </div>
           <div className="max-w-2xl mx-auto">
             <SearchBar />
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            {heroVariant === 'B' ? (
+              <>
+                <Link to="/matches">
+                  <Button
+                    size="lg"
+                    className="min-w-[240px]"
+                    onClick={() =>
+                      trackEvent('cta_click_partidas', { source: 'home_hero' })
+                    }
+                  >
+                    Explorar Jogos do Dia
+                  </Button>
+                </Link>
+                <Link to="/value-bets">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="min-w-[240px]"
+                    onClick={() =>
+                      trackEvent('cta_click_valuebets', { source: 'home_hero' })
+                    }
+                  >
+                    Ver Probabilidades
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/value-bets">
+                  <Button
+                    size="lg"
+                    className="min-w-[240px]"
+                    onClick={() =>
+                      trackEvent('cta_click_valuebets', { source: 'home_hero' })
+                    }
+                  >
+                    Ver Probabilidades do Dia
+                  </Button>
+                </Link>
+                <Link to="/matches">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="min-w-[240px]"
+                    onClick={() =>
+                      trackEvent('cta_click_partidas', { source: 'home_hero' })
+                    }
+                  >
+                    Ver Partidas de Hoje
+                  </Button>
+                </Link>
+              </>
+            )}
+          </div>
+          <div className="pt-1">
+            <Link
+              to="/metodologia"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
+              onClick={() =>
+                trackEvent('cta_click_metodologia', { source: 'home_hero' })
+              }
+            >
+              Como calculamos as probabilidades →
+            </Link>
           </div>
         </div>
 
@@ -99,6 +183,12 @@ const Home = () => {
                       <Link
                         to={`/match/${match.id}`}
                         className="bg-card border border-border rounded-lg p-6 hover:border-primary hover:glow-subtle transition-all group block h-full"
+                        onClick={() =>
+                          trackEvent('match_click', {
+                            match_id: String(match.id),
+                            source: 'home_carousel',
+                          })
+                        }
                       >
                         <div className="space-y-4">
                           {/* Cabeçalho da partida */}
@@ -171,6 +261,7 @@ const Home = () => {
                   <Button 
                     variant="ghost" 
                     className={viewAllButtonClass}
+                    onClick={() => trackEvent('cta_click_partidas', { source: 'home_proximas_partidas' })}
                   >
                     Ver tudo
                   </Button>
@@ -197,6 +288,12 @@ const Home = () => {
                 key={insight.id}
                 to={`/match/${insight.id}`}
                 className="block"
+                onClick={() =>
+                  trackEvent('match_click', {
+                    match_id: String(insight.id),
+                    source: 'home_top_probabilities',
+                  })
+                }
               >
                 <InsightsBox
                   title={insight.title}
@@ -209,7 +306,11 @@ const Home = () => {
           </div>
           <div className="flex justify-end mt-6">
             <Link to="/value-bets">
-              <Button variant="ghost" className={viewAllButtonClass}>
+              <Button
+                variant="ghost"
+                className={viewAllButtonClass}
+                onClick={() => trackEvent('cta_click_valuebets', { source: 'home_maiores_probabilidades' })}
+              >
                 Ver tudo
               </Button>
             </Link>

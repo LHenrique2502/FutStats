@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { BarChart3 } from 'lucide-react';
+import { BarChart3, Bookmark } from 'lucide-react';
+import { trackEvent } from '@/lib/analytics';
 
 export const Header = () => {
   return (
@@ -20,26 +21,46 @@ export const Header = () => {
           <Link
             to="/"
             className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            onClick={() => trackEvent('nav_click', { to: '/', label: 'Home' })}
           >
             Home
           </Link>
           <Link
             to="/matches"
             className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            onClick={() => trackEvent('nav_click', { to: '/matches', label: 'Partidas' })}
           >
             Partidas
           </Link>
           <Link
             to="/value-bets"
             className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            onClick={() => trackEvent('nav_click', { to: '/value-bets', label: 'Probabilidades' })}
           >
             Probabilidades
           </Link>
           <Link
+            to="/metodologia"
+            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            onClick={() => trackEvent('nav_click', { to: '/metodologia', label: 'Metodologia' })}
+          >
+            Metodologia
+          </Link>
+          <Link
             to="/blog"
             className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            onClick={() => trackEvent('nav_click', { to: '/blog', label: 'Blog' })}
           >
             Blog
+          </Link>
+          <Link
+            to="/favoritos"
+            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-2"
+            onClick={() => trackEvent('nav_click', { to: '/favoritos', label: 'Favoritos' })}
+            title="Favoritos"
+          >
+            <Bookmark className="w-4 h-4" />
+            Favoritos
           </Link>
         </nav>
       </div>

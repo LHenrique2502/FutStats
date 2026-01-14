@@ -11,6 +11,7 @@ urlpatterns = [
     path('api/matches/', views.listar_partidas, name='api_listar_partidas'),
     # Matches
     path('api/matches/today/', views.matches_today, name='matches_today'),
+    path('api/matches/<int:id>/', views.match_summary, name='match_summary'),
     path('api/probabilities/today/', views.probabilities_today, name='probabilities_today'),
     path('api/tendencias_rodada/', views.tendencias_rodada, name='tendencias_rodada'),
     path("api/times_destaque/", views.times_em_destaque, name="times_em_destaque"),

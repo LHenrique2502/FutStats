@@ -1,14 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Calendar } from 'lucide-react';
 import { SectionTitle } from '@/components/SectionTitle';
 import { SearchBar } from '@/components/SearchBar';
 import { Link } from 'react-router-dom';
+import { SEO } from '@/components/SEO';
+import { trackEvent } from '@/lib/analytics';
 
 const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
 
 const Matches = () => {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
     setLoading(true);
@@ -24,8 +27,31 @@ const Matches = () => {
       });
   }, []);
 
+  const filtered = useMemo(() => {
+    const q = String(query || '').trim().toLowerCase();
+    if (!q) return matches;
+    return (Array.isArray(matches) ? matches : []).filter((m) => {
+      const hay = [
+        m?.league,
+        m?.homeTeam?.name,
+        m?.awayTeam?.name,
+        m?.date,
+        m?.time,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+      return hay.includes(q);
+    });
+  }, [matches, query]);
+
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Partidas de hoje"
+        description="Lista de partidas do dia com insights e análises rápidas."
+        pathname="/matches"
+      />
       <div className="container mx-auto px-4 py-8 space-y-8">
         {/* Header */}
         <div className="space-y-6">
@@ -34,7 +60,11 @@ const Matches = () => {
             subtitle="Análises completas e probabilidades"
             icon={Calendar}
           />
-          <SearchBar placeholder="Buscar partidas..." />
+          <SearchBar
+            placeholder="Buscar partidas..."
+            value={query}
+            onSearch={(v) => setQuery(v)}
+          />
         </div>
 
         {/* Matches List */}
@@ -42,17 +72,25 @@ const Matches = () => {
           <div className="text-center py-12 text-muted-foreground">
             Carregando partidas...
           </div>
-        ) : matches.length === 0 ? (
+        ) : filtered.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground">
-            Nenhuma partida disponível hoje
+            {String(query || '').trim()
+              ? 'Nenhuma partida encontrada para sua busca'
+              : 'Nenhuma partida disponível hoje'}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {matches.map((match) => (
+            {filtered.map((match) => (
             <Link
               key={match.id}
               to={`/match/${match.id}`}
               className="block bg-card border border-border rounded-lg p-4 hover:border-primary hover:glow-subtle transition-all group"
+              onClick={() =>
+                trackEvent('match_click', {
+                  match_id: String(match.id),
+                  source: 'matches_list',
+                })
+              }
             >
               <div className="space-y-3">
                 {/* Match Header */}

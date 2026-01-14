@@ -193,6 +193,100 @@ def matches_today(request):
 
     return Response(results)
 
+
+@api_view(["GET"])
+def match_summary(request, id):
+    """
+    Retorna um resumo da partida com probabilidades calculadas, taxas por time
+    (baseadas nos últimos jogos no cache) e insights rápidos.
+
+    Esse endpoint é pensado para o frontend (Match page) exibir:
+    - "Por que essa probabilidade?" (amostra e taxas)
+    - insights e dados básicos do jogo
+    """
+    from .utils import preload_ultimos_jogos, gerar_insights_rapidos
+
+    try:
+        match = (
+            Match.objects
+            .select_related("home_team", "away_team", "league")
+            .get(pk=id)
+        )
+    except Match.DoesNotExist:
+        return Response({"detail": "Partida não encontrada."}, status=404)
+
+    sample_limit = int(request.GET.get("sample_limit", 5))
+    sample_limit = max(1, min(20, sample_limit))
+
+    cache = preload_ultimos_jogos(limit=sample_limit)
+    home = match.home_team
+    away = match.away_team
+
+    home_games = cache.get(home.id, []) or []
+    away_games = cache.get(away.id, []) or []
+
+    home_over25 = calcular_over25(home, cache)
+    away_over25 = calcular_over25(away, cache)
+    home_btts = calcular_btts(home, cache)
+    away_btts = calcular_btts(away, cache)
+
+    over25_prob = (home_over25 + away_over25) / 2
+    btts_prob = (home_btts + away_btts) / 2
+
+    min_sample = min(len(home_games), len(away_games))
+    if min_sample >= sample_limit:
+        sample_quality = "boa"
+    elif min_sample >= max(3, sample_limit - 2):
+        sample_quality = "média"
+    else:
+        sample_quality = "baixa"
+
+    # Formatar data: se hora for 00:00, mostrar apenas data
+    match_date = match.date
+    if match_date.hour == 0 and match_date.minute == 0:
+        date_str = match_date.strftime("%d/%m")
+        time_str = None
+    else:
+        date_str = match_date.strftime("%d/%m")
+        time_str = match_date.strftime("%H:%M")
+
+    return Response({
+        "id": match.id,
+        "league": match.league.name if match.league else None,
+        "date": date_str,
+        "time": time_str,
+        "homeTeam": {
+            "id": home.id,
+            "name": home.name,
+            "logo": home.logo,
+        },
+        "awayTeam": {
+            "id": away.id,
+            "name": away.name,
+            "logo": away.logo,
+        },
+        "probabilities": {
+            "over_25": round(float(over25_prob), 2),
+            "btts_yes": round(float(btts_prob), 2),
+        },
+        "team_rates": {
+            "home": {
+                "sample_size": len(home_games),
+                "over_25": int(home_over25),
+                "btts_yes": int(home_btts),
+            },
+            "away": {
+                "sample_size": len(away_games),
+                "over_25": int(away_over25),
+                "btts_yes": int(away_btts),
+            },
+            "sample_limit": sample_limit,
+            "quality": sample_quality,
+        },
+        "insights": gerar_insights_rapidos(match, cache),
+        "generated_at": timezone.now().isoformat(),
+    })
+
 @api_view(["GET"])
 def probabilities_today(request):
     """

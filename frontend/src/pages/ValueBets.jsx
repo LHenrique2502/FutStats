@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { SectionTitle } from '@/components/SectionTitle';
 import { ProbabilityBadge } from '@/components/ProbabilityBadge';
 import { Button } from '@/components/ui/button';
+import { trackEvent } from '@/lib/analytics';
+import { SEO } from '@/components/SEO';
 
 const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
 
@@ -93,6 +95,11 @@ const ValueBets = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Probabilidades do dia"
+        description="Probabilidades estimadas para Mais de 2.5 gols (Over 2.5) e Ambos marcam (BTTS) em todas as partidas de hoje."
+        pathname="/value-bets"
+      />
       <div className="container mx-auto px-4 py-8 space-y-8">
         <div className="flex items-start justify-between gap-4">
           <SectionTitle
@@ -105,7 +112,17 @@ const ValueBets = () => {
             <Button
               variant="outline"
               className="gap-2"
-              onClick={() => setSortOrder((s) => (s === 'desc' ? 'asc' : 'desc'))}
+              onClick={() =>
+                setSortOrder((s) => {
+                  const next = s === 'desc' ? 'asc' : 'desc';
+                  trackEvent('filter_used', {
+                    page: 'value_bets',
+                    filter: 'sort_order',
+                    value: next,
+                  });
+                  return next;
+                })
+              }
               title="Ordenar"
             >
               <ArrowDownUp className="w-4 h-4" />
@@ -132,6 +149,12 @@ const ValueBets = () => {
                   key={match.id}
                   to={`/match/${match.id}`}
                   className="block bg-card border border-border rounded-lg p-4 hover:border-primary hover:glow-subtle transition-all group"
+                  onClick={() =>
+                    trackEvent('match_click', {
+                      match_id: String(match.id),
+                      source: 'value_bets_list',
+                    })
+                  }
                 >
                   <div className="space-y-3">
                     {/* Cabeçalho */}

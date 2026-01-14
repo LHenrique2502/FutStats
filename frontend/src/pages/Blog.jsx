@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { blogPosts } from '@/data/blogPosts';
 import { Link } from 'react-router-dom';
+import { SEO } from '@/components/SEO';
 
 const formatDatePtBr = (isoDate) => {
   const d = new Date(isoDate);
@@ -30,10 +31,15 @@ const Blog = () => {
       return sortOrder === 'asc' ? da - db : db - da;
     });
     return copy;
-  }, [sortOrder]);
+  }, [sortOrder, blogPosts]);
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Blog"
+        description="Guias e conteúdos do FutStats: Over 2.5, BTTS, probabilidade implícita e como filtrar jogos do dia."
+        pathname="/blog"
+      />
       <div className="container mx-auto px-4 py-8 space-y-8">
         <div className="flex items-start justify-between gap-4">
           <SectionTitle
