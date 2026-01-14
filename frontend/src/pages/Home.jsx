@@ -261,6 +261,84 @@ const Home = () => {
             ))}
           </div>
         </section>
+
+        {/* Texto informativo (final da página) */}
+        <section className="space-y-6">
+          <SectionTitle
+            title="Sobre o FutStats"
+            subtitle="Entenda o que você encontra aqui, como as probabilidades são estimadas e quais mercados analisamos."
+          />
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="bg-card border border-border rounded-lg p-6 space-y-3">
+              <h3 className="text-lg font-semibold text-foreground">
+                Do que se trata o site
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                O FutStats é uma plataforma de análise de futebol focada em transformar
+                estatísticas em <strong className="text-foreground">probabilidades</strong> e{' '}
+                <strong className="text-foreground">insights</strong> para apoiar decisões em
+                apostas esportivas. Aqui você encontra jogos do dia, comparações e destaques
+                automáticos para priorizar as partidas com melhor contexto estatístico.
+              </p>
+            </div>
+
+            <div className="bg-card border border-border rounded-lg p-6 space-y-3">
+              <h3 className="text-lg font-semibold text-foreground">
+                Como calculamos as probabilidades
+              </h3>
+              <div className="text-sm text-muted-foreground leading-relaxed space-y-3">
+                <p>
+                  As probabilidades exibidas são estimativas baseadas no desempenho recente
+                  dos times (ex.: frequência de jogos com muitos gols e de “ambos marcam”).
+                </p>
+                <ul className="list-disc pl-5 space-y-2">
+                  <li>
+                    <strong className="text-foreground">Over 2.5</strong> e{' '}
+                    <strong className="text-foreground">BTTS (Sim)</strong>: calculamos uma
+                    taxa para o mandante e outra para o visitante e usamos a média como
+                    probabilidade estimada do jogo.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">1X2</strong>: usamos um modelo
+                    simples que considera vantagem de jogar em casa e a diferença de médias
+                    de gols, com limites para evitar extremos.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">Comparação com odds</strong>:
+                    quando há odds disponíveis, também calculamos a{' '}
+                    <strong className="text-foreground">probabilidade implícita</strong>{' '}
+                    (aprox. 100 / odd) para identificar “valor” quando a nossa
+                    estimativa supera a do mercado.
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="bg-card border border-border rounded-lg p-6 space-y-3">
+              <h3 className="text-lg font-semibold text-foreground">
+                Mercados disponíveis no site
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                No momento, as análises e insights contemplam principalmente:
+              </p>
+              <ul className="list-disc pl-5 text-sm text-muted-foreground space-y-2">
+                <li>
+                  <strong className="text-foreground">Mais de 2.5 gols (Over 2.5)</strong>
+                </li>
+                <li>
+                  <strong className="text-foreground">
+                    Ambos marcam (BTTS) — Sim
+                  </strong>
+                </li>
+                <li>
+                  <strong className="text-foreground">Resultado 1X2</strong>: Vitória do
+                  mandante, Empate, Vitória do visitante
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
