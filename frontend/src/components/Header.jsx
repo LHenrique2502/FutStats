@@ -35,6 +35,12 @@ export const Header = () => {
           >
             Probabilidades
           </Link>
+          <Link
+            to="/blog"
+            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+          >
+            Blog
+          </Link>
         </nav>
       </div>
     </header>
