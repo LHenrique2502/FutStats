@@ -119,6 +119,54 @@ async def import_teams_async():
 
 
 # ==========================
+# FUNÇÃO AUXILIAR: BUSCAR OU CRIAR TIME
+# ==========================
+
+async def get_or_create_team(client, team_api_id, league, semaphore):
+    """
+    Busca um time no banco de dados. Se não existir, busca da API e cria.
+    """
+    try:
+        # Tenta buscar o time no banco
+        team = await sync_to_async(Team.objects.filter)(api_id=team_api_id)
+        team_list = await sync_to_async(list)(team)
+        
+        if team_list:
+            return team_list[0]
+        
+        # Se não existe, busca da API
+        data = await fetch(client, f"lookup/team/{team_api_id}", semaphore)
+        
+        if not data or "lookup" not in data or not data["lookup"]:
+            print(f"⚠️ Time não encontrado na API (ID: {team_api_id})")
+            return None
+        
+        team_data = data["lookup"][0]
+        
+        # Cria o time no banco
+        team, created = await sync_to_async(Team.objects.update_or_create)(
+            api_id=team_data["idTeam"],
+            defaults={
+                "name": team_data.get("strTeam", "Unknown"),
+                "code": team_data.get("strTeamShort"),
+                "country": team_data.get("strCountry"),
+                "logo": team_data.get("strBadge"),
+                "league": league,
+                "last_fetched_at": now(),
+            }
+        )
+        
+        if created:
+            print(f"✅ Time criado automaticamente: {team.name}")
+        
+        return team
+        
+    except Exception as e:
+        print(f"❌ Erro ao buscar/criar time (ID: {team_api_id}): {e}")
+        return None
+
+
+# ==========================
 # IMPORTAÇÃO DE JOGADORES (PARALELIZADA)
 # ==========================
 
@@ -138,15 +186,28 @@ async def import_players_async():
                 return
 
             for p in data["list"]:
+                # Truncar campos para respeitar limites do banco
+                position = p.get("strPosition")
+                if position and len(position) > 30:
+                    position = position[:30]
+                
+                name = p.get("strPlayer", "")
+                if len(name) > 100:
+                    name = name[:100]
+                
+                nationality = p.get("strCountry")  # A API pode retornar strCountry para nacionalidade
+                if nationality and len(nationality) > 50:
+                    nationality = nationality[:50]
+                
                 await sync_to_async(Player.objects.update_or_create)(
                     api_id=p["idPlayer"],
                     defaults={
-                        "name": p["strPlayer"],
+                        "name": name,
                         "age": None,
-                        "nationality": None,
+                        "nationality": nationality,
                         "photo": p.get("strCutout") or p.get("strThumb"),
                         "team": team,
-                        "position": p.get("strPosition"),
+                        "position": position,
                         "number": None,
                         "last_fetched_at": now(),
                     }
@@ -186,8 +247,14 @@ async def import_matches_async():
                 if not (today <= event_date <= seven_days_later):
                     continue
 
-                home_team = await sync_to_async(Team.objects.get)(api_id=ev["idHomeTeam"])
-                away_team = await sync_to_async(Team.objects.get)(api_id=ev["idAwayTeam"])
+                # ✅ Busca ou cria os times automaticamente
+                home_team = await get_or_create_team(client, ev["idHomeTeam"], lg, semaphore)
+                away_team = await get_or_create_team(client, ev["idAwayTeam"], lg, semaphore)
+
+                # Se algum time não foi encontrado/criado, pula a partida
+                if not home_team or not away_team:
+                    print(f"⚠️ Pulando partida {ev.get('idEvent')}: time não encontrado")
+                    continue
 
                 date = make_aware(datetime.strptime(ev["dateEvent"], "%Y-%m-%d"))
 
