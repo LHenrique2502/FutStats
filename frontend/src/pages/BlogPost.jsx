@@ -72,6 +72,13 @@ const contentToBlocks = (content) => {
       continue;
     }
 
+    // Seção de CTAs (vamos ignorar: os botões já existem abaixo do post)
+    // - "CTAs"
+    // - "# CTAs"
+    if (/^(#\s*)?ctas\s*$/i.test(line) || /^ctas\b/i.test(line)) {
+      break;
+    }
+
     // heading (ex.: "Top Matches")
     if (/^#{1,6}\s+/.test(line)) {
       blocks.push({ type: 'h', text: line.replace(/^#{1,6}\s+/, '').trim() });
