@@ -244,10 +244,12 @@ Regras do conteúdo:
   - termine com uma despedida curta e amigável (ex.: "Boa sorte e bons estudos!" ou "Até amanhã!")
 - amostra:
   - quando o campo sample.quality for "baixa" ou o sample.min_sample_size for menor que sample.sample_limit, deixe claro que a amostra é pequena e que a confiança é menor.
-- incluir CTAs no final do conteúdo (apenas texto, sem HTML):
-  - /value-bets?utm_source=blog&utm_medium=cta&utm_campaign=daily_${todayISO}
-  - /matches?utm_source=blog&utm_medium=cta&utm_campaign=daily_${todayISO}
-  - /metodologia?utm_source=blog&utm_medium=cta&utm_campaign=daily_${todayISO}
+- CTAs no final do conteúdo (OBRIGATÓRIO e em formato fixo; sem frases longas, sem texto extra):
+  - adicione uma linha "# CTAs"
+  - em seguida, exatamente 3 itens de lista, um por linha, no formato "Label: URL":
+    - Ver Probabilidades do Dia: /value-bets?utm_source=blog&utm_medium=cta&utm_campaign=daily_${todayISO}
+    - Ver Partidas do Dia: /matches?utm_source=blog&utm_medium=cta&utm_campaign=daily_${todayISO}
+    - Entender Metodologia: /metodologia?utm_source=blog&utm_medium=cta&utm_campaign=daily_${todayISO}
 
 Dados do dia (JSON):
 ${JSON.stringify(payload, null, 2)}
