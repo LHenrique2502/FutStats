@@ -56,7 +56,12 @@ def _smoothed_percent(hits, n, alpha=1, beta=1, max_pct=95):
         return 0
     p = (hits + alpha) / (n + alpha + beta)
     pct = int(round(p * 100))
-    return min(max_pct, max(0, pct))
+
+    # Se a amostra for pequena, limita ainda mais para evitar números "agressivos"
+    # (ex.: n=1 nunca deve sugerir algo perto de certeza).
+    effective_max = max_pct if n >= 5 else min(max_pct, 85)
+
+    return min(effective_max, max(0, pct))
 
 
 def calcular_over25(team, cache):

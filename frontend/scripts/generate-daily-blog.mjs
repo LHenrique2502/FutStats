@@ -12,8 +12,7 @@ const LOG_LEVEL = (process.env.LOG_LEVEL || 'info').toLowerCase(); // debug|info
 if (!BACKEND_API_URL_RAW) throw new Error('BACKEND_API_URL não definido.');
 if (!GROQ_API_KEY) throw new Error('GROQ_API_KEY não definido.');
 
-const BACKEND_API_URL =
-  BACKEND_API_URL_RAW.replace(/\/+$/, '') + '/';
+const BACKEND_API_URL = BACKEND_API_URL_RAW.replace(/\/+$/, '') + '/';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -71,7 +70,10 @@ async function fetchJsonWithRetry(url, { tries = 4, timeoutMs = 15000 } = {}) {
   let lastErr;
   for (let attempt = 1; attempt <= tries; attempt++) {
     try {
-      log('debug', `GET ${url} (attempt ${attempt}/${tries}, timeout ${timeoutMs}ms)`);
+      log(
+        'debug',
+        `GET ${url} (attempt ${attempt}/${tries}, timeout ${timeoutMs}ms)`
+      );
       const res = await fetchWithTimeout(url, { timeoutMs });
       if (!res.ok) {
         const txt = await res.text().catch(() => '');
@@ -80,7 +82,11 @@ async function fetchJsonWithRetry(url, { tries = 4, timeoutMs = 15000 } = {}) {
       return await res.json();
     } catch (err) {
       lastErr = err;
-      log('warn', `Falha em GET ${url} (attempt ${attempt}/${tries})`, String(err?.message || err));
+      log(
+        'warn',
+        `Falha em GET ${url} (attempt ${attempt}/${tries})`,
+        String(err?.message || err)
+      );
       const backoff = Math.min(30000, 1000 * 2 ** (attempt - 1));
       log('debug', `Aguardando ${backoff}ms antes do retry`);
       await sleep(backoff);
@@ -119,11 +125,16 @@ async function pingBackend() {
     // backoff curto e progressivo
     const elapsed = Date.now() - start;
     const wait = elapsed < 30000 ? 2000 : elapsed < 60000 ? 4000 : 6000;
-    log('debug', `Backend ainda indisponível; aguardando ${wait}ms (elapsed ${elapsed}ms)`);
+    log(
+      'debug',
+      `Backend ainda indisponível; aguardando ${wait}ms (elapsed ${elapsed}ms)`
+    );
     await sleep(wait);
   }
 
-  throw new Error(`Pinger falhou (backend ainda dormindo): ${lastErr?.message || lastErr}`);
+  throw new Error(
+    `Pinger falhou (backend ainda dormindo): ${lastErr?.message || lastErr}`
+  );
 }
 
 async function warmUpBackend() {
@@ -142,10 +153,15 @@ async function warmUpBackend() {
       return;
     } catch (e) {
       lastErr = e;
-      log('warn', 'Warm-up step falhou', { ...s, error: String(e?.message || e) });
+      log('warn', 'Warm-up step falhou', {
+        ...s,
+        error: String(e?.message || e),
+      });
     }
   }
-  throw new Error(`Backend não acordou a tempo: ${lastErr?.message || lastErr}`);
+  throw new Error(
+    `Backend não acordou a tempo: ${lastErr?.message || lastErr}`
+  );
 }
 
 function indexProbabilities(probabilities) {
@@ -166,7 +182,10 @@ function pickTopMatches(matches, probsByMatch, limit = 6) {
     const p = probsByMatch[String(m?.id)] || {};
     const a = Number(p.over_25);
     const b = Number(p.btts_yes);
-    const score = Math.max(Number.isFinite(a) ? a : 0, Number.isFinite(b) ? b : 0);
+    const score = Math.max(
+      Number.isFinite(a) ? a : 0,
+      Number.isFinite(b) ? b : 0
+    );
     return { match: m, probs: p, score };
   });
 
@@ -198,6 +217,10 @@ Você é redator do FutStats. Crie UM post diário em pt-BR.
 Regra CRÍTICA: use SOMENTE os números fornecidos no JSON abaixo. Não invente odds, probabilidades, horários ou ligas.
 Se algum dado estiver ausente, escreva "não disponível".
 
+REGRAS IMPORTANTES (para evitar erros):
+- NÃO escreva "probabilidade de vitória", NÃO use mercado 1X2, NÃO fale em mandante/visitante vencer.
+- Use APENAS estes dados/mercados que existem no JSON: Over 2.5 (over_25), BTTS (btts_yes) e as Value Bets (odd + calculated_probability).
+
 Retorne APENAS um JSON válido (sem markdown), no formato:
 {
   "id": "${postId}",
@@ -215,7 +238,12 @@ Regras do conteúdo:
 - formatação obrigatória do texto:
   - use parágrafos separados por "\\n\\n"
   - use listas com UMA linha por item, começando com "- "
-  - não use markdown (sem "**" e sem "*")
+  - não use markdown (sem "**" e sem "*"). Você PODE usar títulos simples começando com "# " (apenas isso).
+- tom de voz:
+  - comece com uma saudação curta e amigável (ex.: "Bom dia!" ou "Olá!")
+  - termine com uma despedida curta e amigável (ex.: "Boa sorte e bons estudos!" ou "Até amanhã!")
+- amostra:
+  - quando o campo sample.quality for "baixa" ou o sample.min_sample_size for menor que sample.sample_limit, deixe claro que a amostra é pequena e que a confiança é menor.
 - incluir CTAs no final do conteúdo (apenas texto, sem HTML):
   - /value-bets?utm_source=blog&utm_medium=cta&utm_campaign=daily_${todayISO}
   - /matches?utm_source=blog&utm_medium=cta&utm_campaign=daily_${todayISO}
@@ -237,30 +265,33 @@ async function generateWithGroq(payload) {
     date: todayISO,
   });
 
-  const res = await fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
-    timeoutMs: 60000,
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${GROQ_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: modelName,
-      // baixa temperatura melhora conformidade com JSON
-      temperature: 0.2,
-      max_tokens: 1400,
-      // Força JSON válido quando suportado pelo provedor/modelo
-      response_format: { type: 'json_object' },
-      messages: [
-        {
-          role: 'system',
-          content:
-            'Você é um redator técnico. Responda SEMPRE com JSON válido puro (sem markdown e sem texto extra).',
-        },
-        { role: 'user', content: prompt },
-      ],
-    }),
-  });
+  const res = await fetchWithTimeout(
+    'https://api.groq.com/openai/v1/chat/completions',
+    {
+      timeoutMs: 60000,
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${GROQ_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: modelName,
+        // baixa temperatura melhora conformidade com JSON
+        temperature: 0.2,
+        max_tokens: 1400,
+        // Força JSON válido quando suportado pelo provedor/modelo
+        response_format: { type: 'json_object' },
+        messages: [
+          {
+            role: 'system',
+            content:
+              'Você é um redator técnico. Responda SEMPRE com JSON válido puro (sem markdown e sem texto extra).',
+          },
+          { role: 'user', content: prompt },
+        ],
+      }),
+    }
+  );
 
   if (!res.ok) {
     const txt = await res.text().catch(() => '');
@@ -368,9 +399,18 @@ async function main() {
 
   log('info', 'Buscando dados do dia na API', { baseUrl: BACKEND_API_URL });
   const [matches, probabilities, valueBets] = await Promise.all([
-    fetchJsonWithRetry(`${BACKEND_API_URL}matches/today/`, { tries: 4, timeoutMs: 20000 }),
-    fetchJsonWithRetry(`${BACKEND_API_URL}probabilities/today/`, { tries: 4, timeoutMs: 20000 }),
-    fetchJsonWithRetry(`${BACKEND_API_URL}value-bets/?limit=8`, { tries: 4, timeoutMs: 20000 }),
+    fetchJsonWithRetry(`${BACKEND_API_URL}matches/today/`, {
+      tries: 4,
+      timeoutMs: 20000,
+    }),
+    fetchJsonWithRetry(`${BACKEND_API_URL}probabilities/today/`, {
+      tries: 4,
+      timeoutMs: 20000,
+    }),
+    fetchJsonWithRetry(`${BACKEND_API_URL}value-bets/?limit=8`, {
+      tries: 4,
+      timeoutMs: 20000,
+    }),
   ]);
 
   const probsByMatch = indexProbabilities(probabilities);
@@ -382,17 +422,59 @@ async function main() {
     topMatches: topMatches.length,
   });
 
+  // Enriquecer topMatches com amostra (últimos 5 jogos) para evitar conclusões em amostra pequena
+  const enrichedTopMatches = [];
+  for (const x of topMatches) {
+    const matchId = x?.match?.id;
+    if (!matchId) continue;
+    try {
+      const summary = await fetchJsonWithRetry(
+        `${BACKEND_API_URL}matches/${matchId}/?sample_limit=5`,
+        { tries: 3, timeoutMs: 20000 }
+      );
+
+      const homeSize = Number(summary?.team_rates?.home?.sample_size);
+      const awaySize = Number(summary?.team_rates?.away?.sample_size);
+      const minSample = Math.min(
+        Number.isFinite(homeSize) ? homeSize : 0,
+        Number.isFinite(awaySize) ? awaySize : 0
+      );
+      const sampleLimit = Number(summary?.team_rates?.sample_limit) || 5;
+
+      enrichedTopMatches.push({
+        id: summary?.id ?? matchId,
+        league: summary?.league ?? x.match?.league,
+        date: summary?.date ?? x.match?.date,
+        time: summary?.time ?? x.match?.time,
+        home: summary?.homeTeam?.name ?? x.match?.homeTeam?.name,
+        away: summary?.awayTeam?.name ?? x.match?.awayTeam?.name,
+        probs: summary?.probabilities ?? x.probs,
+        sample: {
+          sample_limit: sampleLimit,
+          home_sample_size: Number.isFinite(homeSize) ? homeSize : null,
+          away_sample_size: Number.isFinite(awaySize) ? awaySize : null,
+          min_sample_size: minSample,
+          quality: summary?.team_rates?.quality ?? null,
+        },
+      });
+    } catch (e) {
+      // Se falhar, ainda envia o básico sem amostra (mas o prompt deve ser conservador)
+      enrichedTopMatches.push({
+        id: matchId,
+        league: x.match?.league,
+        date: x.match?.date,
+        time: x.match?.time,
+        home: x.match?.homeTeam?.name,
+        away: x.match?.awayTeam?.name,
+        probs: x.probs,
+        sample: { sample_limit: 5, quality: 'indisponível' },
+      });
+    }
+  }
+
   const payload = {
     date: todayISO,
-    topMatches: topMatches.map((x) => ({
-      id: x.match?.id,
-      league: x.match?.league,
-      date: x.match?.date,
-      time: x.match?.time,
-      home: x.match?.homeTeam?.name,
-      away: x.match?.awayTeam?.name,
-      probs: x.probs,
-    })),
+    topMatches: enrichedTopMatches,
     valueBets: (Array.isArray(valueBets) ? valueBets : []).map((v) => ({
       match_id: v?.match_id,
       match: v?.match,
@@ -437,7 +519,10 @@ async function main() {
 
 main().catch((err) => {
   // Modo B: falha o workflow e NÃO commita
-  log('error', 'Falha ao gerar post diário', String(err?.stack || err?.message || err));
+  log(
+    'error',
+    'Falha ao gerar post diário',
+    String(err?.stack || err?.message || err)
+  );
   process.exit(1);
 });
-
