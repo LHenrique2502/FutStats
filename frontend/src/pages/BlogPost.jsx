@@ -8,18 +8,104 @@ import { blogPosts } from '@/data/blogPosts';
 import { SEO } from '@/components/SEO';
 import { trackEvent } from '@/lib/analytics';
 
+const parseLocalDate = (isoDate) => {
+  if (typeof isoDate !== 'string') return null;
+  const m = isoDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return null;
+  const year = Number(m[1]);
+  const month = Number(m[2]);
+  const day = Number(m[3]);
+  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) {
+    return null;
+  }
+  return new Date(year, month - 1, day);
+};
+
 const formatDatePtBr = (isoDate) => {
-  const d = new Date(isoDate);
+  const d = parseLocalDate(isoDate) || new Date(isoDate);
   if (Number.isNaN(d.getTime())) return isoDate;
   return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'medium' }).format(d);
 };
 
-const contentToParagraphs = (content) => {
-  if (typeof content !== 'string') return [];
-  return content
-    .split(/\n\s*\n/g)
-    .map((p) => p.trim())
-    .filter(Boolean);
+const normalizeContent = (content) => {
+  if (typeof content !== 'string') return '';
+  let s = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+  // Remove bold markdown **...** (mantém o texto) para não "poluir" a leitura
+  s = s.replace(/\*\*(.+?)\*\*/g, '$1');
+
+  // Heurística: quando a IA devolve "* item * item * item" na mesma linha, quebrar em linhas
+  const inlineBullets = (s.match(/\s\*\s+/g) || []).length;
+  if (inlineBullets >= 2) {
+    // transforma " * " em nova linha "* "
+    s = s.replace(/\s\*\s+/g, '\n* ');
+  }
+
+  // Normaliza listas para "- "
+  s = s.replace(/^\*\s+/gm, '- ');
+
+  // Normaliza múltiplas quebras
+  s = s.replace(/\n{3,}/g, '\n\n');
+  return s.trim();
+};
+
+const contentToBlocks = (content) => {
+  const text = normalizeContent(content);
+  if (!text) return [];
+
+  const lines = text.split('\n');
+  const blocks = [];
+  let i = 0;
+
+  const pushParagraph = (paraLines) => {
+    const t = paraLines.join(' ').replace(/\s+/g, ' ').trim();
+    if (t) blocks.push({ type: 'p', text: t });
+  };
+
+  while (i < lines.length) {
+    const lineRaw = lines[i];
+    const line = String(lineRaw || '').trim();
+
+    // pula linhas vazias
+    if (!line) {
+      i += 1;
+      continue;
+    }
+
+    // heading (ex.: "Top Matches")
+    if (/^#{1,6}\s+/.test(line)) {
+      blocks.push({ type: 'h', text: line.replace(/^#{1,6}\s+/, '').trim() });
+      i += 1;
+      continue;
+    }
+
+    // lista
+    if (/^-\s+/.test(line)) {
+      const items = [];
+      while (i < lines.length) {
+        const l = String(lines[i] || '').trim();
+        if (!l) break;
+        if (/^-\s+/.test(l)) items.push(l.replace(/^-\s+/, '').trim());
+        else break;
+        i += 1;
+      }
+      if (items.length) blocks.push({ type: 'ul', items });
+      continue;
+    }
+
+    // parágrafo: agrega até próxima linha vazia/heading/lista
+    const paraLines = [];
+    while (i < lines.length) {
+      const l = String(lines[i] || '').trim();
+      if (!l) break;
+      if (/^#{1,6}\s+/.test(l) || /^-\s+/.test(l)) break;
+      paraLines.push(l);
+      i += 1;
+    }
+    pushParagraph(paraLines);
+  }
+
+  return blocks;
 };
 
 const BlogPost = () => {
@@ -63,7 +149,7 @@ const BlogPost = () => {
     );
   }
 
-  const paragraphs = contentToParagraphs(post.content);
+  const blocks = contentToBlocks(post.content);
 
   return (
     <div className="min-h-screen bg-background">
@@ -95,16 +181,40 @@ const BlogPost = () => {
           </div>
 
           <article className="bg-card border border-border rounded-lg p-6">
-            {paragraphs.length > 0 ? (
+            {blocks.length > 0 ? (
               <div className="space-y-4">
-                {paragraphs.map((p, idx) => (
-                  <p
-                    key={`${post.id}-p-${idx}`}
-                    className="text-sm md:text-base text-foreground/90 leading-relaxed"
-                  >
-                    {p}
-                  </p>
-                ))}
+                {blocks.map((b, idx) => {
+                  if (b.type === 'h') {
+                    return (
+                      <h3
+                        key={`${post.id}-h-${idx}`}
+                        className="text-base md:text-lg font-semibold text-foreground"
+                      >
+                        {b.text}
+                      </h3>
+                    );
+                  }
+                  if (b.type === 'ul') {
+                    return (
+                      <ul
+                        key={`${post.id}-ul-${idx}`}
+                        className="list-disc pl-5 space-y-2 text-sm md:text-base text-foreground/90"
+                      >
+                        {b.items.map((it, j) => (
+                          <li key={`${post.id}-ul-${idx}-li-${j}`}>{it}</li>
+                        ))}
+                      </ul>
+                    );
+                  }
+                  return (
+                    <p
+                      key={`${post.id}-p-${idx}`}
+                      className="text-sm md:text-base text-foreground/90 leading-relaxed"
+                    >
+                      {b.text}
+                    </p>
+                  );
+                })}
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">

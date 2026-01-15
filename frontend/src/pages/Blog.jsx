@@ -7,8 +7,22 @@ import { blogPosts } from '@/data/blogPosts';
 import { Link } from 'react-router-dom';
 import { SEO } from '@/components/SEO';
 
+const parseLocalDate = (isoDate) => {
+  if (typeof isoDate !== 'string') return null;
+  const m = isoDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return null;
+  const year = Number(m[1]);
+  const month = Number(m[2]);
+  const day = Number(m[3]);
+  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) {
+    return null;
+  }
+  // Cria data no fuso local (evita o bug de "voltar um dia" do new Date('YYYY-MM-DD') em UTC)
+  return new Date(year, month - 1, day);
+};
+
 const formatDatePtBr = (isoDate) => {
-  const d = new Date(isoDate);
+  const d = parseLocalDate(isoDate) || new Date(isoDate);
   if (Number.isNaN(d.getTime())) return isoDate;
   return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'medium' }).format(d);
 };
@@ -19,8 +33,8 @@ const Blog = () => {
   const sortedPosts = useMemo(() => {
     const copy = [...(Array.isArray(blogPosts) ? blogPosts : [])];
     copy.sort((a, b) => {
-      const da = new Date(a?.date).getTime();
-      const db = new Date(b?.date).getTime();
+      const da = (parseLocalDate(a?.date) || new Date(a?.date)).getTime();
+      const db = (parseLocalDate(b?.date) || new Date(b?.date)).getTime();
 
       const aInvalid = !Number.isFinite(da);
       const bInvalid = !Number.isFinite(db);

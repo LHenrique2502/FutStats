@@ -2,45 +2,51 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://example.com/</loc>
-    <lastmod>2026-01-14T21:40:49.337Z</lastmod>
+    <lastmod>2026-01-15T13:53:26.457Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://example.com/matches</loc>
-    <lastmod>2026-01-14T21:40:49.337Z</lastmod>
+    <lastmod>2026-01-15T13:53:26.457Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/value-bets</loc>
-    <lastmod>2026-01-14T21:40:49.337Z</lastmod>
+    <lastmod>2026-01-15T13:53:26.457Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://example.com/blog</loc>
-    <lastmod>2026-01-14T21:40:49.337Z</lastmod>
+    <lastmod>2026-01-15T13:53:26.457Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://example.com/metodologia</loc>
-    <lastmod>2026-01-14T21:40:49.337Z</lastmod>
+    <lastmod>2026-01-15T13:53:26.457Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/teams</loc>
-    <lastmod>2026-01-14T21:40:49.337Z</lastmod>
+    <lastmod>2026-01-15T13:53:26.457Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://example.com/leagues</loc>
-    <lastmod>2026-01-14T21:40:49.337Z</lastmod>
+    <lastmod>2026-01-15T13:53:26.457Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://example.com/blog/daily-2026-01-15</loc>
+    <lastmod>2026-01-15T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://example.com/blog/intro</loc>

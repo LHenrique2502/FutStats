@@ -44,6 +44,21 @@ def preload_ultimos_jogos(limit=5):
 # ============================================================
 # ✅ Funções agora usam o CACHE
 # ============================================================
+def _smoothed_percent(hits, n, alpha=1, beta=1, max_pct=95):
+    """
+    Suaviza probabilidades para evitar 0%/100% em amostras pequenas.
+    p = (hits + alpha) / (n + alpha + beta)
+
+    - alpha=beta=1 equivale a Laplace smoothing.
+    - max_pct limita o teto (evita "certeza" mesmo com amostra grande).
+    """
+    if not n or n <= 0:
+        return 0
+    p = (hits + alpha) / (n + alpha + beta)
+    pct = int(round(p * 100))
+    return min(max_pct, max(0, pct))
+
+
 def calcular_over25(team, cache):
     jogos = cache.get(team.id, [])
     if not jogos:
@@ -55,7 +70,7 @@ def calcular_over25(team, cache):
         and (match.home_score + match.away_score) >= 3
     )
 
-    return int((hits / len(jogos)) * 100)
+    return _smoothed_percent(hits, len(jogos))
 
 
 def calcular_btts(team, cache):
@@ -69,7 +84,7 @@ def calcular_btts(team, cache):
         and match.home_score > 0 and match.away_score > 0
     )
 
-    return int((hits / len(jogos)) * 100)
+    return _smoothed_percent(hits, len(jogos))
 
 
 def calcular_media_cartoes(team, cache):

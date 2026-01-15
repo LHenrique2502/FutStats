@@ -211,6 +211,11 @@ Retorne APENAS um JSON válido (sem markdown), no formato:
 Regras do conteúdo:
 - máximo ~900 palavras
 - incluir um aviso de risco curto (apostas envolvem risco)
+- não use linguagem de certeza (evite "garantido", "certeza", "100%"); se algum número vier muito alto, trate como estimativa e prefira no máximo "≈95%"
+- formatação obrigatória do texto:
+  - use parágrafos separados por "\\n\\n"
+  - use listas com UMA linha por item, começando com "- "
+  - não use markdown (sem "**" e sem "*")
 - incluir CTAs no final do conteúdo (apenas texto, sem HTML):
   - /value-bets?utm_source=blog&utm_medium=cta&utm_campaign=daily_${todayISO}
   - /matches?utm_source=blog&utm_medium=cta&utm_campaign=daily_${todayISO}
