@@ -241,8 +241,11 @@ async function generateWithGroq(payload) {
     },
     body: JSON.stringify({
       model: modelName,
-      temperature: 0.6,
+      // baixa temperatura melhora conformidade com JSON
+      temperature: 0.2,
       max_tokens: 1400,
+      // Força JSON válido quando suportado pelo provedor/modelo
+      response_format: { type: 'json_object' },
       messages: [
         {
           role: 'system',
@@ -261,8 +264,26 @@ async function generateWithGroq(payload) {
 
   const data = await res.json();
   const text = data?.choices?.[0]?.message?.content;
-  const parsed = extractJson(text);
-  if (!parsed) throw new Error('Não foi possível parsear JSON retornado pela IA.');
+  let parsed;
+  try {
+    parsed = extractJson(text);
+  } catch (e) {
+    // Log seguro: apenas um trecho para diagnosticar formatação inválida
+    log(
+      'error',
+      'Falha ao parsear JSON do Groq (trecho inicial)',
+      String(text || '').slice(0, 800)
+    );
+    throw e;
+  }
+  if (!parsed) {
+    log(
+      'error',
+      'Groq retornou vazio/sem JSON (trecho inicial)',
+      String(text || '').slice(0, 800)
+    );
+    throw new Error('Não foi possível parsear JSON retornado pela IA.');
+  }
   log('info', 'Groq retornou conteúdo; JSON parseado com sucesso');
   return parsed;
 }
