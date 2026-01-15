@@ -3,14 +3,14 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const BACKEND_API_URL_RAW = process.env.BACKEND_API_URL || '';
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
-const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-4.1-mini';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
 const BLOG_MAX_POSTS = Number(process.env.BLOG_MAX_POSTS || 60);
 const POSTS_TIMEZONE = process.env.POSTS_TIMEZONE || 'America/Sao_Paulo';
 const LOG_LEVEL = (process.env.LOG_LEVEL || 'info').toLowerCase(); // debug|info|warn|error
 
 if (!BACKEND_API_URL_RAW) throw new Error('BACKEND_API_URL não definido.');
-if (!OPENAI_API_KEY) throw new Error('OPENAI_API_KEY não definido.');
+if (!GEMINI_API_KEY) throw new Error('GEMINI_API_KEY não definido.');
 
 const BACKEND_API_URL =
   BACKEND_API_URL_RAW.replace(/\/+$/, '') + '/';
@@ -221,38 +221,51 @@ ${JSON.stringify(payload, null, 2)}
 `.trim();
 }
 
-async function generateWithOpenAI(payload) {
+async function generateWithGemini(payload) {
   const prompt = buildPrompt(payload);
 
-  log('info', 'Chamando OpenAI para gerar post', {
-    model: OPENAI_MODEL,
+  log('info', 'Chamando Gemini para gerar post', {
+    model: GEMINI_MODEL,
     postId,
     date: todayISO,
   });
 
-  const res = await fetchWithTimeout('https://api.openai.com/v1/responses', {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
+    GEMINI_MODEL
+  )}:generateContent?key=${encodeURIComponent(GEMINI_API_KEY)}`;
+
+  const res = await fetchWithTimeout(url, {
     timeoutMs: 60000,
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${OPENAI_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: OPENAI_MODEL,
-      input: prompt,
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: prompt }],
+        },
+      ],
+      generationConfig: {
+        temperature: 0.6,
+        maxOutputTokens: 1400,
+      },
     }),
   });
 
   if (!res.ok) {
     const txt = await res.text().catch(() => '');
-    throw new Error(`OpenAI falhou: ${res.status} ${txt.slice(0, 300)}`);
+    throw new Error(`Gemini falhou: ${res.status} ${txt.slice(0, 300)}`);
   }
 
   const data = await res.json();
-  const text = data?.output?.[0]?.content?.[0]?.text;
+  const text = Array.isArray(data?.candidates?.[0]?.content?.parts)
+    ? data.candidates[0].content.parts.map((p) => p?.text || '').join('')
+    : data?.candidates?.[0]?.content?.parts?.[0]?.text;
   const parsed = extractJson(text);
   if (!parsed) throw new Error('Não foi possível parsear JSON retornado pela IA.');
-  log('info', 'OpenAI retornou conteúdo; JSON parseado com sucesso');
+  log('info', 'Gemini retornou conteúdo; JSON parseado com sucesso');
   return parsed;
 }
 
@@ -377,7 +390,7 @@ async function main() {
     },
   };
 
-  const aiPostRaw = await generateWithOpenAI(payload);
+  const aiPostRaw = await generateWithGemini(payload);
   const aiPost = normalizePost(aiPostRaw);
 
   const existing = await readExistingBlogPosts();

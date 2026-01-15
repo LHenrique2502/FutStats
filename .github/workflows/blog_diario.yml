@@ -29,10 +29,10 @@ jobs:
 
       - name: Generate blog post
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           BACKEND_API_URL: ${{ secrets.BACKEND_API_URL }}
           BLOG_MAX_POSTS: ${{ secrets.BLOG_MAX_POSTS }}
-          OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}
+          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
           POSTS_TIMEZONE: "America/Sao_Paulo"
           LOG_LEVEL: "debug"
         run: node "frontend/scripts/generate-daily-blog.mjs"
