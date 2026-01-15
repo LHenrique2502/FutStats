@@ -3,14 +3,14 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const BACKEND_API_URL_RAW = process.env.BACKEND_API_URL || '';
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
+const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.1-8b-instant';
 const BLOG_MAX_POSTS = Number(process.env.BLOG_MAX_POSTS || 60);
 const POSTS_TIMEZONE = process.env.POSTS_TIMEZONE || 'America/Sao_Paulo';
 const LOG_LEVEL = (process.env.LOG_LEVEL || 'info').toLowerCase(); // debug|info|warn|error
 
 if (!BACKEND_API_URL_RAW) throw new Error('BACKEND_API_URL não definido.');
-if (!GEMINI_API_KEY) throw new Error('GEMINI_API_KEY não definido.');
+if (!GROQ_API_KEY) throw new Error('GROQ_API_KEY não definido.');
 
 const BACKEND_API_URL =
   BACKEND_API_URL_RAW.replace(/\/+$/, '') + '/';
@@ -221,54 +221,49 @@ ${JSON.stringify(payload, null, 2)}
 `.trim();
 }
 
-async function generateWithGemini(payload) {
+async function generateWithGroq(payload) {
   const prompt = buildPrompt(payload);
 
-  // Aceita tanto "gemini-2.0-flash" quanto "models/gemini-2.0-flash"
-  const modelName = String(GEMINI_MODEL || '').trim().replace(/^models\//, '');
+  const modelName = String(GROQ_MODEL || '').trim();
 
-  log('info', 'Chamando Gemini para gerar post', {
+  log('info', 'Chamando Groq para gerar post', {
     model: modelName,
     postId,
     date: todayISO,
   });
 
-  const url = `https://generativelanguage.googleapis.com/v1/models/${encodeURIComponent(
-    modelName
-  )}:generateContent?key=${encodeURIComponent(GEMINI_API_KEY)}`;
-
-  const res = await fetchWithTimeout(url, {
+  const res = await fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
     timeoutMs: 60000,
     method: 'POST',
     headers: {
+      Authorization: `Bearer ${GROQ_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      contents: [
+      model: modelName,
+      temperature: 0.6,
+      max_tokens: 1400,
+      messages: [
         {
-          role: 'user',
-          parts: [{ text: prompt }],
+          role: 'system',
+          content:
+            'Você é um redator técnico. Responda SEMPRE com JSON válido puro (sem markdown e sem texto extra).',
         },
+        { role: 'user', content: prompt },
       ],
-      generationConfig: {
-        temperature: 0.6,
-        maxOutputTokens: 1400,
-      },
     }),
   });
 
   if (!res.ok) {
     const txt = await res.text().catch(() => '');
-    throw new Error(`Gemini falhou: ${res.status} ${txt.slice(0, 300)}`);
+    throw new Error(`Groq falhou: ${res.status} ${txt.slice(0, 300)}`);
   }
 
   const data = await res.json();
-  const text = Array.isArray(data?.candidates?.[0]?.content?.parts)
-    ? data.candidates[0].content.parts.map((p) => p?.text || '').join('')
-    : data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  const text = data?.choices?.[0]?.message?.content;
   const parsed = extractJson(text);
   if (!parsed) throw new Error('Não foi possível parsear JSON retornado pela IA.');
-  log('info', 'Gemini retornou conteúdo; JSON parseado com sucesso');
+  log('info', 'Groq retornou conteúdo; JSON parseado com sucesso');
   return parsed;
 }
 
@@ -393,7 +388,7 @@ async function main() {
     },
   };
 
-  const aiPostRaw = await generateWithGemini(payload);
+  const aiPostRaw = await generateWithGroq(payload);
   const aiPost = normalizePost(aiPostRaw);
 
   const existing = await readExistingBlogPosts();
