@@ -4,7 +4,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const BACKEND_API_URL_RAW = process.env.BACKEND_API_URL || '';
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
 const BLOG_MAX_POSTS = Number(process.env.BLOG_MAX_POSTS || 60);
 const POSTS_TIMEZONE = process.env.POSTS_TIMEZONE || 'America/Sao_Paulo';
 const LOG_LEVEL = (process.env.LOG_LEVEL || 'info').toLowerCase(); // debug|info|warn|error
@@ -224,14 +224,17 @@ ${JSON.stringify(payload, null, 2)}
 async function generateWithGemini(payload) {
   const prompt = buildPrompt(payload);
 
+  // Aceita tanto "gemini-2.0-flash" quanto "models/gemini-2.0-flash"
+  const modelName = String(GEMINI_MODEL || '').trim().replace(/^models\//, '');
+
   log('info', 'Chamando Gemini para gerar post', {
-    model: GEMINI_MODEL,
+    model: modelName,
     postId,
     date: todayISO,
   });
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
-    GEMINI_MODEL
+  const url = `https://generativelanguage.googleapis.com/v1/models/${encodeURIComponent(
+    modelName
   )}:generateContent?key=${encodeURIComponent(GEMINI_API_KEY)}`;
 
   const res = await fetchWithTimeout(url, {
