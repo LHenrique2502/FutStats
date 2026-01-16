@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-01-16",
+    title: "Diário de Apostas - 16/01/2026",
+    excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
+    content: "Bom dia!\n\nOlá, amigos! Hoje é mais um dia de apostas e aqui estão as nossas recomendações para você.\n\n**Top Matches**\n\n- Vasco da Gama x Maricá (Brazilian Campeonato Carioca)\n  - Over 2.5: 62%\n  - BTTS: 48%\n\n- Espanyol x Girona (Spanish La Liga)\n  - Over 2.5: 57%\n  - BTTS: 57%\n\n- Pisa x Atalanta (Italian Serie A)\n  - Over 2.5: 35,5%\n  - BTTS: 50%\n\n- Monaco x Lorient (French Ligue 1)\n  - Over 2.5: 43%\n  - BTTS: 50%\n\n- Werder Bremen x Eintracht Frankfurt (German Bundesliga)\n  - Over 2.5: 50%\n  - BTTS: 50%\n\n- Paris SG x Lille (French Ligue 1)\n  - Over 2.5: 36%\n  - BTTS: 50%\n\n**Value Bets**\n\n- Vitória Monaco (Monaco x Lorient)\n  - Odd: 1,67\n  - Probabilidade calculada: 51,33%\n\n- Vitória Pisa (Pisa x Atalanta)\n  - Odd: 5,75\n  - Probabilidade calculada: 44,93%\n\n- Vitória Espanyol (Espanyol x Girona)\n  - Odd: 1,91\n  - Probabilidade calculada: 40,13%\n\n- Vitória Eintracht Frankfurt (Werder Bremen x Eintracht Frankfurt)\n  - Odd: 2,6\n  - Probabilidade calculada: 37,93%\n\n- Vitória Werder Bremen (Werder Bremen x Eintracht Frankfurt)\n  - Odd: 2,62\n  - Probabilidade calculada: 33,73%\n\n- Empate (Pisa x Atalanta)\n  - Odd: 4\n  - Probabilidade calculada: 29,4%\n\n- Empate (Espanyol x Girona)\n  - Odd: 3,4\n  - Probabilidade calculada: 28,8%\n\n**Aviso de Risco**\n\nLembre-se de que as apostas envolvem risco e não há garantia de vitória.\n\n**Boa sorte e bons estudos!**",
+    date: "2026-01-16",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-01-15",
     title: "Diário de Apostas - 15 de Janeiro de 2026",
     excerpt: "Confira as nossas recomendações de apostas para o dia de hoje!",
