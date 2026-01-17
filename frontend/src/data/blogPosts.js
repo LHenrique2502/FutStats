@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-01-17",
+    title: "Diário de Apostas - 17/01/2026",
+    excerpt: "Confira as nossas recomendações de apostas para o dia de hoje!",
+    content: "Bom dia!\n\nOlá, amigos! Hoje é mais um dia de futebol e apostas. Aqui estão as nossas recomendações para o dia de hoje:\n\n**Melhores Apostas do Dia**\n\n- Vitória Real Madrid (1.18, 54.53%)\n- Vitória Lens (1.48, 52.93%)\n- Vitória Napoli (1.44, 46.53%)\n- Vitória Mallorca (3.75, 46.53%)\n- Vitória Tottenham Hotspur (1.73, 46.53%)\n\n**Jogos com Alta Probabilidade de Gols**\n\n- RB Leipzig x Bayern Munich (71.5% de chances de mais de 2.5 gols)\n- Leeds United x Fulham (71% de chances de mais de 2.5 gols)\n- Lens x Auxerre (64% de chances de mais de 2.5 gols)\n- Hamburg x Borussia Mönchengladbach (64% de chances de mais de 2.5 gols)\n- Liverpool x Burnley (64% de chances de mais de 2.5 gols)\n\n**Apostas com Valor**\n\n- Vitória Real Madrid (1.18, 54.53%)\n- Vitória Lens (1.48, 52.93%)\n- Vitória Napoli (1.44, 46.53%)\n- Vitória Mallorca (3.75, 46.53%)\n- Vitória Tottenham Hotspur (1.73, 46.53%)\n\nLembre-se de que as apostas envolvem risco. Boa sorte e bons estudos!\n\nAté amanhã!",
+    date: "2026-01-17",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-01-16",
     title: "Diário de Apostas - 16/01/2026",
     excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
