@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-01-18",
+    title: "Diário de Apostas - 18 de Janeiro de 2026",
+    excerpt: "Confira as nossas recomendações de apostas para o dia de hoje!",
+    content: "Olá!\n\nHoje é um dia cheio de partidas emocionantes! Aqui estão as nossas recomendações de apostas para o dia de hoje:\n\n**Partidas com mais chances de vitória**\n\n- Real Sociedad x Barcelona (Spanish La Liga): 71,5% de chances de mais de 2,5 gols marcados.\n- Strasbourg x Metz (French Ligue 1): 71,5% de chances de mais de 2,5 gols marcados.\n- Rennes x Le Havre (French Ligue 1): 64,5% de chances de mais de 2,5 gols marcados.\n- Bologna x Fiorentina (Italian Serie A): 64% de chances de mais de 2,5 gols marcados.\n- Wolverhampton Wanderers x Newcastle United (English Premier League): 57% de chances de mais de 2,5 gols marcados.\n\n**Value Bets**\n\n- Strasbourg x Metz (French Ligue 1): Vitória Strasbourg com odd de 1,44 e probabilidade calculada de 56,13%.\n- Bologna x Fiorentina (Italian Serie A): Vitória Bologna com odd de 2,3 e probabilidade calculada de 54,53%.\n- Rennes x Le Havre (French Ligue 1): Vitória Rennes com odd de 1,61 e probabilidade calculada de 51,33%.\n\n**Aviso de Risco**\n\nLembre-se de que as apostas envolvem risco. Não aposte mais do que você pode perder.\n\nBoa sorte e bons estudos!",
+    date: "2026-01-18",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-01-17",
     title: "Diário de Apostas - 17/01/2026",
     excerpt: "Confira as nossas recomendações de apostas para o dia de hoje!",
