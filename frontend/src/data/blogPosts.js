@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-01-19",
+    title: "Diário de Apostas - 19/01/2026",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
+    content: "Bom dia!\n\nAqui estão as nossas recomendações de apostas para o dia de hoje.\n\n**Recomendações de Apostas**\n\n- **Vitória Cremonese**: O Cremonese tem uma probabilidade de vitória de 46,53% e uma odd de 2,6.\n- **Vitória Brighton and Hove Albion**: O Brighton and Hove Albion tem uma probabilidade de vitória de 43,33% e uma odd de 1,88.\n- **Vitória Lazio**: O Lazio tem uma probabilidade de vitória de 43,33% e uma odd de 2,8.\n- **Empate**: O empate tem uma probabilidade de 30% e uma odd de 4.\n\n**Avisos de Risco**\n\nLembre-se de que as apostas envolvem risco e não há garantia de vitória.\n\n**Observações**\n\n- A amostra é boa para todos os jogos.\n- A probabilidade de vitória do Cremonese é estimada.\n- A probabilidade de vitória do Brighton and Hove Albion é estimada.\n- A probabilidade de vitória do Lazio é estimada.\n\nBoa sorte e bons estudos!",
+    date: "2026-01-19",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-01-18",
     title: "Diário de Apostas - 18 de Janeiro de 2026",
     excerpt: "Confira as nossas recomendações de apostas para o dia de hoje!",
