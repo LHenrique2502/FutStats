@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-01-20",
+    title: "Opções de Valor para o Dia 20 de Janeiro",
+    excerpt: "Aqui estão algumas opções de valor para o dia de hoje.",
+    content: "Bom dia!\n\nAqui estão algumas opções de valor para o dia de hoje.\n\n- **Preston North End vs Hull City**: A probabilidade de mais de 2,5 gols é de 57%. Além disso, há uma chance de 64% de ambos os times marcarem gols.\n- **Coventry City vs Millwall**: A probabilidade de mais de 2,5 gols é de 64%. Além disso, há uma chance de 57% de ambos os times marcarem gols.\n- **Real Madrid vs Monaco**: A probabilidade de mais de 2,5 gols é de 57%. Além disso, há uma chance de 57% de ambos os times marcarem gols.\n- **Oxford United vs Queens Park Rangers**: A probabilidade de mais de 2,5 gols é de 57%. Além disso, há uma chance de 50% de ambos os times marcarem gols.\n- **Wrexham vs Leicester City**: A probabilidade de mais de 2,5 gols é de 29%. Além disso, há uma chance de 50% de ambos os times marcarem gols.\n- **Inter Milan vs Arsenal**: A probabilidade de mais de 2,5 gols é de 50%. Além disso, há uma chance de 43% de ambos os times marcarem gols.\n\nLembre-se de que apostas envolvem risco. É importante fazer uma análise cuidadosa antes de tomar qualquer decisão.\n\nBoa sorte e bons estudos!",
+    date: "2026-01-20",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-01-19",
     title: "Diário de Apostas - 19/01/2026",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
