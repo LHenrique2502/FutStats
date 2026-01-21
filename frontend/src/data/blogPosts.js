@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-01-21",
+    title: "Diário de Apostas - 21 de Janeiro de 2026",
+    excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
+    content: "Bom dia!\n\nHoje é um dia cheio de partidas emocionantes. Aqui estão as nossas recomendações para o dia de hoje:\n\n- **Marseille vs Liverpool**: Este é um clássico da UEFA Champions League. A probabilidade de mais de 2,5 gols é de 71%. Além disso, há uma boa chance de ambos os times marcarem gols (64%).\n- **Maricá vs Bangu**: Esta partida é da Brazilian Campeonato Carioca. A probabilidade de mais de 2,5 gols é de 67%. No entanto, a amostra é pequena e a confiança é menor devido à qualidade da amostra ser baixa.\n- **Southampton vs Sheffield United**: Esta partida é da English League Championship. A probabilidade de mais de 2,5 gols é de 64%. Além disso, há uma boa chance de ambos os times marcarem gols (64%).\n- **Mirassol vs Bragantino**: Esta partida é da Brazilian Campeonato Paulista. A probabilidade de mais de 2,5 gols é de 57%. No entanto, há uma menor chance de ambos os times marcarem gols (43%).\n- **Atalanta vs Athletic Bilbao**: Esta partida é da UEFA Champions League. A probabilidade de mais de 2,5 gols é de 28,5%. Além disso, há uma boa chance de ambos os times marcarem gols (50%).\n- **Watford vs Portsmouth**: Esta partida é da English League Championship. A probabilidade de mais de 2,5 gols é de 50%. Além disso, há uma boa chance de ambos os times marcarem gols (50%).\n\nApostas envolvem risco. Certifique-se de que você está ciente dos riscos antes de fazer qualquer aposta.\n\nBoa sorte e bons estudos!",
+    date: "2026-01-21",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-01-20",
     title: "Opções de Valor para o Dia 20 de Janeiro",
     excerpt: "Aqui estão algumas opções de valor para o dia de hoje.",
