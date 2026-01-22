@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-01-22",
+    title: "Diário de Apostas - 22 de Janeiro de 2026",
+    excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
+    content: "Bom dia!\n\nAqui estão as nossas recomendações para o dia de hoje.\n\n**América Mineiro vs Atlético Mineiro**\n- É provável que haja mais de 2,5 gols marcados no jogo.\n- É provável que haja gols marcados por ambos os times.\n\n**Santos vs Corinthians**\n- É provável que haja mais de 2,5 gols marcados no jogo.\n- É provável que haja gols marcados por ambos os times.\n\n**Flamengo vs Vasco da Gama**\n- É provável que haja mais de 2,5 gols marcados no jogo.\n- É provável que haja gols marcados por ambos os times.\n\n**Cruzeiro vs Democrata-GV**\n- Não há dados suficientes para fazer uma recomendação confiável.\n\n**Ponte Preta vs São Bernardo**\n- É provável que haja mais de 2,5 gols marcados no jogo.\n- É provável que haja gols marcados por ambos os times.\n\n**Boavista SC vs Portuguesa-RJ**\n- Não há dados suficientes para fazer uma recomendação confiável.\n\nLembre-se de que apostas envolvem risco. Boa sorte e bons estudos!",
+    date: "2026-01-22",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-01-21",
     title: "Diário de Apostas - 21 de Janeiro de 2026",
     excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
