@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-01-23",
+    title: "Diário de Apostas - 23/01",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
+    content: "Bom dia!\n\nNossa equipe de especialistas analisou as estatísticas e encontrou algumas oportunidades interessantes para você apostar. Lembre-se de que as apostas envolvem risco, então é importante fazer uma pesquisa cuidadosa antes de colocar seu dinheiro em jogo.\n\nAqui estão as nossas recomendações de apostas para o dia de hoje:\n\n- **Inter Milan x Pisa**: O Inter Milan tem uma probabilidade de 64% de marcar mais de 2,5 gols, de acordo com nossas estatísticas. Além disso, a probabilidade de ambos os times marcarem gols é de 50%.\n- **Levante x Elche**: O Levante tem uma probabilidade de 50% de marcar mais de 2,5 gols, de acordo com nossas estatísticas. Além disso, a probabilidade de ambos os times marcarem gols é de 57%.\n- **Derby County x West Bromwich Albion**: O Derby County tem uma probabilidade de 43% de marcar mais de 2,5 gols, de acordo com nossas estatísticas. Além disso, a probabilidade de ambos os times marcarem gols é de 43%.\n\nAqui estão as nossas Value Bets para o dia de hoje:\n\n- **Inter Milan x Pisa**: A probabilidade de vitória do Inter Milan é de 54,53%, com um odd de 1,18.\n- **Levante x Elche**: A probabilidade de vitória do Levante é de 44,93%, com um odd de 2,38.\n- **Levante x Elche**: A probabilidade de empate é de 29,4%, com um odd de 3,25.\n- **Levante x Elche**: A probabilidade de vitória do Elche é de 26,73%, com um odd de 3.\n\nLembre-se de que essas são apenas recomendações e que as apostas envolvem risco. Faça uma pesquisa cuidadosa antes de colocar seu dinheiro em jogo.\n\nBoa sorte e bons estudos!",
+    date: "2026-01-23",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-01-22",
     title: "Diário de Apostas - 22 de Janeiro de 2026",
     excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
