@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-01-26",
+    title: "Diário de Apostas - 26/01/2026",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
+    content: "Bom dia!\n\nNós estamos aqui para ajudar você a tomar decisões informadas sobre suas apostas. Aqui estão as nossas recomendações para o dia de hoje:\n\n- **Hellas Verona x Udinese**: O mercado de Over 2.5 tem uma probabilidade de 50% e o BTTS (ambos marcam) tem uma probabilidade de 64%.\n- **Girona x Getafe**: O mercado de Over 2.5 tem uma probabilidade de 57% e o BTTS (ambos marcam) tem uma probabilidade de 64%.\n- **Norwich City x Coventry City**: O mercado de Over 2.5 tem uma probabilidade de 50% e o BTTS (ambos marcam) tem uma probabilidade de 57%.\n- **Everton x Leeds United**: O mercado de Over 2.5 tem uma probabilidade de 57% e o BTTS (ambos marcam) tem uma probabilidade de 57%.\n\nAqui estão as nossas Value Bets para o dia de hoje:\n\n- **Girona x Getafe**: Vitória Girona com uma probabilidade calculada de 46,53% e um odds de 2,15.\n- **Everton x Leeds United**: Vitória Everton com uma probabilidade calculada de 41,73% e um odds de 2,5.\n- **Everton x Leeds United**: Empate com uma probabilidade calculada de 29,4% e um odds de 3,2.\n- **Girona x Getafe**: Empate com uma probabilidade calculada de 28,8% e um odds de 3.\n- **Girona x Getafe**: Vitória Getafe com uma probabilidade calculada de 25,13% e um odds de 3,8.\n\nLembre-se de que as apostas envolvem risco e não há garantia de vitória. É importante fazer suas próprias pesquisas e tomar decisões informadas.\n\nBoa sorte e bons estudos!",
+    date: "2026-01-26",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-01-23",
     title: "Diário de Apostas - 23/01",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
