@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-01-27",
+    title: "Diário de Apostas - 27/01/2026",
+    excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
+    content: "Bom dia!\n\nHoje temos três partidas interessantes para analisar. Vamos começar com a partida entre St Pauli e RB Leipzig na Bundesliga alemã.\n\n# St Pauli vs RB Leipzig\n\n- A probabilidade de mais de 2,5 gols marcados é de 57%.\n- A probabilidade de ambos os times marcarem gols é de 43%.\n\nA amostra usada para essas probabilidades é de boa qualidade, com 5 jogos analisados.\n\n# Werder Bremen vs Hoffenheim\n\n- A probabilidade de mais de 2,5 gols marcados é de 50%.\n- A probabilidade de ambos os times marcarem gols é de 50%.\n\nA amostra usada para essas probabilidades é de boa qualidade, com 5 jogos analisados.\n\n# Maricá vs Sampaio Corrêa FE\n\n- A probabilidade de mais de 2,5 gols marcados é de 33,5%.\n- A probabilidade de ambos os times marcarem gols é de 33,5%.\n\nA amostra usada para essas probabilidades é pequena, com apenas 1 jogo analisado. Portanto, é importante ter em mente que a confiança nesse resultado é menor.\n\nLembre-se de que apostas envolvem risco. Boa sorte e bons estudos!\n\nAté amanhã!",
+    date: "2026-01-27",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-01-26",
     title: "Diário de Apostas - 26/01/2026",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
