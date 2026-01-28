@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-01-28",
+    title: "Diário de Apostas - 28 de Janeiro de 2026",
+    excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
+    content: "Bom dia!\n\nNós estamos aqui para ajudar você a tomar decisões informadas sobre suas apostas. Aqui estão algumas das nossas recomendações para o dia de hoje.\n\n# UEFA Champions League\n\n- Paris SG vs Newcastle United: O jogo tem uma probabilidade de 57% de ter mais de 2,5 gols marcados. Além disso, há uma probabilidade de 64% de ambos os times marcarem gols.\n- Napoli vs Chelsea: O jogo tem uma probabilidade de 57% de ter mais de 2,5 gols marcados. Além disso, há uma probabilidade de 50% de ambos os times marcarem gols.\n- Eintracht Frankfurt vs Tottenham Hotspur: O jogo tem uma probabilidade de 57% de ter mais de 2,5 gols marcados. Além disso, há uma probabilidade de 57% de ambos os times marcarem gols.\n- Bayer Leverkusen vs Villarreal: O jogo tem uma probabilidade de 57% de ter mais de 2,5 gols marcados. Além disso, há uma probabilidade de 43% de ambos os times marcarem gols.\n- Borussia Dortmund vs Inter Milan: O jogo tem uma probabilidade de 50% de ter mais de 2,5 gols marcados. Além disso, há uma probabilidade de 50% de ambos os times marcarem gols.\n\n# Brazilian Serie A\n\n- Corinthians vs Bahia: O jogo tem uma probabilidade de 50% de ter mais de 2,5 gols marcados. Além disso, há uma probabilidade de 36% de ambos os times marcarem gols.\n\nApostas envolvem risco. Certifique-se de que você está apostando dentro de seus meios e não está comprometendo sua situação financeira.\n\nBoa sorte e bons estudos!",
+    date: "2026-01-28",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-01-27",
     title: "Diário de Apostas - 27/01/2026",
     excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
