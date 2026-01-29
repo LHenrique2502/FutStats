@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-01-29",
+    title: "Diário do FutStats - 29 de janeiro de 2026",
+    excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
+    content: "Bom dia!\n\nOlá, amigos do FutStats! Hoje é mais um dia de futebol emocionante e nós estamos aqui para ajudá-los a tomar decisões informadas.\n\n**Recomendações do Dia**\n\n- Mirassol vs Vasco da Gama\n- São Paulo vs Flamengo\n\n**Over 2.5 (Over 2,5 Gols)**\n\n- Mirassol vs Vasco da Gama: 43% de chance de ter mais de 2,5 gols marcados.\n- São Paulo vs Flamengo: 43% de chance de ter mais de 2,5 gols marcados.\n\n**BTTS (Gols de Cada Time)**\n\n- Mirassol vs Vasco da Gama: 36% de chance de ambos times marcarem gols.\n- São Paulo vs Flamengo: 43% de chance de ambos times marcarem gols.\n\n**Avisos de Risco**\n\n- As apostas envolvem risco e não há garantia de sucesso.\n- É importante lembrar que a confiança é menor quando a amostra é pequena.\n\n**Boa sorte e bons estudos!**",
+    date: "2026-01-29",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-01-28",
     title: "Diário de Apostas - 28 de Janeiro de 2026",
     excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
