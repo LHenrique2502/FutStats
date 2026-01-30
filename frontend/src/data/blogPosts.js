@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-01-30",
+    title: "Diário de Apostas - 30/01/2026",
+    excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
+    content: "Bom dia!\n\nAqui estão as nossas recomendações para o dia de hoje.\n\n# Top Matches\n\n- Nova Iguaçu vs Bangu (Brazilian Campeonato Carioca)\n  - Over 2.5: 58,5%\n  - BTTS: 58,5%\n  - Amostra pequena, confiança menor.\n\n- Lens vs Le Havre (French Ligue 1)\n  - Over 2.5: 57%\n  - BTTS: 50%\n\n- Botafogo vs Cruzeiro (Brazilian Serie A)\n  - Over 2.5: 57%\n  - BTTS: 43%\n  - Amostra pequena, confiança menor.\n\n- FC Köln vs Wolfsburg (German Bundesliga)\n  - Over 2.5: 50%\n  - BTTS: 50%\n\n- Espanyol vs Deportivo Alavés (Spanish La Liga)\n  - Over 2.5: 43%\n  - BTTS: 43%\n\n# Avisos Importantes\n\n- As apostas envolvem risco. Não aposte mais do que você pode perder.\n- A confiança é menor devido à amostra pequena.\n\nBoa sorte e bons estudos!",
+    date: "2026-01-30",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-01-29",
     title: "Diário do FutStats - 29 de janeiro de 2026",
     excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
