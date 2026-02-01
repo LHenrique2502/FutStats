@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-01",
+    title: "Diário de Apostas - 01/02/2026",
+    excerpt: "Confira as nossas recomendações de apostas para o dia de hoje!",
+    content: "Olá!\n\nBom dia! Hoje é mais um dia de futebol e apostas. Aqui estão as nossas recomendações para você.\n\n**Recomendações**\n\n- Getafe x Celta Vigo (Spanish La Liga): O Getafe tem uma probabilidade de 50% de ter mais de 2,5 gols marcados.\n- Manchester United x Fulham (English Premier League): O Manchester United tem uma probabilidade de 71% de ter mais de 2,5 gols marcados.\n- Itabirito x Tombense (Brazilian Campeonato Mineiro): O Itabirito tem uma probabilidade de 67% de ter mais de 2,5 gols marcados.\n- Strasbourg x Paris SG (French Ligue 1): O Strasbourg tem uma probabilidade de 64,5% de ter mais de 2,5 gols marcados.\n- Cremonese x Inter Milan (Italian Serie A): O Cremonese tem uma probabilidade de 57% de ter mais de 2,5 gols marcados.\n\n**Avisos de Risco**\n\n- As apostas envolvem risco. Certifique-se de que você está apostando dentro do seu orçamento.\n- A confiabilidade das nossas recomendações depende da qualidade da amostra de dados.\n\n**Despedida**\n\nBoa sorte e bons estudos!",
+    date: "2026-02-01",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-01-30",
     title: "Diário de Apostas - 30/01/2026",
     excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
