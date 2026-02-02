@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-02",
+    title: "Diário de Apostas - 02/02",
+    excerpt: "Aqui estão as nossas recomendações de apostas para hoje.",
+    content: "Bom dia!\n\nAqui estão as nossas recomendações de apostas para hoje. Lembre-se de que apostas envolvem risco.\n\n**Recomendações de Apostas**\n\n- **Mallorca x Sevilla**: A probabilidade de mais de 2,5 gols é de 64%. A probabilidade de ambos times marcarem gols é de 57%.\n- **Udinese x Roma**: A probabilidade de mais de 2,5 gols é de 43%. A probabilidade de ambos times marcarem gols é de 57%.\n- **Sunderland x Burnley**: A probabilidade de mais de 2,5 gols é de 43%. A probabilidade de ambos times marcarem gols é de 50%.\n\n**Value Bets**\n\n- **Udinese x Roma**: A probabilidade de vitória de Udinese é de 46,53%. O odd é de 4,2.\n- **Mallorca x Sevilla**: A probabilidade de vitória de Mallorca é de 41,73%. O odd é de 2,7.\n- **Sunderland x Burnley**: A probabilidade de vitória de Sunderland é de 41,73%. O odd é de 1,8.\n\n**Avisos**\n\n- A amostra de dados para o jogo **Madureira x Vasco da Gama** é pequena e a confiança é menor.\n- A probabilidade de mais de 2,5 gols no jogo **Madureira x Vasco da Gama** é de 21,5%. A probabilidade de ambos times marcarem gols é de 14,5%.\n\nBoa sorte e bons estudos!",
+    date: "2026-02-02",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-01",
     title: "Diário de Apostas - 01/02/2026",
     excerpt: "Confira as nossas recomendações de apostas para o dia de hoje!",
