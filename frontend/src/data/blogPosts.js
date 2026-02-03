@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-03",
+    title: "Diário de Apostas - 03/02",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia 03/02.",
+    content: "Bom dia!\n\nAqui estão as nossas recomendações de apostas para o dia 03/02.\n\n**Recomendações de Apostas**\n\n- Hull City x Watford: Over 2.5 (57%)\n- Sheffield United x Oxford United: Over 2.5 (64%)\n- Bologna x AC Milan: Over 2.5 (50%)\n- Blackburn Rovers x Sheffield Wednesday: BTTS (50%)\n- Portsmouth x Ipswich Town: BTTS (50%)\n\n**Value Bets**\n\n- Bologna x AC Milan: Vitória Bologna (51,33% de probabilidade, 3,0 de odd)\n- Bologna x AC Milan: Empate (27% de probabilidade, 3,2 de odd)\n- Bologna x AC Milan: Vitória AC Milan (20,33% de probabilidade, 2,4 de odd)\n\n**Aviso de Risco**\n\nAs apostas envolvem risco. Não aposte mais do que você pode perder.\n\n**Boa sorte e bons estudos!**",
+    date: "2026-02-03",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-02",
     title: "Diário de Apostas - 02/02",
     excerpt: "Aqui estão as nossas recomendações de apostas para hoje.",
