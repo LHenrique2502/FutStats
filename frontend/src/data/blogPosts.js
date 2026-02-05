@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-05",
+    title: "Diário de Apostas - 05/02",
+    excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
+    content: "Bom dia!\n\nHoje é um dia cheio de jogos emocionantes. Aqui estão as nossas recomendações para o dia de hoje:\n\n- **Bahia x Fluminense**: A probabilidade de mais de 2,5 gols é de 57%. A probabilidade de ambos os times marcarem gols é de 43%.\n- **Grêmio x Botafogo**: A probabilidade de mais de 2,5 gols é de 50%. A probabilidade de ambos os times marcarem gols é de 36%.\n- **Palmeiras x Vitória**: A probabilidade de mais de 2,5 gols é de 43%. A probabilidade de ambos os times marcarem gols é de 36%.\n- **Corinthians x Capivariano**: A probabilidade de mais de 2,5 gols é de 38%. A probabilidade de ambos os times marcarem gols é de 38%. **Observação:** A amostra é pequena e a confiança é menor devido ao número limitado de jogos.\n- **Vasco da Gama x Chapecoense**: A probabilidade de mais de 2,5 gols é de 21,5%. A probabilidade de ambos os times marcarem gols é de 14,5%. **Observação:** A amostra é pequena e a confiança é menor devido ao número limitado de jogos.\n\nApostas envolvem risco. É importante lembrar que as probabilidades podem variar ao longo do tempo.\n\nBoa sorte e bons estudos!",
+    date: "2026-02-05",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-03",
     title: "Diário de Apostas - 03/02",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia 03/02.",
