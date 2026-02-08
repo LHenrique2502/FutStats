@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-08",
+    title: "Diário de Apostas - 08/02/2026",
+    excerpt: "Confira as nossas recomendações de apostas para o dia de hoje.",
+    content: "Bom dia!\n\nOlá, amigos do FutStats! Hoje é mais um dia de futebol emocionante e apostas interessantes. Vamos começar com as nossas recomendações de apostas para o dia de hoje.\n\n**Top Matches**\n\n- Bayern Munich x Hoffenheim (German Bundesliga)\n- Le Havre x Strasbourg (French Ligue 1)\n- Valencia x Real Madrid (Spanish La Liga)\n- Brighton and Hove Albion x Crystal Palace (English Premier League)\n- Cruzeiro x América Mineiro (Brazilian Campeonato Mineiro)\n- Fluminense x Maricá (Brazilian Campeonato Carioca)\n\n**Over 2.5**\n\n- Bayern Munich x Hoffenheim: 71,5%\n- Le Havre x Strasbourg: 64,5%\n- Valencia x Real Madrid: 64%\n- Brighton and Hove Albion x Crystal Palace: 64%\n- Cruzeiro x América Mineiro: 45%\n- Fluminense x Maricá: 62%\n\n**BTTS**\n\n- Bayern Munich x Hoffenheim: 43%\n- Le Havre x Strasbourg: 50%\n- Valencia x Real Madrid: 50%\n- Brighton and Hove Albion x Crystal Palace: 64%\n- Cruzeiro x América Mineiro: 62%\n- Fluminense x Maricá: 62%\n\n**Value Bets**\n\n- Bologna x Parma: Vitória Bologna (1,67, 57,73%)\n- Bayern Munich x Hoffenheim: Vitória Bayern Munich (1,25, 51,33%)\n- Atlético Madrid x Real Betis: Vitória Atlético Madrid (1,48, 48,13%)\n- Brighton and Hove Albion x Crystal Palace: Vitória Brighton and Hove Albion (2, 48,13%)\n- Valencia x Real Madrid: Vitória Real Madrid (1,61, 44,33%)\n- Deportivo Alavés x Getafe: Vitória Deportivo Alavés (2,4, 43,33%)\n- Nice x Monaco: Vitória Nice (3,2, 43,33%)\n- Athletic Bilbao x Levante: Vitória Athletic Bilbao (1,65, 41,73%)\n\n**Aviso de Risco**\n\nLembre-se de que as apostas envolvem risco e não há garantia de vitória. É importante fazer apostas responsáveis e dentro do seu orçamento.\n\nBoa sorte e bons estudos!\n\nAté amanhã!",
+    date: "2026-02-08",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-05",
     title: "Diário de Apostas - 05/02",
     excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
