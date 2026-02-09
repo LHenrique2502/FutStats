@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-09",
+    title: "Diário de Apostas - 09/02/2026",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
+    content: "Bom dia!\n\nHoje é mais um dia de futebol emocionante, com várias partidas importantes em diferentes ligas. Aqui estão as nossas recomendações de apostas para o dia de hoje.\n\n**Recomendações de Apostas**\n\n- **Sheffield United x Middlesbrough**: A probabilidade de mais de 2,5 gols é de 57%. Além disso, a probabilidade de ambos os times marcarem gols é de 64%.\n- **Atalanta x Cremonese**: A probabilidade de mais de 2,5 gols é de 28,5%. Além disso, a probabilidade de ambos os times marcarem gols é de 64%.\n- **Villarreal x Espanyol**: A probabilidade de mais de 2,5 gols é de 50%. Além disso, a probabilidade de ambos os times marcarem gols é de 43%.\n- **Roma x Cagliari**: A probabilidade de mais de 2,5 gols é de 43%. Além disso, a probabilidade de ambos os times marcarem gols é de 50%.\n\n**Value Bets**\n\n- **Vitória Villarreal**: A probabilidade calculada é de 51,33% e o odd é de 1,73.\n- **Vitória Roma**: A probabilidade calculada é de 44,93% e o odd é de 1,5.\n- **Vitória Atalanta**: A probabilidade calculada é de 38,53% e o odd é de 1,36.\n- **Empate Atalanta x Cremonese**: A probabilidade calculada é de 28,2% e o odd é de 5.\n- **Empate Villarreal x Espanyol**: A probabilidade calculada é de 27% e o odd é de 4.\n- **Vitória Cagliari**: A probabilidade calculada é de 26,73% e o odd é de 7.\n\n**Aviso de Risco**\n\nLembre-se de que as apostas envolvem risco e não há garantia de vitória. É importante fazer apostas responsáveis e dentro do seu orçamento.\n\nBoa sorte e bons estudos!",
+    date: "2026-02-09",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-08",
     title: "Diário de Apostas - 08/02/2026",
     excerpt: "Confira as nossas recomendações de apostas para o dia de hoje.",
