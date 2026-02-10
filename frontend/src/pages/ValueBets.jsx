@@ -152,7 +152,7 @@ const ValueBets = () => {
                   onClick={() =>
                     trackEvent('match_click', {
                       match_id: String(match.id),
-                      source: 'value_bets_list',
+                      ui_source: 'value_bets_list',
                     })
                   }
                 >

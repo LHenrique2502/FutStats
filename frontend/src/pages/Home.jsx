@@ -101,7 +101,7 @@ const Home = () => {
                     size="lg"
                     className="min-w-[240px]"
                     onClick={() =>
-                      trackEvent('cta_click_partidas', { source: 'home_hero' })
+                      trackEvent('cta_click_partidas', { ui_source: 'home_hero' })
                     }
                   >
                     Explorar Jogos do Dia
@@ -113,7 +113,7 @@ const Home = () => {
                     variant="outline"
                     className="min-w-[240px]"
                     onClick={() =>
-                      trackEvent('cta_click_valuebets', { source: 'home_hero' })
+                      trackEvent('cta_click_valuebets', { ui_source: 'home_hero' })
                     }
                   >
                     Ver Probabilidades
@@ -127,7 +127,7 @@ const Home = () => {
                     size="lg"
                     className="min-w-[240px]"
                     onClick={() =>
-                      trackEvent('cta_click_valuebets', { source: 'home_hero' })
+                      trackEvent('cta_click_valuebets', { ui_source: 'home_hero' })
                     }
                   >
                     Ver Probabilidades do Dia
@@ -139,7 +139,7 @@ const Home = () => {
                     variant="outline"
                     className="min-w-[240px]"
                     onClick={() =>
-                      trackEvent('cta_click_partidas', { source: 'home_hero' })
+                      trackEvent('cta_click_partidas', { ui_source: 'home_hero' })
                     }
                   >
                     Ver Partidas de Hoje
@@ -153,7 +153,7 @@ const Home = () => {
               to="/metodologia"
               className="text-sm text-muted-foreground hover:text-primary transition-colors"
               onClick={() =>
-                trackEvent('cta_click_metodologia', { source: 'home_hero' })
+                trackEvent('cta_click_metodologia', { ui_source: 'home_hero' })
               }
             >
               Como calculamos as probabilidades →
@@ -186,7 +186,7 @@ const Home = () => {
                         onClick={() =>
                           trackEvent('match_click', {
                             match_id: String(match.id),
-                            source: 'home_carousel',
+                            ui_source: 'home_carousel',
                           })
                         }
                       >
@@ -261,7 +261,7 @@ const Home = () => {
                   <Button 
                     variant="ghost" 
                     className={viewAllButtonClass}
-                    onClick={() => trackEvent('cta_click_partidas', { source: 'home_proximas_partidas' })}
+                    onClick={() => trackEvent('cta_click_partidas', { ui_source: 'home_proximas_partidas' })}
                   >
                     Ver tudo
                   </Button>
@@ -291,7 +291,7 @@ const Home = () => {
                 onClick={() =>
                   trackEvent('match_click', {
                     match_id: String(insight.id),
-                    source: 'home_top_probabilities',
+                    ui_source: 'home_top_probabilities',
                   })
                 }
               >
@@ -309,7 +309,7 @@ const Home = () => {
               <Button
                 variant="ghost"
                 className={viewAllButtonClass}
-                onClick={() => trackEvent('cta_click_valuebets', { source: 'home_maiores_probabilidades' })}
+                onClick={() => trackEvent('cta_click_valuebets', { ui_source: 'home_maiores_probabilidades' })}
               >
                 Ver tudo
               </Button>
