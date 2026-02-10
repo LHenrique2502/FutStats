@@ -339,7 +339,7 @@ const Match = () => {
                     <Button
                       variant="outline"
                       className="gap-2"
-                      onClick={() => trackEvent('cta_click_metodologia', { source: 'match_por_que' })}
+                      onClick={() => trackEvent('cta_click_metodologia', { ui_source: 'match_por_que' })}
                     >
                       Entender a metodologia
                     </Button>

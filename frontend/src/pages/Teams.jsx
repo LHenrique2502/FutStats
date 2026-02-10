@@ -49,7 +49,7 @@ const Teams = () => {
               to={`/team/${team.id}`}
               className="bg-card border border-border rounded-lg p-6 hover:border-primary hover:glow-subtle transition-all group"
               onClick={() =>
-                trackEvent('team_click', { team_id: String(team.id), source: 'teams_list' })
+                trackEvent('team_click', { team_id: String(team.id), ui_source: 'teams_list' })
               }
             >
               <div className="space-y-4">

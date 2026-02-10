@@ -51,7 +51,7 @@ const Favoritos = () => {
               <Link to="/value-bets">
                 <Button
                   onClick={() =>
-                    trackEvent('cta_click_valuebets', { source: 'favoritos_empty' })
+                    trackEvent('cta_click_valuebets', { ui_source: 'favoritos_empty' })
                   }
                 >
                   Ver Probabilidades do Dia
@@ -61,7 +61,7 @@ const Favoritos = () => {
                 <Button
                   variant="outline"
                   onClick={() =>
-                    trackEvent('cta_click_partidas', { source: 'favoritos_empty' })
+                    trackEvent('cta_click_partidas', { ui_source: 'favoritos_empty' })
                   }
                 >
                   Ver Partidas

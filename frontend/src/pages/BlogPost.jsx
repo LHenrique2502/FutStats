@@ -242,7 +242,7 @@ const BlogPost = () => {
                 <Button
                   className="w-full sm:w-auto"
                   onClick={() =>
-                    trackEvent('cta_click_valuebets', { source: 'blog_post' })
+                    trackEvent('cta_click_valuebets', { ui_source: 'blog_post' })
                   }
                 >
                   Ver Probabilidades do Dia
@@ -253,7 +253,7 @@ const BlogPost = () => {
                   variant="outline"
                   className="w-full sm:w-auto"
                   onClick={() =>
-                    trackEvent('cta_click_partidas', { source: 'blog_post' })
+                    trackEvent('cta_click_partidas', { ui_source: 'blog_post' })
                   }
                 >
                   Ver Partidas
@@ -264,7 +264,7 @@ const BlogPost = () => {
                   variant="ghost"
                   className="w-full sm:w-auto"
                   onClick={() =>
-                    trackEvent('cta_click_metodologia', { source: 'blog_post' })
+                    trackEvent('cta_click_metodologia', { ui_source: 'blog_post' })
                   }
                 >
                   Ler Metodologia

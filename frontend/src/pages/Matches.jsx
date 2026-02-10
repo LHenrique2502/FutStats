@@ -88,7 +88,7 @@ const Matches = () => {
               onClick={() =>
                 trackEvent('match_click', {
                   match_id: String(match.id),
-                  source: 'matches_list',
+                  ui_source: 'matches_list',
                 })
               }
             >
