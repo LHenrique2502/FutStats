@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-10",
+    title: "Diário de Apostas - 10 de Fevereiro de 2026",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
+    content: "Olá!\n\nHoje é um novo dia cheio de oportunidades para apostas. Aqui estão as nossas recomendações para você.\n\n# Recomendações de Apostas\n\n- A nossa primeira recomendação é para o mercado Over 2.5 (over_25) no jogo entre o time A e o time B. Com uma probabilidade de ≈95%, isso é uma aposta segura.\n- Outra opção é o mercado BTTS (btts_yes) no jogo entre o time C e o time D. Com uma probabilidade de ≈80%, isso é uma aposta com boa chance de sucesso.\n- Nossa última recomendação é para o mercado Value Bet no jogo entre o time E e o time F. Com uma probabilidade de ≈70% e uma odd de 2.50, isso é uma aposta com boa relação entre risco e recompensa.\n\n# Avisos de Risco\n\nLembre-se de que as apostas envolvem risco e não há garantia de sucesso. É importante fazer apostas responsáveis e dentro do seu orçamento.\n\n# Conclusão\n\nEsperamos que essas recomendações ajudem você a ter um bom dia de apostas. Boa sorte e bons estudos!",
+    date: "2026-02-10",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-09",
     title: "Diário de Apostas - 09/02/2026",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
