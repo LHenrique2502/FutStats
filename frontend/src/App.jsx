@@ -53,6 +53,10 @@ const App = () => (
             path="/odds/:leagueSlug/:market/hoje"
             element={<LeagueMarketToday />}
           />
+          <Route
+            path="/odds/:leagueSlug/:market/:date"
+            element={<LeagueMarketToday />}
+          />
           <Route path="/ferramentas" element={<Tools />} />
           <Route
             path="/ferramentas/probabilidade-implicita"

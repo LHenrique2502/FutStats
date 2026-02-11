@@ -131,11 +131,32 @@ async function main() {
     ...leagueSeo.flatMap((l) => {
       const slug = l?.slug;
       if (!slug) return [];
-      return [
+      const base = [
         { path: `/odds/${slug}/over-25/hoje`, changefreq: 'daily', priority: 0.8 },
         { path: `/odds/${slug}/btts/hoje`, changefreq: 'daily', priority: 0.8 },
         { path: `/odds/${slug}/1x2/hoje`, changefreq: 'daily', priority: 0.7 },
       ];
+      // Também gera alguns dias futuros para rotas dinâmicas por data (sem explodir URLs).
+      const daysForward = 7;
+      const markets = ['over-25', 'btts', '1x2'];
+      const today = new Date();
+      const dated = [];
+      for (let i = 0; i <= daysForward; i += 1) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        const iso = `${yyyy}-${mm}-${dd}`;
+        for (const m of markets) {
+          dated.push({
+            path: `/odds/${slug}/${m}/${iso}`,
+            changefreq: 'daily',
+            priority: 0.6,
+          });
+        }
+      }
+      return [...base, ...dated];
     }),
     { path: '/ferramentas', changefreq: 'monthly', priority: 0.6 },
     {

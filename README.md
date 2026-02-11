@@ -124,6 +124,11 @@ O frontend usa algumas variáveis (arquivo `.env` dentro de `frontend/`):
 
 > Dica: se você vir `https://example.com` no `robots.txt`/`sitemap.xml`, é porque `VITE_SITE_URL`/`SITE_URL` não foram definidos no ambiente de build.
 
+#### ⚙️ Variáveis de ambiente (Backend / Odds)
+
+- `DATABASE_URL`: conexão com o banco (usada também no GitHub Actions).
+- `ODDS_API_KEY`: chave da The Odds API (necessária para `python manage.py importar_odds`).
+
 ---
 
 ## 📈 Páginas de alto tráfego (odds/value)
@@ -135,6 +140,28 @@ Rotas novas adicionadas no frontend:
 - ` /btts-odds-hoje `: recorte do dia para BTTS
 - ` /1x2-odds-hoje `: recorte do dia para 1X2
 - ` /ferramentas ` e ` /guias `: calculadoras + páginas evergreen
+
+### Rotas dinâmicas por liga/mercado/data
+
+- ` /odds/:leagueSlug/:market/hoje ` (ex.: `/odds/brasileirao-a/over-25/hoje`)
+- ` /odds/:leagueSlug/:market/YYYY-MM-DD ` (ex.: `/odds/brasileirao-a/over-25/2026-02-13`)
+
+### Rotina recomendada (para não ficar lento)
+
+Para evitar cálculo em tempo real (e manter o site rápido), a ideia é:
+
+1. **Importar odds** e salvar em `MatchOdds`
+2. **Pré-calcular análises** (probabilidades/insights/best odds) e salvar em `MatchAnalysis`
+
+Comandos:
+
+```bash
+# 1) Importa odds para hoje + próximos 3 dias
+python manage.py importar_odds --days 3
+
+# 2) Pré-calcula análises para hoje + próximos 3 dias
+python manage.py precomputar_analises --days-ahead 3 --sample-limit 5 --force
+```
 
 ---
 

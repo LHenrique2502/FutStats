@@ -14,7 +14,17 @@ from rest_framework.decorators import api_view
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.db.models import Avg, Count, Q, F, Sum
-from .models import League, Team, Player, Match, MatchEvent, TeamStatistics
+from .models import (
+    League,
+    Team,
+    Player,
+    Match,
+    MatchEvent,
+    TeamStatistics,
+    MatchOdds,
+    BetRecommendation,
+    MatchAnalysis,
+)
 from dotenv import load_dotenv
 import os
 import asyncio
@@ -151,11 +161,7 @@ def listar_partidas(request):
 
 @api_view(["GET"])
 def matches_today(request):
-    from .utils import preload_ultimos_jogos, gerar_insights_rapidos
     from datetime import datetime, time
-
-    # ✅ carregamos o cache APENAS UMA VEZ
-    cache = preload_ultimos_jogos()
 
     # Calcular início e fim do dia de hoje
     hoje = timezone.now().date()
@@ -169,8 +175,15 @@ def matches_today(request):
         .order_by("date")
     )
 
+    match_ids = list(matches.values_list("id", flat=True))
+    analyses = {
+        a.match_id: a
+        for a in MatchAnalysis.objects.filter(match_id__in=match_ids)
+    }
+
     results = []
     for match in matches:
+        a = analyses.get(match.id)
         results.append({
             "id": match.id,
             "league": match.league.name,
@@ -188,8 +201,8 @@ def matches_today(request):
                 "logo": match.away_team.logo,
             },
 
-            # ✅ insights agora usam CACHE
-            "insights": gerar_insights_rapidos(match, cache),
+            # insights pré-calculados (se não existir análise ainda, retorna lista vazia)
+            "insights": a.insights if a else [],
         })
 
     return Response(results)
@@ -205,8 +218,6 @@ def match_summary(request, id):
     - "Por que essa probabilidade?" (amostra e taxas)
     - insights e dados básicos do jogo
     """
-    from .utils import preload_ultimos_jogos, gerar_insights_rapidos
-
     try:
         match = (
             Match.objects
@@ -216,31 +227,16 @@ def match_summary(request, id):
     except Match.DoesNotExist:
         return Response({"detail": "Partida não encontrada."}, status=404)
 
-    sample_limit = int(request.GET.get("sample_limit", 5))
-    sample_limit = max(1, min(20, sample_limit))
-
-    cache = preload_ultimos_jogos(limit=sample_limit)
-    home = match.home_team
-    away = match.away_team
-
-    home_games = cache.get(home.id, []) or []
-    away_games = cache.get(away.id, []) or []
-
-    home_over25 = calcular_over25(home, cache)
-    away_over25 = calcular_over25(away, cache)
-    home_btts = calcular_btts(home, cache)
-    away_btts = calcular_btts(away, cache)
-
-    over25_prob = (home_over25 + away_over25) / 2
-    btts_prob = (home_btts + away_btts) / 2
-
-    min_sample = min(len(home_games), len(away_games))
-    if min_sample >= sample_limit:
-        sample_quality = "boa"
-    elif min_sample >= max(3, sample_limit - 2):
-        sample_quality = "média"
-    else:
-        sample_quality = "baixa"
+    analysis = MatchAnalysis.objects.filter(match=match).first()
+    if not analysis:
+        # Não recalcular em tempo real (performance). Use `precomputar_analises`.
+        return Response(
+            {
+                "detail": "Análise ainda não foi pré-calculada para esta partida.",
+                "match_id": match.id,
+            },
+            status=404,
+        )
 
     # Formatar data: se hora for 00:00, mostrar apenas data
     match_date = match.date
@@ -257,35 +253,19 @@ def match_summary(request, id):
         "date": date_str,
         "time": time_str,
         "homeTeam": {
-            "id": home.id,
-            "name": home.name,
-            "logo": home.logo,
+            "id": match.home_team.id,
+            "name": match.home_team.name,
+            "logo": match.home_team.logo,
         },
         "awayTeam": {
-            "id": away.id,
-            "name": away.name,
-            "logo": away.logo,
+            "id": match.away_team.id,
+            "name": match.away_team.name,
+            "logo": match.away_team.logo,
         },
-        "probabilities": {
-            "over_25": round(float(over25_prob), 2),
-            "btts_yes": round(float(btts_prob), 2),
-        },
-        "team_rates": {
-            "home": {
-                "sample_size": len(home_games),
-                "over_25": int(home_over25),
-                "btts_yes": int(home_btts),
-            },
-            "away": {
-                "sample_size": len(away_games),
-                "over_25": int(away_over25),
-                "btts_yes": int(away_btts),
-            },
-            "sample_limit": sample_limit,
-            "quality": sample_quality,
-        },
-        "insights": gerar_insights_rapidos(match, cache),
-        "generated_at": timezone.now().isoformat(),
+        "probabilities": analysis.probabilities,
+        "team_rates": analysis.team_rates,
+        "insights": analysis.insights,
+        "generated_at": analysis.computed_at.isoformat() if analysis.computed_at else None,
     })
 
 
@@ -376,8 +356,6 @@ def probabilities_today(request):
     """
     from datetime import datetime, time
 
-    cache = preload_ultimos_jogos()
-
     hoje = timezone.now().date()
     inicio_do_dia = timezone.make_aware(datetime.combine(hoje, time.min))
     fim_do_dia = timezone.make_aware(datetime.combine(hoje, time.max))
@@ -389,19 +367,24 @@ def probabilities_today(request):
         .order_by("date")
     )
 
+    match_ids = list(matches.values_list("id", flat=True))
+    analyses = {
+        a.match_id: a
+        for a in MatchAnalysis.objects.filter(match_id__in=match_ids)
+    }
+
     results = []
     for match in matches:
-        home = match.home_team
-        away = match.away_team
-
-        over25_prob = (calcular_over25(home, cache) + calcular_over25(away, cache)) / 2
-        btts_prob = (calcular_btts(home, cache) + calcular_btts(away, cache)) / 2
-
-        results.append({
-            "match_id": match.id,
-            "over_25": round(float(over25_prob), 2),
-            "btts_yes": round(float(btts_prob), 2),
-        })
+        a = analyses.get(match.id)
+        if not a:
+            continue
+        results.append(
+            {
+                "match_id": match.id,
+                "over_25": a.probabilities.get("over_25"),
+                "btts_yes": a.probabilities.get("btts_yes"),
+            }
+        )
 
     return Response(results)
 
@@ -416,21 +399,27 @@ def odds_today(request):
     - league: nome exato da liga (opcional)
     - league_contains: substring (case-insensitive) do nome da liga (opcional)
     - days_ahead: janela a partir de hoje (default: 1 = apenas hoje, max: 7)
+    - date: data alvo em YYYY-MM-DD (opcional). Se informado, ignora days_ahead.
     """
     from datetime import datetime, time
-    from .utils import preload_ultimos_jogos
-    from .models import MatchOdds
 
     league = request.GET.get("league")
     league_contains = request.GET.get("league_contains")
+    date_str = (request.GET.get("date") or "").strip()
     days_ahead = int(request.GET.get("days_ahead", 1) or 1)
     days_ahead = max(1, min(days_ahead, 7))
 
-    cache = preload_ultimos_jogos()
+    if date_str:
+        try:
+            target_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+        except ValueError:
+            target_date = None
+    else:
+        target_date = None
 
-    hoje = timezone.now().date()
-    inicio = timezone.make_aware(datetime.combine(hoje, time.min))
-    fim = inicio + timedelta(days=days_ahead)
+    base_date = target_date or timezone.now().date()
+    inicio = timezone.make_aware(datetime.combine(base_date, time.min))
+    fim = inicio + timedelta(days=1 if target_date else days_ahead)
 
     matches_qs = (
         Match.objects.select_related("home_team", "away_team", "league")
@@ -447,98 +436,33 @@ def odds_today(request):
         return Response([])
 
     match_ids = [m.id for m in matches]
-    odds_qs = (
-        MatchOdds.objects.filter(match_id__in=match_ids)
-        .select_related("bookmaker")
-        .order_by("-last_updated")
-    )
-
-    markets = [
-        ("home_win", "home_win_odd"),
-        ("draw", "draw_odd"),
-        ("away_win", "away_win_odd"),
-        ("over_25", "over_25_odd"),
-        ("under_25", "under_25_odd"),
-        ("btts_yes", "btts_yes_odd"),
-        ("btts_no", "btts_no_odd"),
-    ]
-
-    best_by_match = {mid: {k: None for (k, _) in markets} for mid in match_ids}
-
-    def f(x):
-        return float(x) if x is not None else None
-
-    for row in odds_qs:
-        bm = row.bookmaker
-        for key, field in markets:
-            val = getattr(row, field)
-            if val is None:
-                continue
-            odd = f(val)
-            if odd is None:
-                continue
-            cur = best_by_match[row.match_id].get(key)
-            if cur is None or odd > cur["odd"]:
-                best_by_match[row.match_id][key] = {
-                    "odd": odd,
-                    "bookmaker": bm.name if bm else None,
-                    "is_brazilian": bool(getattr(bm, "is_brazilian", False)),
-                    "last_updated": row.last_updated.isoformat() if row.last_updated else None,
-                }
+    analyses = {
+        a.match_id: a
+        for a in MatchAnalysis.objects.filter(match_id__in=match_ids)
+    }
 
     results = []
     for match in matches:
-        home = match.home_team
-        away = match.away_team
-
-        # Probabilidades do FutStats
-        over25_prob = (calcular_over25(home, cache) + calcular_over25(away, cache)) / 2
-        btts_prob = (calcular_btts(home, cache) + calcular_btts(away, cache)) / 2
-
-        # Heurística simples para 1X2 (mesma ideia do betting_utils)
-        home_goals_avg = calcular_media_gols(home, cache)
-        away_goals_avg = calcular_media_gols(away, cache)
-
-        diff_home = home_goals_avg - away_goals_avg
-        base_prob = 33.33
-        home_advantage = 10
-        goal_diff_factor_home = diff_home * 8
-        home_win_prob = base_prob + home_advantage + goal_diff_factor_home
-        home_win_prob = max(15, min(75, home_win_prob))
-
-        diff_away = away_goals_avg - home_goals_avg
-        away_advantage = -5
-        goal_diff_factor_away = diff_away * 8
-        away_win_prob = base_prob + away_advantage + goal_diff_factor_away
-        away_win_prob = max(15, min(75, away_win_prob))
-
-        diff_abs = abs(home_goals_avg - away_goals_avg)
-        draw_prob = 30 - (diff_abs * 3)
-        draw_prob = max(20, min(35, draw_prob))
-
+        a = analyses.get(match.id)
+        if not a:
+            continue
         results.append({
             "id": match.id,
             "league": match.league.name if match.league else None,
             "date": match.date.strftime("%d/%m"),
             "time": match.date.strftime("%H:%M"),
             "homeTeam": {
-                "id": home.id,
-                "name": home.name,
-                "logo": home.logo,
+                "id": match.home_team.id,
+                "name": match.home_team.name,
+                "logo": match.home_team.logo,
             },
             "awayTeam": {
-                "id": away.id,
-                "name": away.name,
-                "logo": away.logo,
+                "id": match.away_team.id,
+                "name": match.away_team.name,
+                "logo": match.away_team.logo,
             },
-            "probabilities": {
-                "over_25": round(float(over25_prob), 2),
-                "btts_yes": round(float(btts_prob), 2),
-                "home_win": round(float(home_win_prob), 2),
-                "draw": round(float(draw_prob), 2),
-                "away_win": round(float(away_win_prob), 2),
-            },
-            "best_by_market": best_by_match.get(match.id) or {},
+            "probabilities": a.probabilities,
+            "best_by_market": a.best_by_market,
         })
 
     return Response(results)
@@ -1044,60 +968,117 @@ def value_bets(request):
     Retorna as melhores probabilidades de cada tipo de aposta bater
     Ordenadas por probabilidade calculada (maior primeiro)
     """
-    from .betting_utils import get_best_probabilities
-    
-    limit = int(request.GET.get('limit', 10))
-    probabilities = get_best_probabilities(limit)
-    
+    from datetime import datetime, time
+
+    limit = int(request.GET.get("limit", 25))
+    days_ahead = int(request.GET.get("days_ahead", 3))
+    days_ahead = max(1, min(days_ahead, 7))
+
+    hoje = timezone.now().date()
+    inicio = timezone.make_aware(datetime.combine(hoje, time.min))
+    fim = inicio + timedelta(days=days_ahead)
+
+    matches = list(
+        Match.objects.filter(date__gte=inicio, date__lt=fim)
+        .select_related("home_team", "away_team", "league")
+        .order_by("date")
+    )
+    if not matches:
+        return Response([])
+
+    match_ids = [m.id for m in matches]
+
+    analyses = {
+        a.match_id: a
+        for a in MatchAnalysis.objects.filter(match_id__in=match_ids)
+    }
+
+    odds_rows = (
+        MatchOdds.objects.filter(match_id__in=match_ids)
+        .select_related("bookmaker")
+        .order_by("-last_updated")
+    )
+
+    # Agrupar odds por match para montar available_bookmakers por mercado
+    odds_by_match = {}
+    for row in odds_rows:
+        odds_by_match.setdefault(row.match_id, []).append(row)
+
+    bet_name = {
+        "over_25": "Mais de 2.5 Gols",
+        "btts_yes": "Ambos Marcam (BTTS)",
+        "home_win": "Casa (1)",
+        "draw": "Empate (X)",
+        "away_win": "Fora (2)",
+    }
+
+    odd_field = {
+        "over_25": "over_25_odd",
+        "btts_yes": "btts_yes_odd",
+        "home_win": "home_win_odd",
+        "draw": "draw_odd",
+        "away_win": "away_win_odd",
+    }
+
+    def implied_prob(odd):
+        if not odd or odd <= 0:
+            return None
+        return round(100 / float(odd), 2)
+
     results = []
-    for prob in probabilities:
-        # Formatar data: se hora for 00:00, mostrar apenas data
-        match_date = prob["match"].date
-        if match_date.hour == 0 and match_date.minute == 0:
-            date_str = match_date.strftime("%d/%m")
-        else:
-            date_str = match_date.strftime("%d/%m %H:%M")
-        
-        # Buscar todas as casas disponíveis para este mercado
-        from .models import MatchOdds
-        all_odds_for_market = MatchOdds.objects.filter(
-            match=prob["match"],
-            **{f"{prob['bet_type']}_odd__isnull": False}
-        ).select_related('bookmaker')
-        
-        # Encontrar melhor odd e se é brasileira
-        best_odd = prob["odd"]
-        best_bookmaker = prob["bookmaker"]
-        is_brazilian = best_bookmaker.is_brazilian if best_bookmaker else False
-        
-        # Lista de todas as casas disponíveis
-        available_bookmakers = []
-        for match_odd in all_odds_for_market:
-            odd_value = getattr(match_odd, f"{prob['bet_type']}_odd")
-            if odd_value:
-                available_bookmakers.append({
-                    "name": match_odd.bookmaker.name,
-                    "odd": float(odd_value),
-                    "is_brazilian": match_odd.bookmaker.is_brazilian
-                })
-        
-        results.append({
-            "match_id": prob["match"].id,
-            "match": f"{prob['match'].home_team.name} x {prob['match'].away_team.name}",
-            "league": prob["match"].league.name,
-            "date": date_str,
-            "bet_type": prob["bet_type"],
-            "bet_name": prob["bet_name"],
-            "odd": float(prob["odd"]),
-            "calculated_probability": round(prob["calculated_probability"], 2),
-            "implied_probability": round(prob["implied_probability"], 2),
-            "difference": round(prob["difference"], 2),
-            "best_bookmaker": best_bookmaker.name if best_bookmaker else None,
-            "is_brazilian_bookmaker": is_brazilian,
-            "available_bookmakers": available_bookmakers,
-        })
-    
-    return Response(results)
+    for m in matches:
+        a = analyses.get(m.id)
+        if not a:
+            continue
+
+        best = a.best_by_market or {}
+        probs = a.probabilities or {}
+
+        for market in ["over_25", "btts_yes", "home_win", "draw", "away_win"]:
+            best_market = best.get(market)
+            if not best_market or best_market.get("odd") is None:
+                continue
+
+            odd = float(best_market["odd"])
+            implied = implied_prob(odd)
+            calc = probs.get(market)
+            if calc is None or implied is None:
+                continue
+
+            available = []
+            field = odd_field[market]
+            for row in odds_by_match.get(m.id, []):
+                val = getattr(row, field, None)
+                if val is None:
+                    continue
+                available.append(
+                    {
+                        "name": row.bookmaker.name if row.bookmaker else None,
+                        "odd": float(val),
+                        "is_brazilian": bool(getattr(row.bookmaker, "is_brazilian", False)),
+                    }
+                )
+
+            results.append(
+                {
+                    "match_id": m.id,
+                    "match": f"{m.home_team.name} x {m.away_team.name}",
+                    "league": m.league.name if m.league else None,
+                    "date": m.date.strftime("%d/%m %H:%M"),
+                    "bet_type": market,
+                    "bet_name": bet_name.get(market, market),
+                    "odd": round(odd, 2),
+                    "calculated_probability": float(calc),
+                    "implied_probability": float(implied),
+                    "difference": round(float(calc) - float(implied), 2),
+                    "best_bookmaker": best_market.get("bookmaker"),
+                    "is_brazilian_bookmaker": bool(best_market.get("is_brazilian")),
+                    "available_bookmakers": available,
+                }
+            )
+
+    results.sort(key=lambda r: r.get("calculated_probability", 0), reverse=True)
+    return Response(results[:limit])
 
 @api_view(["GET"])
 def available_bookmakers(request):

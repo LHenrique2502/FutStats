@@ -168,9 +168,6 @@ def get_best_probabilities(limit=10):
         date__lte=future_date
     ).select_related('home_team', 'away_team', 'league')
     
-    print(f"🔍 DEBUG: Buscando partidas entre {start_date.strftime('%d/%m/%Y %H:%M')} e {future_date.strftime('%d/%m/%Y %H:%M')}")
-    print(f"🔍 DEBUG: Encontradas {matches.count()} partidas futuras")
-    
     cache = preload_ultimos_jogos()
     all_probabilities = []
     
@@ -189,7 +186,6 @@ def get_best_probabilities(limit=10):
             continue
         
         matches_with_odds += 1
-        print(f"✅ DEBUG: {match.home_team.name} x {match.away_team.name} tem {odds_list.count()} odds")
         
         # Calcular probabilidades baseadas em estatísticas
         over25_prob = (calcular_over25(home, cache) + calcular_over25(away, cache)) / 2
@@ -199,48 +195,8 @@ def get_best_probabilities(limit=10):
         home_goals_avg = calcular_media_gols(home, cache)
         away_goals_avg = calcular_media_gols(away, cache)
         
-        # 🔍 LOGS DETALHADOS PARA DIAGNÓSTICO
-        home_jogos = cache.get(home.id, [])
-        away_jogos = cache.get(away.id, [])
-        
-        print(f"   📊 ESTATÍSTICAS DO TIME CASA ({home.name}):")
-        print(f"      - Jogos no cache: {len(home_jogos)}")
-        print(f"      - Jogos com placar: {sum(1 for j in home_jogos if j.home_score is not None and j.away_score is not None)}")
-        if home_jogos:
-            jogos_com_placar = [j for j in home_jogos if j.home_score is not None and j.away_score is not None]
-            if jogos_com_placar:
-                placares = []
-                for j in jogos_com_placar[:3]:
-                    if j.home_team_id == home.id:
-                        placares.append(f"{j.home_score}x{j.away_score}")
-                    else:
-                        placares.append(f"{j.away_score}x{j.home_score}")
-                print(f"      - Últimos placares: {placares}")
-        print(f"      - Média de gols: {home_goals_avg}")
-        print(f"      - Over 2.5: {calcular_over25(home, cache)}%")
-        
-        print(f"   📊 ESTATÍSTICAS DO TIME VISITANTE ({away.name}):")
-        print(f"      - Jogos no cache: {len(away_jogos)}")
-        print(f"      - Jogos com placar: {sum(1 for j in away_jogos if j.home_score is not None and j.away_score is not None)}")
-        if away_jogos:
-            jogos_com_placar = [j for j in away_jogos if j.home_score is not None and j.away_score is not None]
-            if jogos_com_placar:
-                placares = []
-                for j in jogos_com_placar[:3]:
-                    if j.home_team_id == away.id:
-                        placares.append(f"{j.home_score}x{j.away_score}")
-                    else:
-                        placares.append(f"{j.away_score}x{j.home_score}")
-                print(f"      - Últimos placares: {placares}")
-        print(f"      - Média de gols: {away_goals_avg}")
-        print(f"      - Over 2.5: {calcular_over25(away, cache)}%")
-        
-        print(f"   Prob Over 2.5: {over25_prob}%, Prob BTTS: {btts_prob}%")
-        print(f"   Média gols casa: {home_goals_avg}, visitante: {away_goals_avg}")
-        
         # Calcular diferença de gols
         diff_gols = home_goals_avg - away_goals_avg
-        print(f"   🔢 Diferença de gols: {diff_gols}")
         
         # Analisar cada odd disponível
         for match_odd in odds_list:
@@ -260,9 +216,6 @@ def get_best_probabilities(limit=10):
                         "bookmaker": bookmaker,
                         "difference": round(over25_prob - implied_prob, 2),
                     })
-                    print(f"   ✅ Over 2.5: odd {match_odd.over_25_odd}, prob calculada {over25_prob}%, implícita {implied_prob}%")
-            else:
-                print(f"   ⚠️ Over 2.5 odd não disponível para {bookmaker.name}")
             
             # BTTS (se disponível)
             if match_odd.btts_yes_odd:
@@ -296,12 +249,6 @@ def get_best_probabilities(limit=10):
                     home_win_prob = base_prob + home_advantage + goal_diff_factor
                     home_win_prob = max(15, min(75, home_win_prob))  # Limitar entre 15% e 75%
                     
-                    print(f"   🎯 CÁLCULO HOME WIN ({bookmaker.name}):")
-                    print(f"      - Base: {base_prob}%")
-                    print(f"      - Vantagem casa: +{home_advantage}%")
-                    print(f"      - Diferença gols ({diff_gols}): {goal_diff_factor}%")
-                    print(f"      - TOTAL: {home_win_prob}%")
-                    
                     all_probabilities.append({
                         "match": match,
                         "bet_type": "home_win",
@@ -325,12 +272,6 @@ def get_best_probabilities(limit=10):
                     
                     away_win_prob = base_prob + away_advantage + goal_diff_factor
                     away_win_prob = max(15, min(75, away_win_prob))
-                    
-                    print(f"   🎯 CÁLCULO AWAY WIN ({bookmaker.name}):")
-                    print(f"      - Base: {base_prob}%")
-                    print(f"      - Desvantagem fora: {away_advantage}%")
-                    print(f"      - Diferença gols ({diff_gols}): {goal_diff_factor}%")
-                    print(f"      - TOTAL: {away_win_prob}%")
                     
                     all_probabilities.append({
                         "match": match,
@@ -364,9 +305,6 @@ def get_best_probabilities(limit=10):
                         "difference": round(draw_prob - implied_prob, 2),
                     })
     
-    print(f"📊 DEBUG: Total de probabilidades encontradas (antes de agrupar): {len(all_probabilities)}")
-    print(f"📊 DEBUG: Partidas com odds: {matches_with_odds}, sem odds: {matches_without_odds}")
-    
     # Agrupar por (match, bet_type) e escolher a melhor odd para cada mercado
     # Usar um dicionário para agrupar: {(match_id, bet_type): melhor_probabilidade}
     grouped_probabilities = {}
@@ -387,8 +325,6 @@ def get_best_probabilities(limit=10):
     
     # Converter de volta para lista
     unique_probabilities = list(grouped_probabilities.values())
-    
-    print(f"📊 DEBUG: Total de probabilidades após agrupar: {len(unique_probabilities)}")
     
     # Ordenar por probabilidade calculada (maior primeiro)
     unique_probabilities.sort(key=lambda x: x["calculated_probability"], reverse=True)

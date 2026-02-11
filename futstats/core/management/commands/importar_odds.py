@@ -33,7 +33,8 @@ class Command(BaseCommand):
         smart = not options.get('no_smart', False)
         
         self.stdout.write("=" * 60)
-        self.stdout.write(self.style.SUCCESS("🎯 IMPORTANDO ODDS E ANALISANDO VALUE BETS"))
+        # Evitar emojis: no Windows (cp1252) pode causar UnicodeEncodeError no terminal.
+        self.stdout.write(self.style.SUCCESS("IMPORTANDO ODDS E ANALISANDO VALUE BETS"))
         self.stdout.write("=" * 60)
         
         # Importar odds
@@ -41,12 +42,12 @@ class Command(BaseCommand):
         
         # Analisar value bets
         self.stdout.write("\n" + "=" * 60)
-        self.stdout.write(self.style.SUCCESS("📊 ANALISANDO VALUE BETS..."))
+        self.stdout.write(self.style.SUCCESS("ANALISANDO VALUE BETS..."))
         self.stdout.write("=" * 60)
         
         recommendations = get_best_value_bets(limit=20)
         
-        self.stdout.write(f"\n✅ Encontradas {len(recommendations)} apostas com valor:\n")
+        self.stdout.write(f"\nEncontradas {len(recommendations)} apostas com valor:\n")
         
         for i, rec in enumerate(recommendations, 1):
             self.stdout.write(f"{i}. {rec.match}")
@@ -59,4 +60,4 @@ class Command(BaseCommand):
             self.stdout.write(f"   Casa: {rec.bookmaker.name if rec.bookmaker else 'N/A'}")
             self.stdout.write("")
         
-        self.stdout.write(self.style.SUCCESS("✅ Processo concluído!"))
+        self.stdout.write(self.style.SUCCESS("Processo concluído!"))

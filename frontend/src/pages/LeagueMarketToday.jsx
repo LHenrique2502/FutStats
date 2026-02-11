@@ -71,46 +71,55 @@ const FAQ = [
   },
 ];
 
-function marketMeta(displayLeague, marketSlug) {
+function marketMeta(displayLeague, marketSlug, dayLabel) {
+  const when = dayLabel || 'hoje';
   if (marketSlug === 'btts') {
     return {
       key: 'btts_yes',
-      title: `BTTS em ${displayLeague} hoje: melhores odds + edge`,
-      description: `Ranking de ${displayLeague} hoje para BTTS (Sim) com melhor odd, probabilidade implícita, nossa probabilidade e edge.`,
+      title: `BTTS em ${displayLeague} ${when}: melhores odds + edge`,
+      description: `Ranking de ${displayLeague} ${when} para BTTS (Sim) com melhor odd, probabilidade implícita, nossa probabilidade e edge.`,
       ga4Market: 'btts',
     };
   }
   if (marketSlug === '1x2') {
     return {
       key: '1x2',
-      title: `1X2 em ${displayLeague} hoje: odds + edge`,
-      description: `Odds de 1X2 (casa/empate/fora) em ${displayLeague} hoje, com probabilidade implícita e estimativa do FutStats.`,
+      title: `1X2 em ${displayLeague} ${when}: odds + edge`,
+      description: `Odds de 1X2 (casa/empate/fora) em ${displayLeague} ${when}, com probabilidade implícita e estimativa do FutStats.`,
       ga4Market: '1x2',
     };
   }
   return {
     key: 'over_25',
-    title: `Over 2.5 em ${displayLeague} hoje: melhores odds + edge`,
-    description: `Ranking de ${displayLeague} hoje para Over 2.5 com melhor odd, probabilidade implícita, nossa probabilidade e edge.`,
+    title: `Over 2.5 em ${displayLeague} ${when}: melhores odds + edge`,
+    description: `Ranking de ${displayLeague} ${when} para Over 2.5 com melhor odd, probabilidade implícita, nossa probabilidade e edge.`,
     ga4Market: 'over_25',
   };
 }
 
 const LeagueMarketToday = () => {
-  const { leagueSlug, market } = useParams();
+  const { leagueSlug, market, date } = useParams();
   const marketSlug = market || 'over-25';
+  const dayParam = date || 'hoje';
+  const dayLabel = useMemo(() => {
+    if (!dayParam || dayParam === 'hoje') return 'hoje';
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dayParam);
+    if (!m) return dayParam;
+    return `${m[3]}/${m[2]}`;
+  }, [dayParam]);
 
   const league = useMemo(() => {
     return leagueSeo.find((l) => l.slug === leagueSlug) || null;
   }, [leagueSlug]);
 
   const displayLeague = league?.displayName || 'Liga';
-  const meta = useMemo(
-    () => marketMeta(displayLeague, marketSlug),
-    [displayLeague, marketSlug]
-  );
+  const meta = useMemo(() => marketMeta(displayLeague, marketSlug, dayLabel), [
+    displayLeague,
+    marketSlug,
+    dayLabel,
+  ]);
 
-  const pathname = `/odds/${leagueSlug}/${marketSlug}/hoje`;
+  const pathname = `/odds/${leagueSlug}/${marketSlug}/${dayParam}`;
 
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
@@ -132,9 +141,12 @@ const LeagueMarketToday = () => {
       }
       setLoading(true);
       try {
-        const url = `${API_URL_BACK}odds/today/?league=${encodeURIComponent(
-          league.leagueName
-        )}&days_ahead=1`;
+        const url =
+          dayParam === 'hoje'
+            ? `${API_URL_BACK}odds/today/?league=${encodeURIComponent(league.leagueName)}&days_ahead=1`
+            : `${API_URL_BACK}odds/today/?league=${encodeURIComponent(
+                league.leagueName
+              )}&date=${encodeURIComponent(dayParam)}`;
         const res = await fetch(url);
         const data = await res.json();
         setItems(Array.isArray(data) ? data : []);
@@ -146,7 +158,7 @@ const LeagueMarketToday = () => {
       }
     };
     load();
-  }, [league?.leagueName]);
+  }, [league?.leagueName, dayParam]);
 
   const rows = useMemo(() => {
     const list = Array.isArray(items) ? items : [];

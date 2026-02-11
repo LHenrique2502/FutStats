@@ -11,7 +11,8 @@ from core.models import Match, MatchOdds, Bookmaker, League
 
 load_dotenv()
 
-ODDS_API_KEY = os.getenv("ODDS_API_KEY", "e37d55d58131f9ecc5909b7085a9644e")
+# Segurança: a chave deve vir do ambiente (.env / secrets). Não manter default no código.
+ODDS_API_KEY = os.getenv("ODDS_API_KEY")
 ODDS_API_BASE_URL = "https://api.the-odds-api.com/v4"
 
 # Lista de bookmakers brasileiros ou conhecidos no Brasil
@@ -99,7 +100,7 @@ async def get_available_bookmakers(sport_key, regions="us,uk", markets="h2h,tota
             
             return list(bookmakers)
         except Exception as e:
-            print(f"❌ Erro ao buscar bookmakers disponíveis: {e}")
+            print(f"Erro ao buscar bookmakers disponíveis: {e}")
             return []
 
 
@@ -108,6 +109,10 @@ async def fetch_odds_for_sport(sport_key, regions="us,uk", markets="h2h,totals")
     Busca odds para um esporte específico
     Nota: BTTS não está disponível no plano gratuito da The Odds API
     """
+    if not ODDS_API_KEY:
+        raise RuntimeError(
+            "ODDS_API_KEY não configurada. Defina ODDS_API_KEY no ambiente (ou .env)."
+        )
     url = f"{ODDS_API_BASE_URL}/sports/{sport_key}/odds"
     params = {
         "apiKey": ODDS_API_KEY,
@@ -116,7 +121,7 @@ async def fetch_odds_for_sport(sport_key, regions="us,uk", markets="h2h,totals")
         "oddsFormat": "decimal",  # Usar formato decimal
     }
     
-    print(f"🔗 Buscando odds: {sport_key}")
+    print(f"Buscando odds: {sport_key}")
     
     async with httpx.AsyncClient(timeout=30.0) as client:
         try:
@@ -126,14 +131,14 @@ async def fetch_odds_for_sport(sport_key, regions="us,uk", markets="h2h,totals")
             # Verificar quota
             remaining = response.headers.get("x-requests-remaining", "unknown")
             used = response.headers.get("x-requests-used", "unknown")
-            print(f"📊 Quota: {used} usadas, {remaining} restantes")
+            print(f"Quota: {used} usadas, {remaining} restantes")
             
             data = response.json()
-            print(f"📥 Recebidos {len(data) if isinstance(data, list) else 0} eventos da API")
+            print(f"Recebidos {len(data) if isinstance(data, list) else 0} eventos da API")
             
             # Debug: mostrar primeiros eventos
             if isinstance(data, list) and len(data) > 0:
-                print(f"📋 Primeiro evento recebido:")
+                print("Primeiro evento recebido:")
                 print(f"   Home: {data[0].get('home_team', 'N/A')}")
                 print(f"   Away: {data[0].get('away_team', 'N/A')}")
                 print(f"   Data: {data[0].get('commence_time', 'N/A')}")
@@ -141,9 +146,9 @@ async def fetch_odds_for_sport(sport_key, regions="us,uk", markets="h2h,totals")
             
             return data
         except httpx.HTTPStatusError as e:
-            print(f"❌ Erro HTTP ao buscar odds: {e.response.status_code}")
+            print(f"Erro HTTP ao buscar odds: {e.response.status_code}")
             if e.response.status_code == 429:
-                print("⚠️ Rate limit atingido. Aguarde alguns segundos.")
+                print("Rate limit atingido. Aguarde alguns segundos.")
             try:
                 error_text = e.response.text[:200]
                 print(f"   Resposta: {error_text}")
@@ -151,7 +156,7 @@ async def fetch_odds_for_sport(sport_key, regions="us,uk", markets="h2h,totals")
                 pass
             return None
         except Exception as e:
-            print(f"❌ Erro ao buscar odds: {e}")
+            print(f"Erro ao buscar odds: {e}")
             import traceback
             traceback.print_exc()
             return None
@@ -164,7 +169,54 @@ def normalize_team_name(team_name):
     """
     if not team_name:
         return ""
-    return team_name.strip().lower().replace(" fc", "").replace(" cf", "").replace(" fc", "")
+
+    import re
+    import unicodedata
+
+    s = team_name.strip().lower()
+
+    # Remover acentos/diacríticos (ex.: Alavés -> Alaves)
+    s = unicodedata.normalize("NFKD", s)
+    s = "".join(ch for ch in s if not unicodedata.combining(ch))
+
+    # Padronizar símbolos e pontuação
+    s = s.replace("&", "and")
+    s = re.sub(r"[^\w\s]", " ", s)  # remove pontuação
+    s = re.sub(r"\s+", " ", s).strip()
+
+    # Remover sufixos/prefixos comuns
+    tokens_to_drop = {
+        "fc",
+        "cf",
+        "ac",
+        "sc",
+        "afc",
+        "cfc",
+        "club",
+        "de",
+        "da",
+        "do",
+        "the",
+        "ca",
+        "cd",
+        "ud",
+        "ss",
+        "as",
+        "st",
+    }
+    parts = [p for p in s.split(" ") if p and p not in tokens_to_drop]
+    s = " ".join(parts)
+
+    # Aliases conhecidos (diferenças comuns entre provedores)
+    aliases = {
+        "paris sg": "paris saint germain",
+        "psg": "paris saint germain",
+        "paris saint germain": "paris saint germain",
+        "borussia m gladbach": "borussia monchengladbach",
+        "b m gladbach": "borussia monchengladbach",
+        "inter": "inter milan",
+    }
+    return aliases.get(s, s)
 
 
 def find_matching_match(odds_event, matches):
@@ -251,18 +303,18 @@ async def process_and_save_odds(odds_data, league=None, days_ahead=1):
     days_ahead: quantos dias à frente buscar (padrão 1 = apenas hoje)
     """
     if not odds_data:
-        print("⚠️ Nenhum dado de odds recebido")
+        print("Nenhum dado de odds recebido")
         return
     
     if not isinstance(odds_data, list):
-        print(f"⚠️ Formato de dados inesperado: {type(odds_data)}")
+        print(f"Formato de dados inesperado: {type(odds_data)}")
         return
     
     # Obter lista de bookmakers permitidos
     allowed_bookmakers = get_allowed_bookmakers()
-    print(f"🔒 Filtrando bookmakers: {', '.join(allowed_bookmakers)}")
+    print(f"Filtrando bookmakers: {', '.join(allowed_bookmakers)}")
     
-    print(f"\n📊 Processando {len(odds_data)} eventos da API...")
+    print(f"\nProcessando {len(odds_data)} eventos da API...")
     
     # Buscar partidas de hoje até X dias à frente
     from datetime import timedelta
@@ -271,7 +323,7 @@ async def process_and_save_odds(odds_data, league=None, days_ahead=1):
     start_date = current_time.replace(hour=0, minute=0, second=0, microsecond=0)  # Início de hoje
     end_date = start_date + timedelta(days=days_ahead)  # Fim do período
     
-    print(f"📅 Buscando partidas entre {start_date.strftime('%d/%m/%Y %H:%M')} e {end_date.strftime('%d/%m/%Y %H:%M')}")
+    print(f"Buscando partidas entre {start_date.strftime('%d/%m/%Y %H:%M')} e {end_date.strftime('%d/%m/%Y %H:%M')}")
     
     matches_query = Match.objects.filter(
         date__gte=start_date,
@@ -280,13 +332,13 @@ async def process_and_save_odds(odds_data, league=None, days_ahead=1):
     
     if league:
         matches_query = matches_query.filter(league=league)
-        print(f"🔍 Filtrando por liga: {league.name}")
+        print(f"Filtrando por liga: {league.name}")
     
     matches = await sync_to_async(list)(matches_query)
-    print(f"📋 Encontradas {len(matches)} partidas no banco para matching")
+    print(f"Encontradas {len(matches)} partidas no banco para matching")
     
     if len(matches) == 0:
-        print("⚠️ Nenhuma partida encontrada no banco para o período!")
+        print("Nenhuma partida encontrada no banco para o período!")
         print(f"   Período: {start_date.strftime('%d/%m/%Y')} até {end_date.strftime('%d/%m/%Y')}")
         print("   Dica: Execute primeiro o comando para importar partidas")
         
@@ -298,7 +350,7 @@ async def process_and_save_odds(odds_data, league=None, days_ahead=1):
         return
     
     # Mostrar algumas partidas encontradas
-    print(f"\n📋 Exemplos de partidas encontradas:")
+    print("\nExemplos de partidas encontradas:")
     for match in matches[:3]:
         print(f"   - {match.home_team.name} x {match.away_team.name} ({match.date.strftime('%d/%m %H:%M')})")
     
@@ -424,9 +476,9 @@ async def process_and_save_odds(odds_data, league=None, days_ahead=1):
                 
                 if created:
                     saved_count += 1
-                    print(f"✅ Odds salvas: {match} - {bookmaker.name}")
+                    print(f"Odds salvas: {match} - {bookmaker.name}")
     
-    print(f"\n📊 Resumo:")
+    print("\nResumo:")
     print(f"   Eventos da API: {len(odds_data)}")
     print(f"   Matches encontrados: {matched_count}")
     print(f"   Odds salvas: {saved_count}")
@@ -434,7 +486,7 @@ async def process_and_save_odds(odds_data, league=None, days_ahead=1):
     
     # Mostrar alguns exemplos de eventos não encontrados
     if unmatched_events and len(unmatched_events) > 0:
-        print(f"\n⚠️ Exemplos de eventos não encontrados:")
+        print("\nExemplos de eventos não encontrados:")
         for i, event in enumerate(unmatched_events[:3], 1):
             print(f"   {i}. {event['home']} x {event['away']} ({event['date']})")
 
@@ -446,7 +498,7 @@ async def import_odds_for_league(league, days_ahead=1):
     """
     try:
         sport_key = get_sport_key_for_league(league.name)
-        print(f"\n🔍 Buscando odds para {league.name} (sport_key: {sport_key})")
+        print(f"\nBuscando odds para {league.name} (sport_key: {sport_key})")
         
         # Buscar apenas h2h e totals (btts não disponível no plano gratuito)
         odds_data = await fetch_odds_for_sport(sport_key, markets="h2h,totals")
@@ -454,9 +506,9 @@ async def import_odds_for_league(league, days_ahead=1):
         if odds_data:
             await process_and_save_odds(odds_data, league, days_ahead)
         else:
-            print(f"⚠️ Nenhuma odd encontrada para {league.name}")
+            print(f"Nenhuma odd encontrada para {league.name}")
     except Exception as e:
-        print(f"❌ Erro ao processar liga {league.name}: {e}")
+        print(f"Erro ao processar liga {league.name}: {e}")
         import traceback
         traceback.print_exc()
         raise  # Re-raise para que o contador de erros funcione
@@ -471,25 +523,25 @@ async def import_all_odds(days_ahead=1, force=False, smart=True):
     """
     from datetime import timedelta
     
-    print("\n🚀 Iniciando importação de odds...")
-    print(f"📅 Buscando odds para os próximos {days_ahead} dia(s)")
+    print("\nIniciando importação de odds...")
+    print(f"Buscando odds para os próximos {days_ahead} dia(s)")
     if smart and not force:
-        print("🧠 Modo inteligente ativado (verificando necessidade de atualização)")
+        print("Modo inteligente ativado (verificando necessidade de atualização)")
     if force:
-        print("⚡ Modo forçado ativado (atualizando todas as ligas)")
+        print("Modo forçado ativado (atualizando todas as ligas)")
     
     leagues = await sync_to_async(list)(
         League.objects.filter(name__in=LEAGUE_TO_SPORT_KEY.keys())
     )
     
     if not leagues:
-        print("⚠️ Nenhuma liga configurada encontrada.")
+        print("Nenhuma liga configurada encontrada.")
         all_leagues = await sync_to_async(list)(League.objects.values_list('name', flat=True))
         print(f"   Ligas no banco: {list(all_leagues)}")
         print(f"   Ligas configuradas: {list(LEAGUE_TO_SPORT_KEY.keys())}")
         return
     
-    print(f"✅ Encontradas {len(leagues)} ligas configuradas")
+    print(f"Encontradas {len(leagues)} ligas configuradas")
     
     requests_made = 0
     requests_skipped = 0
@@ -525,7 +577,7 @@ async def import_all_odds(days_ahead=1, force=False, smart=True):
                             break
                     
                     if not needs_update:
-                        print(f"⏭️  Pulando {league.name}: odds já atualizadas recentemente")
+                        print(f"Pulando {league.name}: odds já atualizadas recentemente")
                         requests_skipped += 1
                         continue
             
@@ -538,14 +590,14 @@ async def import_all_odds(days_ahead=1, force=False, smart=True):
             await asyncio.sleep(2)
         except Exception as e:
             requests_failed += 1
-            print(f"❌ Erro ao processar liga {league.name}: {e}")
+            print(f"Erro ao processar liga {league.name}: {e}")
             print(f"   Continuando com as próximas ligas...")
             # Continuar com a próxima liga mesmo se esta falhar
             continue
     
-    print(f"\n📊 Estatísticas de quota:")
+    print("\nEstatísticas de quota:")
     print(f"   Requisições feitas: {requests_made}")
     print(f"   Requisições economizadas: {requests_skipped}")
     print(f"   Requisições com erro: {requests_failed}")
     print(f"   Economia estimada: {requests_skipped} créditos")
-    print("\n✅ Importação de odds concluída!")
+    print("\nImportação de odds concluída!")

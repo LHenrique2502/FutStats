@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.timezone import now
+from django.utils import timezone
 
 
 class League(models.Model):
@@ -190,3 +191,40 @@ class BetRecommendation(models.Model):
     
     def __str__(self):
         return f"{self.match} - {self.bet_type} ({self.value_percentage}% value)"
+
+
+class MatchAnalysis(models.Model):
+    """
+    Snapshot da análise calculada para uma partida (para leitura rápida pelo frontend/API).
+
+    Guarda:
+    - probabilidades do FutStats (Over/BTTS/1X2)
+    - taxas por time (amostra) e qualidade
+    - insights
+    - melhor odd por mercado (best_by_market)
+    """
+
+    match = models.OneToOneField(
+        Match, on_delete=models.CASCADE, related_name="analysis"
+    )
+
+    sample_limit = models.IntegerField(default=5)
+
+    # Estruturas flexíveis para evoluir sem migrations constantes.
+    probabilities = models.JSONField(default=dict)  # { over_25, btts_yes, home_win, draw, away_win }
+    team_rates = models.JSONField(default=dict)  # { home: {...}, away: {...}, sample_limit, quality }
+    insights = models.JSONField(default=list)  # lista de insights (dicts)
+
+    # { over_25: {odd, bookmaker, is_brazilian, last_updated}, ... }
+    best_by_market = models.JSONField(default=dict)
+
+    computed_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["computed_at"]),
+        ]
+
+    def __str__(self):
+        return f"Analysis: {self.match_id} @ {self.computed_at.isoformat()}"
