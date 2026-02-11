@@ -112,6 +112,95 @@ npm install
 npm run dev
 ```
 
+#### ⚙️ Variáveis de ambiente (Frontend / SEO)
+
+O frontend usa algumas variáveis (arquivo `.env` dentro de `frontend/`):
+
+- `VITE_API_URL_BACK`: URL base da API (ex.: `http://127.0.0.1:8000/api/`)
+- `VITE_SITE_URL`: URL pública do site (ex.: `https://seu-dominio.com`) — usada para canonical/OG e para gerar `sitemap.xml`
+- `SITE_URL`: alternativa para builds (o script de SEO roda via `node` no `prebuild` e pode usar `SITE_URL` quando `VITE_SITE_URL` não estiver disponível no ambiente)
+- `VITE_OG_IMAGE_URL` (opcional): imagem padrão para Open Graph
+- `VITE_GSC_VERIFICATION` (opcional): verificação do Google Search Console
+
+> Dica: se você vir `https://example.com` no `robots.txt`/`sitemap.xml`, é porque `VITE_SITE_URL`/`SITE_URL` não foram definidos no ambiente de build.
+
+---
+
+## 📈 Páginas de alto tráfego (odds/value)
+
+Rotas novas adicionadas no frontend:
+
+- ` /value-bets-hoje `: ranking de value bets (probabilidade vs odd/implícita)
+- ` /over-25-odds-hoje `: recorte do dia para Over 2.5
+- ` /btts-odds-hoje `: recorte do dia para BTTS
+- ` /1x2-odds-hoje `: recorte do dia para 1X2
+- ` /ferramentas ` e ` /guias `: calculadoras + páginas evergreen
+
+---
+
+## 🤖 Telegram (digest diário)
+
+Foi adicionado um comando de management no Django para enviar um digest diário (top value bets) via Telegram:
+
+- Arquivo: `futstats/core/management/commands/enviar_digest_telegram.py`
+- Variáveis de ambiente necessárias:
+  - `TELEGRAM_BOT_TOKEN`
+  - `TELEGRAM_CHAT_ID` (um ou mais IDs separados por vírgula) **ou** `TELEGRAM_CHANNEL_ID`
+  - `SITE_URL` (recomendado, para os links apontarem para seu domínio)
+
+### Comandos úteis
+
+#### 1) Testar sem enviar (dry-run)
+
+```bash
+python manage.py enviar_digest_telegram --limit 10 --mode latest --dry-run
+```
+
+#### 2) Enviar de verdade (usa `.env`)
+
+```bash
+python manage.py enviar_digest_telegram --limit 10 --mode latest
+```
+
+#### 3) Enviar filtrando por data do jogo (janela)
+
+```bash
+# Apenas hoje
+python manage.py enviar_digest_telegram --limit 10 --mode window --days-ahead 1
+
+# Hoje + próximos 2 dias
+python manage.py enviar_digest_telegram --limit 10 --mode window --days-ahead 3
+```
+
+#### 4) Enviar passando token/chat por parâmetro (sem depender do `.env`)
+
+```bash
+python manage.py enviar_digest_telegram --token "SEU_TOKEN" --chat-id "-1001234567890" --limit 10 --mode latest
+```
+
+#### 5) Windows (PowerShell): definir variáveis e enviar
+
+```powershell
+$env:TELEGRAM_BOT_TOKEN="SEU_TOKEN"
+$env:TELEGRAM_CHANNEL_ID="-1001234567890"   # canal/grupo (normalmente começa com -100)
+$env:SITE_URL="https://seu-dominio.com"
+python manage.py enviar_digest_telegram --limit 10 --mode latest
+```
+
+### Observações
+
+- **`mode latest` vs `mode window`**
+  - `latest`: pega as últimas recomendações (ótimo para teste e validação do bot)
+  - `window`: filtra por data do jogo (ideal para digest diário real)
+- **Encoding no Windows**: se o console mostrar caracteres quebrados, rode `chcp 65001` antes do comando.
+- **Pré-requisito de dados**: para o digest ter conteúdo, o banco precisa ter `BetRecommendation` gerado (por exemplo, após rodar a importação/análise de odds do projeto).
+
+Exemplo simples:
+
+```bash
+python manage.py enviar_digest_telegram --limit 10 --mode latest --site-url "https://seu-dominio.com"
+```
+
 ---
 
 ## 🌍 Deploy

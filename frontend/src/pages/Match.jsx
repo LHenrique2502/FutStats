@@ -4,17 +4,49 @@ import {
   Calendar,
   AlertCircle,
   Star,
+  BarChart3,
 } from 'lucide-react';
 import { SectionTitle } from '@/components/SectionTitle';
 import { InsightsBox } from '@/components/InsightsBox';
 import { ProbabilityBadge } from '@/components/ProbabilityBadge';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { trackEvent } from '@/lib/analytics';
 import { SEO } from '@/components/SEO';
 import { isFavorite, toggleFavorite } from '@/lib/favorites';
 
 const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
+
+function impliedProbFromOdd(odd) {
+  const n = typeof odd === 'number' ? odd : Number(odd);
+  if (!Number.isFinite(n) || n <= 1) return null;
+  return 1 / n;
+}
+
+function fmtOdd(o) {
+  const n = typeof o === 'number' ? o : Number(o);
+  if (!Number.isFinite(n)) return '--';
+  return n.toFixed(2);
+}
+
+function fmtPct01(p) {
+  if (typeof p !== 'number' || !Number.isFinite(p)) return '--';
+  return `${(p * 100).toFixed(2)}%`;
+}
+
+function fmtPct100(p) {
+  const n = typeof p === 'number' ? p : Number(p);
+  if (!Number.isFinite(n)) return '--';
+  return `${n.toFixed(2)}%`;
+}
 
 const Match = () => {
   const { id } = useParams();
@@ -22,6 +54,8 @@ const Match = () => {
   const [match, setMatch] = useState(null);
   const [error, setError] = useState(null);
   const [favorite, setFavorite] = useState(false);
+  const [oddsLoading, setOddsLoading] = useState(false);
+  const [oddsData, setOddsData] = useState(null);
 
   useEffect(() => {
     trackEvent('open_match', { match_id: id ? String(id) : undefined });
@@ -53,6 +87,27 @@ const Match = () => {
       }
     };
     load();
+  }, [id]);
+
+  useEffect(() => {
+    const loadOdds = async () => {
+      if (!id) return;
+      setOddsLoading(true);
+      try {
+        const res = await fetch(`${API_URL_BACK}matches/${id}/odds/`);
+        if (!res.ok) {
+          setOddsData(null);
+          return;
+        }
+        const data = await res.json();
+        setOddsData(data);
+      } catch {
+        setOddsData(null);
+      } finally {
+        setOddsLoading(false);
+      }
+    };
+    loadOdds();
   }, [id]);
 
   const onToggleFavorite = () => {
@@ -100,6 +155,28 @@ const Match = () => {
         probability: i.probability,
       }));
   }, [match]);
+
+  const bestOdds = oddsData?.best_by_market || null;
+  const bookmakers = Array.isArray(oddsData?.bookmakers) ? oddsData.bookmakers : [];
+
+  const compareMarkets = useMemo(() => {
+    const overP = typeof match?.probabilities?.over_25 === 'number' ? match.probabilities.over_25 : null;
+    const bttsP = typeof match?.probabilities?.btts_yes === 'number' ? match.probabilities.btts_yes : null;
+
+    const mk = (key, label, probPct) => {
+      const best = bestOdds?.[key];
+      const odd = best?.odd ?? null;
+      const imp = odd ? impliedProbFromOdd(odd) : null;
+      const modelP = typeof probPct === 'number' && Number.isFinite(probPct) ? probPct / 100 : null;
+      const edge = modelP !== null && imp !== null ? modelP - imp : null;
+      return { key, label, odd, bookmaker: best?.bookmaker, isBrazilian: best?.is_brazilian, imp, modelP, edge, probPct };
+    };
+
+    return [
+      mk('over_25', 'Over 2.5', overP),
+      mk('btts_yes', 'BTTS (Sim)', bttsP),
+    ];
+  }, [match, bestOdds]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -249,6 +326,172 @@ const Match = () => {
                   </div>
                 </div>
               </div>
+            </section>
+
+            {/* Odds e edge */}
+            <section className="space-y-6">
+              <SectionTitle
+                title="Odds e comparação (edge)"
+                subtitle="Melhor odd por mercado e comparação com a probabilidade do FutStats."
+                icon={BarChart3}
+              />
+
+              {oddsLoading ? (
+                <div className="text-center py-10 text-muted-foreground">
+                  Carregando odds...
+                </div>
+              ) : !bestOdds ? (
+                <div className="bg-card border border-border rounded-lg p-6">
+                  <p className="text-sm text-muted-foreground">
+                    Não encontramos odds salvas para essa partida no momento.
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="bg-card border border-border rounded-lg p-6 space-y-4">
+                    <h3 className="text-base font-semibold text-foreground">
+                      Melhor preço + edge
+                    </h3>
+
+                    <div className="space-y-3">
+                      {compareMarkets.map((m) => (
+                        <div
+                          key={m.key}
+                          className="bg-muted/30 border border-border rounded-lg p-4"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="text-sm font-semibold text-foreground">
+                                  {m.label}
+                                </span>
+                                {m.bookmaker ? (
+                                  <Badge variant={m.isBrazilian ? 'secondary' : 'outline'}>
+                                    {m.bookmaker}
+                                  </Badge>
+                                ) : null}
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Nossa prob: {fmtPct100(m.probPct)} • Implícita:{' '}
+                                {fmtPct01(m.imp)}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-lg font-bold text-foreground">
+                                {fmtOdd(m.odd)}
+                              </div>
+                              <div className="text-xs">
+                                <span
+                                  className={
+                                    typeof m.edge === 'number' && m.edge >= 0
+                                      ? 'text-emerald-600 font-semibold'
+                                      : 'text-muted-foreground font-semibold'
+                                  }
+                                >
+                                  Edge: {m.edge === null ? '--' : `${(m.edge * 100).toFixed(2)}%`}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="mt-3 flex flex-col sm:flex-row gap-2">
+                            <Link
+                              to={`/ferramentas/value-checker?odd=${encodeURIComponent(
+                                String(m.odd ?? '')
+                              )}&p=${encodeURIComponent(String(m.probPct ?? ''))}`}
+                              className="flex-1"
+                            >
+                              <Button
+                                className="w-full"
+                                onClick={() =>
+                                  trackEvent('cta_click_valuechecker', {
+                                    ui_source: 'match_odds',
+                                    match_id: id ? String(id) : undefined,
+                                    market: m.key,
+                                  })
+                                }
+                              >
+                                Abrir no value checker
+                              </Button>
+                            </Link>
+                            <Link to="/guias/probabilidade-implicita" className="flex-1">
+                              <Button variant="outline" className="w-full">
+                                Entender implícita
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      Apostas envolvem risco. Edge/EV são estimativas e não garantem resultado.
+                    </p>
+                  </div>
+
+                  <div className="bg-card border border-border rounded-lg p-6 space-y-4">
+                    <h3 className="text-base font-semibold text-foreground">
+                      Comparação por casa (odds salvas)
+                    </h3>
+
+                    {bookmakers.length === 0 ? (
+                      <div className="text-sm text-muted-foreground">
+                        Sem odds por bookmaker disponíveis.
+                      </div>
+                    ) : (
+                      <div className="border border-border rounded-lg overflow-hidden">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Casa</TableHead>
+                              <TableHead className="text-right">Over 2.5</TableHead>
+                              <TableHead className="text-right">BTTS</TableHead>
+                              <TableHead className="text-right hidden md:table-cell">1</TableHead>
+                              <TableHead className="text-right hidden md:table-cell">X</TableHead>
+                              <TableHead className="text-right hidden md:table-cell">2</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {bookmakers.map((b) => (
+                              <TableRow key={`${b.bookmaker}-${b.last_updated || ''}`}>
+                                <TableCell className="font-medium">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span>{b.bookmaker || '--'}</span>
+                                    <Badge variant={b.is_brazilian ? 'secondary' : 'outline'}>
+                                      {b.is_brazilian ? 'BR' : 'Global'}
+                                    </Badge>
+                                  </div>
+                                  {b.last_updated ? (
+                                    <div className="text-xs text-muted-foreground mt-1">
+                                      Atualizado:{' '}
+                                      {new Date(b.last_updated).toLocaleString('pt-BR')}
+                                    </div>
+                                  ) : null}
+                                </TableCell>
+                                <TableCell className="text-right">
+                                  {fmtOdd(b?.markets?.over_25)}
+                                </TableCell>
+                                <TableCell className="text-right">
+                                  {fmtOdd(b?.markets?.btts_yes)}
+                                </TableCell>
+                                <TableCell className="text-right hidden md:table-cell">
+                                  {fmtOdd(b?.markets?.home_win)}
+                                </TableCell>
+                                <TableCell className="text-right hidden md:table-cell">
+                                  {fmtOdd(b?.markets?.draw)}
+                                </TableCell>
+                                <TableCell className="text-right hidden md:table-cell">
+                                  {fmtOdd(b?.markets?.away_win)}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </section>
 
             {/* Match Insights */}

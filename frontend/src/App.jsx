@@ -16,6 +16,18 @@ import Match from './pages/Match';
 import League from './pages/League';
 import Metodologia from './pages/Metodologia';
 import Favoritos from './pages/Favoritos';
+import Tools from './pages/Tools';
+import ImpliedProbability from './pages/ImpliedProbability';
+import ValueChecker from './pages/ValueChecker';
+import ValueBetsToday from './pages/ValueBetsToday';
+import OddsToday from './pages/OddsToday';
+import LeagueMarketToday from './pages/LeagueMarketToday';
+import Guides from './pages/Guides';
+import GuideOver25 from './pages/GuideOver25';
+import GuideBTTS from './pages/GuideBTTS';
+import GuideProbabilidadeImplicita from './pages/GuideProbabilidadeImplicita';
+import GuideValueBet from './pages/GuideValueBet';
+import GuideComoUsarFutStats from './pages/GuideComoUsarFutStats';
 import NotFound from './pages/NotFound';
 
 const queryClient = new QueryClient();
@@ -33,6 +45,32 @@ const App = () => (
           <Route path="/teams" element={<Teams />} />
           <Route path="/matches" element={<Matches />} />
           <Route path="/value-bets" element={<ValueBets />} />
+          <Route path="/value-bets-hoje" element={<ValueBetsToday />} />
+          <Route path="/over-25-odds-hoje" element={<OddsToday />} />
+          <Route path="/btts-odds-hoje" element={<OddsToday />} />
+          <Route path="/1x2-odds-hoje" element={<OddsToday />} />
+          <Route
+            path="/odds/:leagueSlug/:market/hoje"
+            element={<LeagueMarketToday />}
+          />
+          <Route path="/ferramentas" element={<Tools />} />
+          <Route
+            path="/ferramentas/probabilidade-implicita"
+            element={<ImpliedProbability />}
+          />
+          <Route path="/ferramentas/value-checker" element={<ValueChecker />} />
+          <Route path="/guias" element={<Guides />} />
+          <Route path="/guias/over-25" element={<GuideOver25 />} />
+          <Route path="/guias/btts" element={<GuideBTTS />} />
+          <Route
+            path="/guias/probabilidade-implicita"
+            element={<GuideProbabilidadeImplicita />}
+          />
+          <Route path="/guias/value-bet" element={<GuideValueBet />} />
+          <Route
+            path="/guias/como-usar-futstats"
+            element={<GuideComoUsarFutStats />}
+          />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogPost />} />
           <Route path="/team/:id" element={<Team />} />

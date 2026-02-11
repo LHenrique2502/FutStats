@@ -5,10 +5,57 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+async function tryLoadEnvFromDotenvFiles() {
+  // Este script roda via `node` (fora do Vite), então `.env` não é carregado automaticamente.
+  // Tentamos ler alguns arquivos comuns para preencher SITE_URL/VITE_SITE_URL em builds locais.
+  const candidates = [
+    path.resolve(__dirname, '../.env'),
+    path.resolve(__dirname, '../.env.local'),
+    path.resolve(__dirname, '../.env.production'),
+    path.resolve(__dirname, '../.env.production.local'),
+  ];
+
+  const parse = (raw) => {
+    const lines = String(raw || '').split(/\r?\n/);
+    const out = {};
+    for (const line of lines) {
+      const s = line.trim();
+      if (!s || s.startsWith('#')) continue;
+      const idx = s.indexOf('=');
+      if (idx <= 0) continue;
+      const key = s.slice(0, idx).trim();
+      let val = s.slice(idx + 1).trim();
+      if (
+        (val.startsWith('"') && val.endsWith('"')) ||
+        (val.startsWith("'") && val.endsWith("'"))
+      ) {
+        val = val.slice(1, -1);
+      }
+      out[key] = val;
+    }
+    return out;
+  };
+
+  for (const p of candidates) {
+    try {
+      const raw = await fs.readFile(p, 'utf8');
+      const env = parse(raw);
+      if (!process.env.SITE_URL && env.SITE_URL) process.env.SITE_URL = env.SITE_URL;
+      if (!process.env.VITE_SITE_URL && env.VITE_SITE_URL)
+        process.env.VITE_SITE_URL = env.VITE_SITE_URL;
+      if (!process.env.VITE_OG_IMAGE_URL && env.VITE_OG_IMAGE_URL)
+        process.env.VITE_OG_IMAGE_URL = env.VITE_OG_IMAGE_URL;
+      if (process.env.SITE_URL || process.env.VITE_SITE_URL) return;
+    } catch {
+      // ignora (arquivo pode não existir)
+    }
+  }
+}
+
+await tryLoadEnvFromDotenvFiles();
+
 const SITE_URL =
-  process.env.SITE_URL ||
-  process.env.VITE_SITE_URL ||
-  'https://example.com';
+  process.env.SITE_URL || process.env.VITE_SITE_URL || 'https://example.com';
 
 const nowIso = new Date().toISOString();
 
@@ -17,6 +64,16 @@ async function loadBlogPosts() {
     const modPath = path.resolve(__dirname, '../src/data/blogPosts.js');
     const mod = await import(pathToFileURL(modPath).href);
     return Array.isArray(mod.blogPosts) ? mod.blogPosts : [];
+  } catch {
+    return [];
+  }
+}
+
+async function loadLeagueSeo() {
+  try {
+    const modPath = path.resolve(__dirname, '../src/data/leagueSeo.js');
+    const mod = await import(pathToFileURL(modPath).href);
+    return Array.isArray(mod.leagueSeo) ? mod.leagueSeo : [];
   } catch {
     return [];
   }
@@ -61,11 +118,38 @@ async function main() {
   await fs.mkdir(publicDir, { recursive: true });
 
   const blogPosts = await loadBlogPosts();
+  const leagueSeo = await loadLeagueSeo();
 
   const staticRoutes = [
     { path: '/', changefreq: 'daily', priority: 1.0 },
     { path: '/matches', changefreq: 'daily', priority: 0.8 },
     { path: '/value-bets', changefreq: 'daily', priority: 0.9 },
+    { path: '/value-bets-hoje', changefreq: 'daily', priority: 0.9 },
+    { path: '/over-25-odds-hoje', changefreq: 'daily', priority: 0.8 },
+    { path: '/btts-odds-hoje', changefreq: 'daily', priority: 0.8 },
+    { path: '/1x2-odds-hoje', changefreq: 'daily', priority: 0.7 },
+    ...leagueSeo.flatMap((l) => {
+      const slug = l?.slug;
+      if (!slug) return [];
+      return [
+        { path: `/odds/${slug}/over-25/hoje`, changefreq: 'daily', priority: 0.8 },
+        { path: `/odds/${slug}/btts/hoje`, changefreq: 'daily', priority: 0.8 },
+        { path: `/odds/${slug}/1x2/hoje`, changefreq: 'daily', priority: 0.7 },
+      ];
+    }),
+    { path: '/ferramentas', changefreq: 'monthly', priority: 0.6 },
+    {
+      path: '/ferramentas/probabilidade-implicita',
+      changefreq: 'monthly',
+      priority: 0.6,
+    },
+    { path: '/ferramentas/value-checker', changefreq: 'monthly', priority: 0.6 },
+    { path: '/guias', changefreq: 'monthly', priority: 0.6 },
+    { path: '/guias/over-25', changefreq: 'monthly', priority: 0.6 },
+    { path: '/guias/btts', changefreq: 'monthly', priority: 0.6 },
+    { path: '/guias/probabilidade-implicita', changefreq: 'monthly', priority: 0.6 },
+    { path: '/guias/value-bet', changefreq: 'monthly', priority: 0.6 },
+    { path: '/guias/como-usar-futstats', changefreq: 'monthly', priority: 0.6 },
     { path: '/blog', changefreq: 'weekly', priority: 0.7 },
     { path: '/metodologia', changefreq: 'monthly', priority: 0.6 },
     { path: '/teams', changefreq: 'weekly', priority: 0.5 },

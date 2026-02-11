@@ -40,6 +40,27 @@ export const Header = () => {
             Probabilidades
           </Link>
           <Link
+            to="/value-bets-hoje"
+            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            onClick={() => trackEvent('nav_click', { to: '/value-bets-hoje', label: 'Value Bets Hoje' })}
+          >
+            Value Bets
+          </Link>
+          <Link
+            to="/ferramentas"
+            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            onClick={() => trackEvent('nav_click', { to: '/ferramentas', label: 'Ferramentas' })}
+          >
+            Ferramentas
+          </Link>
+          <Link
+            to="/guias"
+            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            onClick={() => trackEvent('nav_click', { to: '/guias', label: 'Guias' })}
+          >
+            Guias
+          </Link>
+          <Link
             to="/metodologia"
             className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             onClick={() => trackEvent('nav_click', { to: '/metodologia', label: 'Metodologia' })}
