@@ -22,8 +22,7 @@ import {
 import { trackEvent } from '@/lib/analytics';
 import { SEO } from '@/components/SEO';
 import { isFavorite, toggleFavorite } from '@/lib/favorites';
-
-const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
+import { getMatchOdds, getMatchSummary } from '@/lib/publicData';
 
 function impliedProbFromOdd(odd) {
   const n = typeof odd === 'number' ? odd : Number(odd);
@@ -72,12 +71,7 @@ const Match = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_URL_BACK}matches/${id}/`);
-        if (!res.ok) {
-          const payload = await res.json().catch(() => null);
-          throw new Error(payload?.detail || `Erro ao carregar partida (${res.status})`);
-        }
-        const data = await res.json();
+        const data = await getMatchSummary(id);
         setMatch(data);
       } catch (e) {
         setError(e?.message || 'Erro ao carregar partida');
@@ -94,12 +88,7 @@ const Match = () => {
       if (!id) return;
       setOddsLoading(true);
       try {
-        const res = await fetch(`${API_URL_BACK}matches/${id}/odds/`);
-        if (!res.ok) {
-          setOddsData(null);
-          return;
-        }
-        const data = await res.json();
+        const data = await getMatchOdds(id);
         setOddsData(data);
       } catch {
         setOddsData(null);

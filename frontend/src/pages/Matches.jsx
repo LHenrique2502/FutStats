@@ -5,8 +5,7 @@ import { SearchBar } from '@/components/SearchBar';
 import { Link } from 'react-router-dom';
 import { SEO } from '@/components/SEO';
 import { trackEvent } from '@/lib/analytics';
-
-const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
+import { getMatchesToday } from '@/lib/publicData';
 
 const Matches = () => {
   const [matches, setMatches] = useState([]);
@@ -15,16 +14,10 @@ const Matches = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`${API_URL_BACK}matches/today/`)
-      .then((res) => res.json())
-      .then((data) => {
-        setMatches(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Erro ao carregar partidas:', err);
-        setLoading(false);
-      });
+    getMatchesToday()
+      .then((data) => setMatches(Array.isArray(data) ? data : []))
+      .catch((err) => console.error('Erro ao carregar partidas:', err))
+      .finally(() => setLoading(false));
   }, []);
 
   const filtered = useMemo(() => {

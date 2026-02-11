@@ -2,1903 +2,1903 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://example.com/</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://example.com/matches</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/value-bets</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://example.com/value-bets-hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://example.com/over-25-odds-hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/btts-odds-hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/1x2-odds-hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/over-25/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/btts/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/1x2/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://example.com/odds/brasileirao-a/over-25/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/brasileirao-a/btts/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/brasileirao-a/1x2/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://example.com/odds/brasileirao-a/over-25/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/btts/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/1x2/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/over-25/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/btts/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/1x2/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/over-25/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/btts/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/1x2/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/over-25/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/btts/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/1x2/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/over-25/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/btts/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/1x2/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/over-25/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/btts/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/1x2/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/over-25/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/btts/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/brasileirao-a/1x2/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/brasileirao-a/over-25/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/brasileirao-a/btts/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/brasileirao-a/1x2/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/over-25/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/btts/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/1x2/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://example.com/odds/carioca/over-25/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/carioca/btts/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/carioca/1x2/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://example.com/odds/carioca/over-25/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/btts/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/1x2/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/over-25/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/btts/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/1x2/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/over-25/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/btts/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/1x2/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/over-25/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/btts/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/1x2/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/over-25/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/btts/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/1x2/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/over-25/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/btts/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/1x2/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/over-25/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/btts/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/carioca/1x2/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/carioca/over-25/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/carioca/btts/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/carioca/1x2/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/over-25/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/btts/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/1x2/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://example.com/odds/paulista/over-25/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/paulista/btts/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/paulista/1x2/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://example.com/odds/paulista/over-25/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/btts/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/1x2/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/over-25/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/btts/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/1x2/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/over-25/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/btts/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/1x2/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/over-25/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/btts/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/1x2/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/over-25/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/btts/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/1x2/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/over-25/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/btts/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/1x2/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/over-25/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/btts/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/paulista/1x2/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/paulista/over-25/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/paulista/btts/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/paulista/1x2/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/over-25/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/btts/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/1x2/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://example.com/odds/mineiro/over-25/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/mineiro/btts/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/mineiro/1x2/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://example.com/odds/mineiro/over-25/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/btts/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/1x2/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/over-25/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/btts/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/1x2/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/over-25/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/btts/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/1x2/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/over-25/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/btts/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/1x2/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/over-25/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/btts/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/1x2/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/over-25/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/btts/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/1x2/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/over-25/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/btts/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/mineiro/1x2/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/mineiro/over-25/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/mineiro/btts/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/mineiro/1x2/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/over-25/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/btts/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/1x2/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://example.com/odds/premier-league/over-25/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/premier-league/btts/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/premier-league/1x2/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://example.com/odds/premier-league/over-25/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/btts/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/1x2/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/over-25/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/btts/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/1x2/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/over-25/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/btts/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/1x2/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/over-25/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/btts/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/1x2/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/over-25/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/btts/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/1x2/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/over-25/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/btts/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/1x2/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/over-25/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/btts/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/premier-league/1x2/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/premier-league/over-25/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/premier-league/btts/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/premier-league/1x2/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/over-25/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/btts/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/1x2/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://example.com/odds/championship/over-25/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/championship/btts/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/championship/1x2/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://example.com/odds/championship/over-25/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/btts/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/1x2/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/over-25/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/btts/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/1x2/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/over-25/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/btts/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/1x2/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/over-25/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/btts/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/1x2/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/over-25/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/btts/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/1x2/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/over-25/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/btts/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/1x2/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/over-25/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/btts/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/championship/1x2/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/championship/over-25/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/championship/btts/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/championship/1x2/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/over-25/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/btts/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/1x2/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://example.com/odds/la-liga/over-25/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/la-liga/btts/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/la-liga/1x2/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://example.com/odds/la-liga/over-25/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/btts/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/1x2/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/over-25/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/btts/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/1x2/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/over-25/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/btts/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/1x2/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/over-25/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/btts/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/1x2/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/over-25/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/btts/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/1x2/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/over-25/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/btts/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/1x2/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/over-25/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/btts/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/la-liga/1x2/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/la-liga/over-25/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/la-liga/btts/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/la-liga/1x2/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/over-25/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/btts/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/1x2/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://example.com/odds/serie-a-it/over-25/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/serie-a-it/btts/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/serie-a-it/1x2/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://example.com/odds/serie-a-it/over-25/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/btts/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/1x2/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/over-25/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/btts/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/1x2/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/over-25/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/btts/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/1x2/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/over-25/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/btts/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/1x2/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/over-25/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/btts/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/1x2/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/over-25/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/btts/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/1x2/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/over-25/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/btts/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/serie-a-it/1x2/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/serie-a-it/over-25/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/serie-a-it/btts/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/serie-a-it/1x2/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/over-25/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/btts/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/1x2/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://example.com/odds/bundesliga/over-25/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/bundesliga/btts/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/bundesliga/1x2/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://example.com/odds/bundesliga/over-25/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/btts/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/1x2/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/over-25/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/btts/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/1x2/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/over-25/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/btts/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/1x2/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/over-25/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/btts/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/1x2/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/over-25/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/btts/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/1x2/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/over-25/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/btts/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/1x2/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/over-25/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/btts/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/bundesliga/1x2/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/bundesliga/over-25/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/bundesliga/btts/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/bundesliga/1x2/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/over-25/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/btts/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/1x2/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://example.com/odds/ligue-1/over-25/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/ligue-1/btts/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/ligue-1/1x2/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://example.com/odds/ligue-1/over-25/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/btts/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/1x2/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/over-25/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/btts/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/1x2/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/over-25/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/btts/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/1x2/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/over-25/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/btts/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/1x2/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/over-25/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/btts/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/1x2/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/over-25/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/btts/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/1x2/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/over-25/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/btts/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/ligue-1/1x2/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/ligue-1/over-25/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/ligue-1/btts/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/ligue-1/1x2/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/over-25/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/btts/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/1x2/hoje</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://example.com/odds/champions-league/over-25/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/champions-league/btts/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://example.com/odds/champions-league/1x2/2026-02-10</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://example.com/odds/champions-league/over-25/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/btts/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/1x2/2026-02-11</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/over-25/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/btts/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/1x2/2026-02-12</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/over-25/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/btts/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/1x2/2026-02-13</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/over-25/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/btts/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/1x2/2026-02-14</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/over-25/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/btts/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/1x2/2026-02-15</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/over-25/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/btts/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/1x2/2026-02-16</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/over-25/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/btts/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/odds/champions-league/1x2/2026-02-17</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/champions-league/over-25/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/champions-league/btts/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://example.com/odds/champions-league/1x2/2026-02-18</loc>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/ferramentas</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/ferramentas/probabilidade-implicita</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/ferramentas/value-checker</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/guias</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/guias/over-25</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/guias/btts</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/guias/probabilidade-implicita</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/guias/value-bet</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/guias/como-usar-futstats</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/blog</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://example.com/metodologia</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://example.com/teams</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://example.com/leagues</loc>
-    <lastmod>2026-02-11T02:43:55.670Z</lastmod>
+    <lastmod>2026-02-11T03:08:58.204Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>

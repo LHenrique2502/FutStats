@@ -188,6 +188,8 @@ def matches_today(request):
             "id": match.id,
             "league": match.league.name,
             "date": match.date.strftime("%d/%m"),
+            "date_iso": match.date.date().isoformat() if match.date else None,
+            "datetime_iso": match.date.isoformat() if match.date else None,
             "time": match.date.strftime("%H:%M"),
 
             "homeTeam": {
@@ -450,6 +452,8 @@ def odds_today(request):
             "id": match.id,
             "league": match.league.name if match.league else None,
             "date": match.date.strftime("%d/%m"),
+            "date_iso": match.date.date().isoformat() if match.date else None,
+            "datetime_iso": match.date.isoformat() if match.date else None,
             "time": match.date.strftime("%H:%M"),
             "homeTeam": {
                 "id": match.home_team.id,

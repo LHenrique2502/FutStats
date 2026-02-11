@@ -13,8 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-
-const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
+import { getValueBetsWindow } from '@/lib/publicData';
 
 const MARKET = {
   over_25: {
@@ -68,9 +67,9 @@ const OddsToday = () => {
     const load = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${API_URL_BACK}value-bets/?limit=${limit}`);
-        const data = await res.json();
-        setRows(Array.isArray(data) ? data : []);
+        const data = await getValueBetsWindow(3);
+        const list = Array.isArray(data) ? data : [];
+        setRows(list.slice(0, limit));
       } catch (e) {
         console.error('Erro ao carregar odds/value:', e);
         setRows([]);

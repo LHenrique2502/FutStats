@@ -17,8 +17,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { trackEvent } from '@/lib/analytics';
 import { SEO } from '@/components/SEO';
-
-const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
+import { getMatchesToday, getTeamHighlights, getValueBetsWindow } from '@/lib/publicData';
 
 const Home = () => {
   const [matches, setMatches] = useState([]);
@@ -38,16 +37,15 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`${API_URL_BACK}matches/today/`)
-      .then((res) => res.json())
-      .then((data) => setMatches(data))
+    getMatchesToday()
+      .then((data) => setMatches(Array.isArray(data) ? data : []))
       .catch((err) => console.error('Erro ao carregar jogos:', err));
   }, []);
 
   useEffect(() => {
-    fetch(`${API_URL_BACK}value-bets/?limit=3`)
-      .then((res) => res.json())
-      .then((data) => {
+    getValueBetsWindow(3)
+      .then((raw) => {
+        const data = (Array.isArray(raw) ? raw : []).slice(0, 3);
         // Formatar dados para o formato esperado pelo InsightsBox
         const formatted = data.map((item, index) => ({
           id: item.match_id || index,
@@ -63,9 +61,8 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`${API_URL_BACK}times_destaque/`)
-      .then((res) => res.json())
-      .then((data) => setHighlightTeams(data))
+    getTeamHighlights()
+      .then((data) => setHighlightTeams(Array.isArray(data) ? data : []))
       .catch((err) => console.error('Erro ao carregar times destaque:', err));
   }, []);
 

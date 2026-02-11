@@ -15,8 +15,7 @@ import {
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { trackEvent } from '@/lib/analytics';
-
-const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
+import { getValueBetsWindow } from '@/lib/publicData';
 
 const BET_LABEL = {
   over_25: 'Over 2.5',
@@ -47,9 +46,9 @@ const ValueBetsToday = () => {
     const load = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${API_URL_BACK}value-bets/?limit=${limit}`);
-        const data = await res.json();
-        setRows(Array.isArray(data) ? data : []);
+        const data = await getValueBetsWindow(3);
+        const list = Array.isArray(data) ? data : [];
+        setRows(list.slice(0, limit));
       } catch (e) {
         console.error('Erro ao carregar value bets:', e);
         setRows([]);

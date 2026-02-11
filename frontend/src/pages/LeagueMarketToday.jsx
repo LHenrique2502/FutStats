@@ -22,8 +22,7 @@ import {
 } from '@/components/ui/accordion';
 import { leagueSeo } from '@/data/leagueSeo';
 import { trackEvent } from '@/lib/analytics';
-
-const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
+import { getOddsWindow } from '@/lib/publicData';
 
 function impliedPct(odd) {
   const n = typeof odd === 'number' ? odd : Number(odd);
@@ -141,15 +140,19 @@ const LeagueMarketToday = () => {
       }
       setLoading(true);
       try {
-        const url =
+        const data = await getOddsWindow(3);
+        const list = Array.isArray(data) ? data : [];
+
+        const filteredByLeague = list.filter((x) => x?.league === league.leagueName);
+
+        // Se estiver em /hoje, filtra só o dia atual (ISO) quando disponível.
+        // Se estiver em /YYYY-MM-DD, filtra por esse ISO.
+        const byDay =
           dayParam === 'hoje'
-            ? `${API_URL_BACK}odds/today/?league=${encodeURIComponent(league.leagueName)}&days_ahead=1`
-            : `${API_URL_BACK}odds/today/?league=${encodeURIComponent(
-                league.leagueName
-              )}&date=${encodeURIComponent(dayParam)}`;
-        const res = await fetch(url);
-        const data = await res.json();
-        setItems(Array.isArray(data) ? data : []);
+            ? filteredByLeague.filter((x) => !x?.date_iso || x.date_iso === new Date().toISOString().slice(0, 10))
+            : filteredByLeague.filter((x) => x?.date_iso === dayParam);
+
+        setItems(byDay.length ? byDay : filteredByLeague);
       } catch (e) {
         console.error('Erro ao carregar odds do dia:', e);
         setItems([]);

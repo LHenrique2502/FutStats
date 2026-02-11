@@ -6,8 +6,7 @@ import { ProbabilityBadge } from '@/components/ProbabilityBadge';
 import { Button } from '@/components/ui/button';
 import { trackEvent } from '@/lib/analytics';
 import { SEO } from '@/components/SEO';
-
-const API_URL_BACK = import.meta.env.VITE_API_URL_BACK;
+import { getMatchesToday, getProbabilitiesToday } from '@/lib/publicData';
 
 const ValueBets = () => {
   const [matches, setMatches] = useState([]);
@@ -20,14 +19,12 @@ const ValueBets = () => {
       setLoading(true);
       try {
         // 1) Todas as partidas do dia (base da listagem)
-        const matchesRes = await fetch(`${API_URL_BACK}matches/today/`);
-        const matchesData = await matchesRes.json();
+        const matchesData = await getMatchesToday();
         const dayMatches = Array.isArray(matchesData) ? matchesData : [];
         setMatches(dayMatches);
 
         // 2) Probabilidades para TODOS os jogos do dia (2 mercados: over_25 e btts_yes)
-        const probsRes = await fetch(`${API_URL_BACK}probabilities/today/`);
-        const probsData = await probsRes.json();
+        const probsData = await getProbabilitiesToday();
         const probsList = Array.isArray(probsData) ? probsData : [];
 
         const grouped = {};

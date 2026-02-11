@@ -161,7 +161,17 @@ python manage.py importar_odds --days 3
 
 # 2) Pré-calcula análises para hoje + próximos 3 dias
 python manage.py precomputar_analises --days-ahead 3 --sample-limit 5 --force
+
+# 3) Exporta snapshots públicos para o frontend (sem depender do backend em runtime)
+python manage.py export_public_data --days-ahead 3 --include-per-match
 ```
+
+### Frontend sem backend (evitar hibernação)
+
+O frontend pode ler os dados de `frontend/public/data/**.json` (gerados pelo comando acima e pelo workflow diário).
+
+- Base dos snapshots: `VITE_PUBLIC_DATA_BASE` (default: `/data`)
+- Se quiser **desligar totalmente** o fallback para o backend: `VITE_DISABLE_BACKEND=1`
 
 ---
 
