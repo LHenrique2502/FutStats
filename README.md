@@ -116,11 +116,25 @@ npm run dev
 
 O frontend usa algumas variáveis (arquivo `.env` dentro de `frontend/`):
 
+- `VITE_GA4_MEASUREMENT_ID` (opcional): Measurement ID do GA4 (ex.: `G-XXXXXXXXXX`)
 - `VITE_API_URL_BACK`: URL base da API (ex.: `http://127.0.0.1:8000/api/`)
 - `VITE_SITE_URL`: URL pública do site (ex.: `https://seu-dominio.com`) — usada para canonical/OG e para gerar `sitemap.xml`
 - `SITE_URL`: alternativa para builds (o script de SEO roda via `node` no `prebuild` e pode usar `SITE_URL` quando `VITE_SITE_URL` não estiver disponível no ambiente)
 - `VITE_OG_IMAGE_URL` (opcional): imagem padrão para Open Graph
 - `VITE_GSC_VERIFICATION` (opcional): verificação do Google Search Console
+
+#### ⚙️ Variáveis de ambiente (Frontend / Analytics - tráfego interno)
+
+Para acessar o site como desenvolvedor **sem contar nas métricas**, foi adicionado um modo de "tráfego interno" no GA4.
+
+- `VITE_INTERNAL_TRAFFIC_TOKEN` (opcional, recomendado): token para ativar o modo via URL.
+  - Ativar no navegador atual: `https://seu-dominio.com/?internal=SEU_TOKEN`
+  - Desativar no navegador atual: `https://seu-dominio.com/?internal=off`
+
+Notas:
+- O modo é persistido no navegador via `localStorage` (`internal_traffic=1`).
+- O parâmetro `internal` é removido da URL após ativar/desativar (para evitar deixar o token visível).
+- No GA4, configure o filtro **Tráfego interno** para excluir eventos com `traffic_type=internal`.
 
 > Dica: se você vir `https://example.com` no `robots.txt`/`sitemap.xml`, é porque `VITE_SITE_URL`/`SITE_URL` não foram definidos no ambiente de build.
 
