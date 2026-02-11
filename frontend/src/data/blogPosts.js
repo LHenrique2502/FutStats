@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-11",
+    title: "Diário de Apostas - 11 de Fevereiro de 2026",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
+    content: "Bom dia!\n\nNós estamos aqui para ajudar você a encontrar as melhores apostas do dia. Aqui estão as nossas recomendações para o dia de hoje:\n\n# Recomendações do Dia\n\n- Aston Villa x Brighton and Hove Albion: O Over 2.5 tem uma probabilidade de 64%.\n- Manchester City x Fulham: A casa tem uma probabilidade de vitória de 51,33% e um odd de 1,38.\n- Sunderland x Liverpool: A casa tem uma probabilidade de vitória de 41,73% e um odd de 4,5.\n\n# Avisos de Risco\n\nLembre-se de que as apostas envolvem risco e não há garantia de vitória.\n\n# Recomendações de Valor\n\n- Manchester City x Fulham: Casa (1) com um odd de 1,38 e uma probabilidade calculada de 51,33%.\n- Sunderland x Liverpool: Casa (1) com um odd de 4,5 e uma probabilidade calculada de 41,73%.\n\n# Notas\n\nAqui estão as nossas notas para o dia de hoje:\n\n- A probabilidade de vitória da casa em Aston Villa x Brighton and Hove Albion é de 38,53%.\n- A probabilidade de vitória da casa em Manchester City x Fulham é de 51,33%.\n- A probabilidade de vitória da casa em Sunderland x Liverpool é de 41,73%.\n\nBoa sorte e bons estudos!",
+    date: "2026-02-11",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-10",
     title: "Diário de Apostas - 10 de Fevereiro de 2026",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
