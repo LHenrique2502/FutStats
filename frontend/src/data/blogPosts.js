@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-13",
+    title: "Diário de Apostas - 13 de Fevereiro de 2026",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
+    content: "Bom dia!\n\nNossa equipe de especialistas analisou as estatísticas e previsões para o dia de hoje e selecionou as melhores apostas para você. Lembre-se de que apostas envolvem risco e não há garantia de vitória.\n\n# Recomendações de Apostas\n\n- **Bayer Leverkusen x St Pauli**: Casa (1) com odd de 1.48 e probabilidade calculada de 57.73%.\n- **RB Leipzig x Wolfsburg**: Casa (1) com odd de 1.45 e probabilidade calculada de 57.73%.\n- **Hoffenheim x Freiburg**: Casa (1) com odd de 1.7 e probabilidade calculada de 54.53%.\n- **Lille x Brest**: Casa (1) com odd de 1.77 e probabilidade calculada de 54.53%.\n- **Inter Milan x Juventus**: Casa (1) com odd de 1.95 e probabilidade calculada de 52.93%.\n- **Real Madrid x Real Sociedad**: Casa (1) com odd de 1.38 e probabilidade calculada de 51.33%.\n- **Monaco x Nantes**: Casa (1) com odd de 1.48 e probabilidade calculada de 49.73%.\n- **Hamburg x Union Berlin**: Casa (1) com odd de 2.5 e probabilidade calculada de 48.13%.\n\n# Estatísticas\n\n- **Rennes x Paris SG**: 64.5% de chance de mais de 2.5 gols.\n- **Pisa x AC Milan**: 50% de chance de mais de 2.5 gols.\n- **Internacional x Palmeiras**: 50% de chance de mais de 2.5 gols.\n- **Borussia Dortmund x Mainz**: 43% de chance de mais de 2.5 gols.\n- **Elche x Osasuna**: 50% de chance de mais de 2.5 gols.\n\n# Avisos\n\n- Lembre-se de que apostas envolvem risco e não há garantia de vitória.\n- Sempre faça suas próprias pesquisas e análises antes de fazer uma aposta.\n\nBoa sorte e bons estudos!",
+    date: "2026-02-13",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-12",
     title: "Diário de Apostas - 12 de Fevereiro de 2026",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
