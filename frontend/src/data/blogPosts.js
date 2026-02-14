@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-14",
+    title: "Diário de Apostas - 14/02/2026",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
+    content: "Bom dia!\n\nOlá, amigos do FutStats! Hoje é mais um dia de apostas emocionantes. Aqui estão as nossas recomendações para você.\n\n**Recomendações de Apostas**\n\n- **Bayer Leverkusen x St Pauli**: Casa (1) com odd de 1,5 e probabilidade calculada de 57,73%.\n- **RB Leipzig x Wolfsburg**: Casa (1) com odd de 1,48 e probabilidade calculada de 57,73%.\n- **Hoffenheim x Freiburg**: Casa (1) com odd de 1,73 e probabilidade calculada de 54,53%.\n- **Lille x Brest**: Casa (1) com odd de 1,65 e probabilidade calculada de 54,53%.\n- **Inter Milan x Juventus**: Casa (1) com odd de 2 e probabilidade calculada de 52,93%.\n- **Real Madrid x Real Sociedad**: Casa (1) com odd de 1,38 e probabilidade calculada de 51,33%.\n- **Hamburg x Union Berlin**: Casa (1) com odd de 2,5 e probabilidade calculada de 48,13%.\n- **Lazio x Atalanta**: Casa (1) com odd de 3,3 e probabilidade calculada de 48,13%.\n\n**Avisos de Risco**\n\nLembre-se de que as apostas envolvem risco. Não aposte mais do que você pode perder.\n\n**Boa Sorte!**\n\nEsperamos que essas recomendações ajudem você a ter um bom dia de apostas. Boa sorte e bons estudos!\n\nAté amanhã!",
+    date: "2026-02-14",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-13",
     title: "Diário de Apostas - 13 de Fevereiro de 2026",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
