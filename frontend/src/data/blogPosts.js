@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-15",
+    title: "Diário de Apostas - 15 de Fevereiro de 2026",
+    excerpt: "Confira as nossas recomendações de apostas para o dia de hoje!",
+    content: "Olá!\n\nHoje é mais um dia de futebol e apostas! Aqui estão as nossas recomendações para o dia de hoje:\n\n# Recomendações de Apostas\n\n- **Lyon x Nice**: O Lyon tem uma boa chance de vencer, com uma probabilidade de 41.73%. Além disso, há uma boa chance de golos a serem marcados, com uma probabilidade de 64% de BTTS.\n- **FC Augsburg x FC Heidenheim**: O FC Augsburg também tem uma boa chance de vencer, com uma probabilidade de 41.73%. Além disso, há uma boa chance de golos a serem marcados, com uma probabilidade de 64% de BTTS.\n- **Cremonese x Genoa**: O Cremonese tem uma boa chance de vencer, com uma probabilidade de 46.53%. Além disso, há uma boa chance de golos a serem marcados, com uma probabilidade de 64% de BTTS.\n- **Botafogo x Flamengo**: O Botafogo tem uma boa chance de vencer, com uma probabilidade de 52.93%. Além disso, há uma boa chance de golos a serem marcados, com uma probabilidade de 43% de BTTS.\n- **RB Leipzig x Wolfsburg**: O RB Leipzig tem uma boa chance de vencer, com uma probabilidade de 57.73%. Além disso, há uma boa chance de golos a serem marcados, com uma probabilidade de 50% de BTTS.\n\n# Avisos de Risco\n\nLembre-se de que as apostas envolvem risco e não há garantia de vitória. É importante fazer apostas de forma responsável e dentro do seu orçamento.\n\n# Boa Sorte!\n\nEsperamos que você tenha uma boa sorte hoje! Boa sorte e bons estudos!",
+    date: "2026-02-15",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-14",
     title: "Diário de Apostas - 14/02/2026",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
