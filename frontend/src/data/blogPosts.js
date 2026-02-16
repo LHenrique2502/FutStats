@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-16",
+    title: "Diário de Apostas - 16/02/2026",
+    excerpt: "Aqui estão as nossas recomendações de apostas para hoje.",
+    content: "Bom dia!\n\nOlá a todos os fãs de futebol! Hoje é mais um dia de apostas emocionantes. Aqui estão as nossas recomendações de apostas para hoje.\n\n**Recomendações de Apostas**\n\n- **Girona x Barcelona**: A probabilidade de mais de 2,5 gols é de 78,5%. Além disso, a probabilidade de ambos os times marcarem gols é de 78,5%.\n- **Nova Iguaçu x Maricá**: A probabilidade de mais de 2,5 gols é de 67%. Além disso, a probabilidade de ambos os times marcarem gols é de 67%.\n- **Coventry City x Middlesbrough**: A probabilidade de mais de 2,5 gols é de 57%. Além disso, a probabilidade de ambos os times marcarem gols é de 64%.\n- **Fluminense x Bangu**: A probabilidade de mais de 2,5 gols é de 53,5%. Além disso, a probabilidade de ambos os times marcarem gols é de 53,5%.\n\n**Value Bets**\n\n- **Casa (1) em Cagliari x Lecce**: A probabilidade calculada é de 43,33% e o odd é de 2,38.\n- **Casa (1) em Girona x Barcelona**: A probabilidade calculada é de 40,13% e o odd é de 6,5.\n\n**Aviso de Risco**\n\nLembre-se de que as apostas envolvem risco e não há garantia de vitória. É importante fazer apostas responsáveis e dentro do seu orçamento.\n\nBoa sorte e bons estudos!",
+    date: "2026-02-16",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-15",
     title: "Diário de Apostas - 15 de Fevereiro de 2026",
     excerpt: "Confira as nossas recomendações de apostas para o dia de hoje!",
