@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-17",
+    title: "Diário de Apostas - 17/02/2026",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
+    content: "Olá!\n\nHoje é dia de apostas! Aqui estão as nossas recomendações para você.\n\n**Recomendações de Apostas**\n\n- AC Milan x Como: Casa (1) - Odd: 2.3 - Probabilidade: ≈43%\n- Wolverhampton Wanderers x Arsenal: Casa (1) - Odd: 11 - Probabilidade: ≈37%\n- Levante x Villarreal: Fora (2) - Odd: 1.83 - Probabilidade: ≈36%\n- Levante x Villarreal: Casa (1) - Odd: 3.8 - Probabilidade: ≈35%\n- Wolverhampton Wanderers x Arsenal: Fora (2) - Odd: 1.29 - Probabilidade: ≈35%\n- AC Milan x Como: Empate (X) - Odd: 3.3 - Probabilidade: ≈30%\n- AC Milan x Como: Fora (2) - Odd: 3.1 - Probabilidade: ≈28%\n- Wolverhampton Wanderers x Arsenal: Empate (X) - Odd: 5.25 - Probabilidade: ≈28%\n\n**Avisos de Risco**\n\nAs apostas envolvem risco. Certifique-se de que você está ciente dos riscos antes de fazer qualquer aposta.\n\n**Observações**\n\n- A probabilidade é uma estimativa baseada em dados históricos e pode variar dependendo das circunstâncias atuais.\n\nBoa sorte e bons estudos!",
+    date: "2026-02-17",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-16",
     title: "Diário de Apostas - 16/02/2026",
     excerpt: "Aqui estão as nossas recomendações de apostas para hoje.",
