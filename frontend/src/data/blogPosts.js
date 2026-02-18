@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-18",
+    title: "Diário de Apostas - 18/02/2026",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
+    content: "Olá!\n\nHoje é mais um dia de futebol e apostas. Aqui estão as nossas recomendações para você.\n\n**Recomendações de Apostas**\n\n- **AC Milan x Como**: O AC Milan é favorito para ganhar, com uma probabilidade de vitória de 43,33%. A probabilidade de mais de 2,5 gols é de 36%.\n- **Levante x Villarreal**: O Villarreal é favorito para ganhar, com uma probabilidade de vitória de 36,33%. A probabilidade de mais de 2,5 gols é de 50%.\n- **Wolverhampton Wanderers x Arsenal**: O Arsenal é favorito para ganhar, com uma probabilidade de vitória de 36,93%. A probabilidade de mais de 2,5 gols é de 36%.\n\n**Value Bets**\n\n- **AC Milan x Como**: O AC Milan é favorito para ganhar, com uma probabilidade de vitória de 43,33% e um odd de 2,3.\n- **Levante x Villarreal**: O Villarreal é favorito para ganhar, com uma probabilidade de vitória de 36,33% e um odd de 1,88.\n- **Wolverhampton Wanderers x Arsenal**: O Arsenal é favorito para ganhar, com uma probabilidade de vitória de 36,93% e um odd de 10.\n\n**Aviso de Risco**\n\nLembre-se de que as apostas envolvem risco. Não aposte mais do que você pode perder.\n\nBoa sorte e bons estudos!",
+    date: "2026-02-18",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-17",
     title: "Diário de Apostas - 17/02/2026",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
