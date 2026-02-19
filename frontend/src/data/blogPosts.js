@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-19",
+    title: "Diário de Apostas - 19/02/2026",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia 19/02/2026.",
+    content: "Bom dia!\n\nOlá, pessoal! Aqui está o nosso diário de apostas para o dia 19/02/2026.\n\n**Apostas do Dia**\n\n- RB Leipzig x Borussia Dortmund: Casa (1) com odd de 2.25 e probabilidade calculada de 54.53%.\n- Atlético Madrid x Espanyol: Casa (1) com odd de 1.48 e probabilidade calculada de 54.53%.\n- Bayern Munich x Eintracht Frankfurt: Casa (1) com odd de 1.15 e probabilidade calculada de 49.73%.\n- Real Betis x Rayo Vallecano: Casa (1) com odd de 1.91 e probabilidade calculada de 49.73%.\n- Manchester City x Newcastle United: Casa (1) com odd de 1.48 e probabilidade calculada de 49.73%.\n- Aston Villa x Leeds United: Casa (1) com odd de 1.88 e probabilidade calculada de 48.13%.\n- Real Sociedad x Real Oviedo: Casa (1) com odd de 1.53 e probabilidade calculada de 46.53%.\n- Chelsea x Burnley: Casa (1) com odd de 1.22 e probabilidade calculada de 44.93%.\n\n**Aviso de Risco**\n\nLembre-se de que as apostas envolvem risco e não há garantia de ganho.\n\n**Observações**\n\nA amostra para o jogo Athletico Paranaense x Corinthians é pequena e a confiança é menor.\n\nBoa sorte e bons estudos!",
+    date: "2026-02-19",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-18",
     title: "Diário de Apostas - 18/02/2026",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
