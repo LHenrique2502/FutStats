@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-20",
+    title: "Diário de Apostas - 20/02/2026",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
+    content: "Bom dia!\n\nNossa equipe de especialistas analisou as estatísticas e probabilidade de vitórias para você ter uma melhor chance de sucesso.\n\n**Recomendações de Apostas**\n\n- **Villarreal x Valencia**: Casa (1) com probabilidade de vitória de 56,13% e odds de 1,7.\n- **Atlético Madrid x Espanyol**: Casa (1) com probabilidade de vitória de 54,53% e odds de 1,5.\n- **RB Leipzig x Borussia Dortmund**: Casa (1) com probabilidade de vitória de 54,53% e odds de 2,15.\n- **Strasbourg x Lyon**: Casa (1) com probabilidade de vitória de 51,33% e odds de 2,38.\n- **Nice x Lorient**: Casa (1) com probabilidade de vitória de 51,33% e odds de 2,05.\n- **Bayern Munich x Eintracht Frankfurt**: Casa (1) com probabilidade de vitória de 49,73% e odds de 1,14.\n- **Real Betis x Rayo Vallecano**: Casa (1) com probabilidade de vitória de 49,73% e odds de 1,91.\n- **Manchester City x Newcastle United**: Casa (1) com probabilidade de vitória de 49,73% e odds de 1,48.\n\n**Avisos de Risco**\n\n- As apostas envolvem risco e podem resultar em perdas financeiras.\n- É importante fazer uma análise cuidadosa antes de fazer qualquer aposta.\n\n**Observações**\n\n- A probabilidade de vitória é baseada em dados históricos e pode variar dependendo das circunstâncias do jogo.\n- Os odds podem mudar ao longo do tempo.\n\nBoa sorte e bons estudos!",
+    date: "2026-02-20",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-19",
     title: "Diário de Apostas - 19/02/2026",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia 19/02/2026.",
