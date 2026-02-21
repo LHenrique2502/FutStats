@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-21",
+    title: "Diário de Apostas - 21/02/2026",
+    excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
+    content: "Olá!\n\nBom dia! Aqui estão as nossas recomendações para o dia de hoje.\n\n**Recomendações do Dia**\n\n- Bayern Munich x Eintracht Frankfurt (German Bundesliga): Over 2.5 (71,5%)\n- Aston Villa x Leeds United (English Premier League): Over 2.5 (64%)\n- West Ham United x Bournemouth (English Premier League): Over 2.5 (57%)\n- Chelsea x Burnley (English Premier League): Over 2.5 (64%)\n- Hull City x Queens Park Rangers (English League Championship): Over 2.5 (57%)\n\n**Value Bets**\n\n- Villarreal x Valencia (Spanish La Liga): Casa (1) (1,7, ≈56,13%)\n- Atlético Madrid x Espanyol (Spanish La Liga): Casa (1) (1,5, ≈54,53%)\n- RB Leipzig x Borussia Dortmund (German Bundesliga): Casa (1) (2,15, ≈54,53%)\n\n**Aviso de Risco**\n\nLembre-se de que as apostas envolvem risco. Não aposte mais do que você pode perder.\n\nBoa sorte e bons estudos!",
+    date: "2026-02-21",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-20",
     title: "Diário de Apostas - 20/02/2026",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
