@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-22",
+    title: "Diário de Apostas - 22 de Fevereiro de 2026",
+    excerpt: "Confira as nossas recomendações de apostas para o dia de hoje!",
+    content: "Olá!\n\nBom dia! Hoje é mais um dia de apostas emocionantes. Aqui estão as nossas recomendações para você:\n\n**Recomendações de Apostas**\n\n- **Casa (1)**: Barcelona x Levante (Spanish La Liga) - Odd: 1.12, Calculated Probability: 49.73%\n- **Casa (1)**: Celta Vigo x Mallorca (Spanish La Liga) - Odd: 1.83, Calculated Probability: 46.53%\n- **Over 2.5**: Strasbourg x Lyon (French Ligue 1) - Odd: 78.5, Calculated Probability: 64%\n- **BTTS**: Auxerre x Rennes (French Ligue 1) - Odd: 64.5, Calculated Probability: 64.5%\n\n**Avisos de Risco**\n\nLembre-se de que as apostas envolvem risco. Não aposte mais do que você pode perder.\n\n**Nossas Recomendações**\n\n- **Casa (1)**: Barcelona x Levante (Spanish La Liga) - Odd: 1.12, Calculated Probability: 49.73%\n- **Casa (1)**: Celta Vigo x Mallorca (Spanish La Liga) - Odd: 1.83, Calculated Probability: 46.53%\n- **Over 2.5**: Strasbourg x Lyon (French Ligue 1) - Odd: 78.5, Calculated Probability: 64%\n- **BTTS**: Auxerre x Rennes (French Ligue 1) - Odd: 64.5, Calculated Probability: 64.5%\n\n**Boa Sorte!**\n\nBoa sorte e bons estudos! Não esqueça de verificar as condições de cada aposta antes de colocar seu dinheiro em jogo.\n\nAté amanhã!",
+    date: "2026-02-22",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-21",
     title: "Diário de Apostas - 21/02/2026",
     excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
