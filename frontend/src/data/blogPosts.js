@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-23",
+    title: "Diário de Apostas - 23/02",
+    excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
+    content: "Bom dia!\n\nAqui estão as nossas recomendações para o dia de hoje.\n\n**Recomendações**\n\n- O jogo entre Fiorentina e Pisa tem uma probabilidade de mais de 2,5 gols em 64%.\n- O jogo entre Everton e Manchester United tem uma probabilidade de mais de 2,5 gols em 57%.\n- O jogo entre Deportivo Alavés e Girona tem uma probabilidade de mais de 2,5 gols em 57%.\n- O jogo entre Bologna e Udinese tem uma probabilidade de mais de 2,5 gols em 50%.\n- O jogo entre Maricá e Portuguesa-RJ tem uma probabilidade de mais de 2,5 gols em 33,5%.\n- O jogo entre Sampaio Corrêa FE e Nova Iguaçu tem uma probabilidade de mais de 2,5 gols em 33,5%.\n\n**Avisos de Risco**\n\n- As apostas envolvem risco. Não aposte mais do que você pode perder.\n\n**Despedida**\n\nBoa sorte e bons estudos!",
+    date: "2026-02-23",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-22",
     title: "Diário de Apostas - 22 de Fevereiro de 2026",
     excerpt: "Confira as nossas recomendações de apostas para o dia de hoje!",
