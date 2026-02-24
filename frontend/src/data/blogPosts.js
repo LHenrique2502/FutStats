@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-24",
+    title: "Diário de Apostas - 24 de Fevereiro de 2026",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
+    content: "Bom dia!\n\nNós estamos aqui para ajudá-lo a encontrar as melhores apostas para o dia de hoje. Aqui estão algumas das nossas recomendações:\n\n- Middlesbrough vs Leicester City: O Over 2.5 tem uma probabilidade de ≈57%.\n- Watford vs Ipswich Town: O Over 2.5 tem uma probabilidade de ≈57%.\n- Hull City vs Derby County: O Over 2.5 tem uma probabilidade de ≈57%.\n- Southampton vs Queens Park Rangers: O Over 2.5 tem uma probabilidade de ≈57%.\n- Swansea City vs Preston North End: O Over 2.5 tem uma probabilidade de ≈50%.\n- West Bromwich Albion vs Charlton Athletic: O Over 2.5 tem uma probabilidade de ≈43%.\n\nLembre-se de que as apostas envolvem risco. Não aposte mais do que você pode perder.\n\nBoa sorte e bons estudos!",
+    date: "2026-02-24",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-23",
     title: "Diário de Apostas - 23/02",
     excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
