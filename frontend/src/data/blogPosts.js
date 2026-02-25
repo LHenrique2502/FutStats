@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-25",
+    title: "Diário de Apostas - 25 de Fevereiro de 2026",
+    excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
+    content: "Bom dia!\n\nHoje é mais um dia de futebol emocionante, com várias partidas importantes em diferentes ligas. Aqui estão as nossas recomendações de apostas para o dia de hoje.\n\n**Recomendações de Apostas**\n\n- **Over 2.5**: Sheffield United vs Coventry City (71%), Millwall vs Birmingham City (57%), Stoke City vs Oxford United (50%)\n- **BTTS**: Sheffield United vs Coventry City (71%), Millwall vs Birmingham City (36%), Stoke City vs Oxford United (36%)\n\n**Avisos de Risco**\n\nApostas envolvem risco. Certifique-se de que você está apostando dentro do seu orçamento e que você entende os riscos envolvidos.\n\n**Despedida**\n\nBoa sorte e bons estudos!",
+    date: "2026-02-25",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-24",
     title: "Diário de Apostas - 24 de Fevereiro de 2026",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
