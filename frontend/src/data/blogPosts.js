@@ -1,5 +1,13 @@
 export const blogPosts = [
   {
+    id: "daily-2026-02-26",
+    title: "Diário de Apostas - 26/02",
+    excerpt: "Aqui estão as nossas recomendações para o dia de hoje.",
+    content: "Bom dia!\n\nNossa equipe de especialistas analisou as estatísticas e traz as nossas recomendações para o dia de hoje.\n\n**Recomendações**\n\n- Palmeiras vs Fluminense: O Palmeiras tem uma chance de 71% de marcar mais de 2,5 gols, enquanto o Fluminense tem uma chance de 64% de marcar gols em ambos os lados do campo.\n- Grêmio vs Atlético Mineiro: O Grêmio tem uma chance de 57% de marcar mais de 2,5 gols, enquanto o Atlético Mineiro tem uma chance de 57% de marcar gols em ambos os lados do campo.\n- Santos vs Vasco da Gama: O Santos tem uma chance de 44,93% de vencer, enquanto o Vasco da Gama tem uma chance de 26,73% de vencer.\n- Sampaio Corrêa FE vs Maricá: O Maricá tem uma chance de 44,33% de vencer, enquanto o Sampaio Corrêa FE tem uma chance de 27,33% de vencer.\n- Nova Iguaçu vs Portuguesa-RJ: O Nova Iguaçu tem uma chance de 59,33% de vencer, enquanto a Portuguesa-RJ tem uma chance de 15% de vencer.\n\n**Avisos de Risco**\n\nLembre-se de que as apostas envolvem risco e não há garantia de sucesso.\n\n**Boa Sorte!**\n\nBoa sorte e bons estudos!",
+    date: "2026-02-26",
+    category: "Diário",
+  },
+  {
     id: "daily-2026-02-25",
     title: "Diário de Apostas - 25 de Fevereiro de 2026",
     excerpt: "Aqui estão as nossas recomendações de apostas para o dia de hoje.",
